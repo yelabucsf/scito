@@ -19,5 +19,6 @@ setup(name='scito',
             'scipy',
             'statsmodels',
       ],
+      ext_modules=[Extension('helloworld', ['src/test.c'])],
       scripts=[],
       zip_safe=False)
