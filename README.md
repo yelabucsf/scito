@@ -11,3 +11,5 @@ pip install .
 ```
 
 after that follow specific tutorials in the `scito/examples`
+
+Check
