@@ -1,19 +1,36 @@
 #include <Python.h>
 
-static PyObject* helloworld(PyObject* self) {
-   return Py_BuildValue("s", "Hello, Python extensions!!");
+int fastfactorial(int n){
+    if(n<=1)
+        return 1;
+    else
+        return n * fastfactorial(n-1);
 }
 
-static char helloworld_docs[] =
-   "helloworld( ): Any message you want to put here!!\n";
 
-static PyMethodDef helloworld_funcs[] = {
-   {"helloworld", (PyCFunction)helloworld,
-      METH_NOARGS, helloworld_docs},
-      {NULL}
+static PyObject* factorial(PyObject *self, PyObject *args){
+    int n;
+    if (!PyArg_ParseTuple(args,"i",&n))
+        return NULL;
+    int result = fastfactorial(n);
+    return Py_BuildValue("i",result);
+}
+
+static PyMethodDef mainMethods[] = {
+        {"factorial",factorial,METH_VARARGS,"Calculate the factorial of n"},
+        {NULL,NULL,0,NULL}
 };
 
-void inithelloworld(void) {
-   Py_InitModule3("helloworld", helloworld_funcs,
-                  "Extension module example!");
+static PyModuleDef cmath11 = {
+        PyModuleDef_HEAD_INIT,
+        "cmath11","Factorial Calculation",
+        -1,
+        mainMethods
+};
+
+PyMODINIT_FUNC PyInit_cmath11(int){
+    return PyModule_Create(&cmath11);
 }
+
+
+

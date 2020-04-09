@@ -11,9 +11,9 @@
  */
 
 #include <math.h>
+#include <stdbool.h>
 
 #include <R_ext/Print.h>/* for diagnostics */
-#include <R_ext/Random.h>/* when R's RNG is used */
 #include <R_ext/Utils.h>/* for interrupting */
 
 #include "cluster.h"
@@ -33,7 +33,7 @@ void cl_clara(int *n,  /* = number of objects */
 	      double *valmd,/*[j]= missing value code (instead of NA) for x[,j]*/
 	      int *jtmd,	/* [j]= {-1,1};	 -1: x[,j] has NA; 1: no NAs in x[,j] */
 	      DISS_KIND *diss_kind, // = {EUCLIDEAN, MANHATTAN, JACCARD}
-	      int/*logical*/ *rng_R,/*= {0,1};  0 : use clara's internal weak RNG;
+	      int/*logical*/ *seed,/*= {0,1};  0 : use clara's internal weak RNG;
 				     *	        1 : use R's RNG (and seed) */
 	      int/*logical*/ *pam_like,/* if (1), we do "swap()" as in pam(), otherwise
 					  use the code as it was in clara() "forever"
@@ -67,7 +67,7 @@ void cl_clara(int *n,  /* = number of objects */
 
     /* Local variables */
 
-    Rboolean nafs, kall, full_sample, lrg_sam, dyst_toomany_NA,
+    bool nafs, kall, full_sample, lrg_sam, dyst_toomany_NA, // creates boolean variables?
 	has_NA = *mdata;
     int j, jk, jkk, js, jsm, jran, l, n_sam;
     int nsm, ntt, rand_k, nrun, n_dys, nsamb, nunfs;
@@ -90,20 +90,20 @@ void cl_clara(int *n,  /* = number of objects */
 			   *nsam, *nran, *n,
 			   full_sample ? " 'full_sample',":
 			   (lrg_sam ? " 'large_sample',": ""));
-    if(*rng_R && !full_sample)
+    if(*seed > 0 && !full_sample)
 	GetRNGstate();
     else /* << initialize `random seed' of the very simple randm() below */
 	nrun = 0;
 
 #define NEW_rand_k_trace_print(_nr_)					\
-	rand_k= 1+ (int)(rnn* ((*rng_R)? unif_rand(): randm(&nrun)));	\
+	rand_k= 1+ (int)(rnn* ((*seed)? unif_rand(): randm(&nrun)));	\
 	if (rand_k > *n) {/* should never happen */			\
 	    warning(_("C level clara(): random k=%d > n **\n"), rand_k); \
 	    rand_k = *n;						\
 	}								\
 	if(*trace_lev >= 4) {						\
 	    Rprintf("... {" #_nr_ "}");					\
-	    if(*rng_R) Rprintf("R unif_rand()");			\
+	    if(*seed) Rprintf("R unif_rand()");			\
 	    else       Rprintf("nrun=%5d", nrun);			\
 	    Rprintf(" -> k{ran}=%d\n", rand_k);				\
 	}
@@ -280,7 +280,7 @@ void cl_clara(int *n,  /* = number of objects */
 	if(full_sample) break; /* out of resampling */
     }
 /* --- end random sampling loop */
-    if(*rng_R && !full_sample)
+    if(*seed && !full_sample)
 	PutRNGstate();
 
     if (nunfs >= *nran) { *jstop = 1; return; }

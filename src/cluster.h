@@ -1,8 +1,6 @@
 /* Declare everything, Fortran & C -- so we can register them */
 
-#include <R.h>
-#include <Rinternals.h>
-/* -> Rconfig.h, but also Boolean.h RS.h */
+#include <Python.h>
 
 #ifdef ENABLE_NLS
 #include <libintl.h>

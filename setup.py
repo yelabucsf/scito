@@ -19,6 +19,7 @@ setup(name='scito',
             'scipy',
             'statsmodels',
       ],
-      ext_modules=[Extension('helloworld', ['src/test.c'])],
+      ext_modules=[Extension('cmath11', ['src/test.c'])],
+      include_package_data=True,
       scripts=[],
       zip_safe=False)
