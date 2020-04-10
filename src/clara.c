@@ -9,12 +9,9 @@
 /* original Id: clara.f,v 1.10 2002/08/27 15:43:58 maechler translated by
  * f2c (version 20010821) and run through f2c-clean,v 1.10 2002/03/28
  */
+// TODO implement common RNG with py: https://studywolf.wordpress.com/2012/10/02/a-common-random-number-generator-for-c-and-python/
 
 #include <math.h>
-#include <stdbool.h>
-
-#include <R_ext/Print.h>/* for diagnostics */
-#include <R_ext/Utils.h>/* for interrupting */
 
 #include "cluster.h"
 #include "ind_2.h"
@@ -32,9 +29,9 @@ void cl_clara(int *n,  /* = number of objects */
 	      int *mdata,	/*= {0,1}; 1: min(x) is missing value (NA);  0: no NA */
 	      double *valmd,/*[j]= missing value code (instead of NA) for x[,j]*/
 	      int *jtmd,	/* [j]= {-1,1};	 -1: x[,j] has NA; 1: no NAs in x[,j] */
-	      DISS_KIND *diss_kind, // = {EUCLIDEAN, MANHATTAN, JACCARD}
-	      int/*logical*/ *seed,/*= {0,1};  0 : use clara's internal weak RNG;
-				     *	        1 : use R's RNG (and seed) */
+	      int *diss_kind, // = {EUCLIDEAN, MANHATTAN, JACCARD}
+	      int/*logical*/ *py_rng,/*= {0,1};  0 : use clara's internal weak RNG;
+				     *	        1 : use common RNG with Python */
 	      int/*logical*/ *pam_like,/* if (1), we do "swap()" as in pam(), otherwise
 					  use the code as it was in clara() "forever"
 					  upto 2011-04 */
@@ -67,7 +64,7 @@ void cl_clara(int *n,  /* = number of objects */
 
     /* Local variables */
 
-    bool nafs, kall, full_sample, lrg_sam, dyst_toomany_NA, // creates boolean variables?
+    Rboolean nafs, kall, full_sample, lrg_sam, dyst_toomany_NA, // creates boolean variables?
 	has_NA = *mdata;
     int j, jk, jkk, js, jsm, jran, l, n_sam;
     int nsm, ntt, rand_k, nrun, n_dys, nsamb, nunfs;
@@ -86,26 +83,26 @@ void cl_clara(int *n,  /* = number of objects */
     else
 	n_sam = *nsam;
 
-    if(*trace_lev) Rprintf("C clara(): (nsam,nran,n) = (%d,%d,%d);%s\n",
+    if(*trace_lev) PySys_WriteStdout("C clara(): (nsam,nran,n) = (%d,%d,%d);%s\n",
 			   *nsam, *nran, *n,
 			   full_sample ? " 'full_sample',":
 			   (lrg_sam ? " 'large_sample',": ""));
-    if(*seed > 0 && !full_sample)
-	GetRNGstate();
+    if(*py_rng && !full_sample)
+        // TODO implement common RNG with py here
     else /* << initialize `random seed' of the very simple randm() below */
-	nrun = 0;
+	    nrun = 0;
 
 #define NEW_rand_k_trace_print(_nr_)					\
-	rand_k= 1+ (int)(rnn* ((*seed)? unif_rand(): randm(&nrun)));	\
+	rand_k= 1+ (int)(rnn* ((*py_rng)? unif_rand(): randm(&nrun)));	\
 	if (rand_k > *n) {/* should never happen */			\
 	    warning(_("C level clara(): random k=%d > n **\n"), rand_k); \
 	    rand_k = *n;						\
 	}								\
 	if(*trace_lev >= 4) {						\
-	    Rprintf("... {" #_nr_ "}");					\
-	    if(*seed) Rprintf("R unif_rand()");			\
-	    else       Rprintf("nrun=%5d", nrun);			\
-	    Rprintf(" -> k{ran}=%d\n", rand_k);				\
+	    PySys_WriteStdout("... {" #_nr_ "}");					\
+	    if(*py_rng) PySys_WriteStdout("R unif_rand()");			\
+	    else       PySys_WriteStdout("nrun=%5d", nrun);			\
+	    PySys_WriteStdout(" -> k{ran}=%d\n", rand_k);				\
 	}
 
 /* __LOOP__ :  random subsamples are drawn and partitioned into kk clusters */
@@ -115,13 +112,13 @@ void cl_clara(int *n,  /* = number of objects */
     nunfs = 0;
     dyst_toomany_NA = FALSE;
     for (jran = 1; jran <= *nran; ++jran) {
-	if(*trace_lev) Rprintf("C clara(): sample %d ", jran);
+	if(*trace_lev) PySys_WriteStdout("C clara(): sample %d ", jran);
 	if (!full_sample) {/* `real' case: sample size < n */
 	    ntt = 0;
 	    if (kall && nunfs+1 != jran && !lrg_sam) {
 		/* Have had (at least) one valid sample; use its representatives
 		 * nrx[] :  nsel[] := sort(nrx[])  for the first j=1:k */
-		if(*trace_lev >= 2) Rprintf(" if (kall && nunfs...): \n");
+		if(*trace_lev >= 2) PySys_WriteStdout(" if (kall && nunfs...): \n");
 
 		for (jk = 0; jk < *kk; ++jk)
 		    nsel[jk] = nrx[jk];
@@ -140,7 +137,7 @@ void cl_clara(int *n,  /* = number of objects */
 		ntt = *kk;
 	    }
 	    else { /* no valid sample  _OR_  lrg_sam */
-		if(*trace_lev >= 2) Rprintf(" finding 1st... new k{ran}:\n");
+		if(*trace_lev >= 2) PySys_WriteStdout(" finding 1st... new k{ran}:\n");
 
 		/* Loop finding random index `rand_k' not yet in nrx[0:(*kk-1)] : */
 	    L180:
@@ -159,15 +156,15 @@ void cl_clara(int *n,  /* = number of objects */
 	    }
 
 	    if(*trace_lev >= 2) {
-		Rprintf(".. kall: %s, ", (kall) ? "T" : "FALSE");
+		PySys_WriteStdout(".. kall: %s, ", (kall) ? "T" : "FALSE");
 		if(*trace_lev == 2) {
-		    Rprintf("nsel[ntt=%d] = %d\n", ntt, nsel[ntt]);
+		    PySys_WriteStdout("nsel[ntt=%d] = %d\n", ntt, nsel[ntt]);
 		} else { /* trace_lev >= 3 */
-		    Rprintf("\n... nrx [0:%d]= ",*kk-1);
-		    for (jk = 0; jk < *kk; jk++) Rprintf("%d ",nrx[jk]);
-		    Rprintf("\n... nsel[0:%d]= ",ntt-1);
-		    for (jk = 0; jk < ntt; jk++) Rprintf("%d ",nsel[jk]);
-		    Rprintf("\n");
+		    PySys_WriteStdout("\n... nrx [0:%d]= ",*kk-1);
+		    for (jk = 0; jk < *kk; jk++) PySys_WriteStdout("%d ",nrx[jk]);
+		    PySys_WriteStdout("\n... nsel[0:%d]= ",ntt-1);
+		    for (jk = 0; jk < ntt; jk++) PySys_WriteStdout("%d ",nsel[jk]);
+		    PySys_WriteStdout("\n");
 		}
 	    }
 
@@ -203,7 +200,7 @@ void cl_clara(int *n,  /* = number of objects */
 	    } while (ntt < n_sam);
 
 	L295:
-	    if(*trace_lev) Rprintf(" {295} [ntt=%d, nunfs=%d] ", ntt, nunfs);
+	    if(*trace_lev) PySys_WriteStdout(" {295} [ntt=%d, nunfs=%d] ", ntt, nunfs);
 	    if (lrg_sam) {
 		/* have indices for smaller _nonsampled_ half; revert this: */
 		for (j = 1, jk = 0, js = 0; j <= *n; j++) {
@@ -216,10 +213,10 @@ void cl_clara(int *n,  /* = number of objects */
 		    nsel[j] = nrepr[j];
 	    }
 	    if(*trace_lev >= 3) {
-		Rprintf(".. nsel[1:%d]= ", *nsam);
-		for (jk = 0; jk < *nsam; jk++) Rprintf("%d ",nsel[jk]);
+		PySys_WriteStdout(".. nsel[1:%d]= ", *nsam);
+		for (jk = 0; jk < *nsam; jk++) PySys_WriteStdout("%d ",nsel[jk]);
 	    }
-	    if(*trace_lev) Rprintf(" -> dysta2()\n");
+	    if(*trace_lev) PySys_WriteStdout(" -> dysta2()\n");
 	}
 	else { /* full_sample : *n = *nsam -- one sample is enough ! */
 	    for (j = 0; j < *nsam; ++j)
@@ -230,7 +227,7 @@ void cl_clara(int *n,  /* = number of objects */
 	       jtmd, valmd, has_NA, &dyst_toomany_NA);
 	if(dyst_toomany_NA) {
 	    if(*trace_lev)
-		Rprintf("  dysta2() gave dyst_toomany_NA --> new sample\n");
+		PySys_WriteStdout("  dysta2() gave dyst_toomany_NA --> new sample\n");
 	    dyst_toomany_NA = FALSE;
 	    ++nunfs;
 	    continue;/* random sample*/
@@ -241,7 +238,7 @@ void cl_clara(int *n,  /* = number of objects */
 	    if (s < dys[l])
 		s = dys[l];
 	if(*trace_lev >= 2)
-	    Rprintf(". clara(): s:= max dys[1..%d] = %g;", l-1,s);
+	    PySys_WriteStdout(". clara(): s:= max dys[1..%d] = %g;", l-1,s);
 
 	bswap2(*kk, *nsam, s, dys, *pam_like, *trace_lev,
 	       /* --> */ &sky, nrepr,
@@ -249,7 +246,7 @@ void cl_clara(int *n,  /* = number of objects */
 	       /* beter[], only used here */&tmp[nsamb]);
 
 	if(*trace_lev >= 2)
-	    Rprintf("end{bswap2}: sky = %g\n", sky);
+	    PySys_WriteStdout("end{bswap2}: sky = %g\n", sky);
 
 	selec(*kk, *n, *jpp, *diss_kind, &zb, *nsam, has_NA, jtmd, valmd,
 	      *trace_lev, nrepr, nsel, dys, x, nr, &nafs, ttd, radus, ratt,
@@ -259,11 +256,11 @@ void cl_clara(int *n,  /* = number of objects */
 		     * because of too many NA s */
 	    ++nunfs;
 	    if(*trace_lev >= 2)
-		Rprintf(" selec() -> 'NAfs'");
+		PySys_WriteStdout(" selec() -> 'NAfs'");
 	}
 	else if(!kall || zba > zb) { /* 1st proper sample  or  new best */
 	    kall = TRUE;
-	    if(*trace_lev >= 2) Rprintf(" 1st proper or new best:");
+	    if(*trace_lev >= 2) PySys_WriteStdout(" 1st proper or new best:");
 	    zba = zb;
 	    for (jk = 0; jk < *kk; ++jk) {
 		ttbes[jk] = ttd	 [jk];
@@ -275,12 +272,12 @@ void cl_clara(int *n,  /* = number of objects */
 		nbest[js] = nsel[js];
 	    sx = s;
 	}
-	if(*trace_lev >= 2) Rprintf(" obj= %g\n", zb/rnn);
+	if(*trace_lev >= 2) PySys_WriteStdout(" obj= %g\n", zb/rnn);
 
 	if(full_sample) break; /* out of resampling */
     }
 /* --- end random sampling loop */
-    if(*seed && !full_sample)
+    if(*py_rng && !full_sample)
 	PutRNGstate();
 
     if (nunfs >= *nran) { *jstop = 1; return; }
@@ -288,16 +285,16 @@ void cl_clara(int *n,  /* = number of objects */
     if (!kall) { *jstop = 2; return; }
 
     if(*trace_lev) {
-	Rprintf("C clara(): best sample _found_ ");
+	PySys_WriteStdout("C clara(): best sample _found_ ");
 	if(*trace_lev >= 2) {
-	    Rprintf("; nbest[1:%d] =\n c(", *nsam);
+	    PySys_WriteStdout("; nbest[1:%d] =\n c(", *nsam);
 	    for (js = 0; js < *nsam; ++js) {
-		Rprintf("%d", nbest[js]);
-		if(js+1 < *nsam) Rprintf(",");
+		PySys_WriteStdout("%d", nbest[js]);
+		if(js+1 < *nsam) PySys_WriteStdout(",");
 	    }
-	    Rprintf(")\n");
+	    PySys_WriteStdout(")\n");
 	}
-	Rprintf(" --> dysta2(nbest), resul(), end\n");
+	PySys_WriteStdout(" --> dysta2(nbest), resul(), end\n");
     }
 
 
@@ -337,7 +334,7 @@ void cl_clara(int *n,  /* = number of objects */
  * Compute Dissimilarities for the selected sub-sample ---> dys[,]
  */
 void dysta2(int nsam, int jpp, int *nsel,
-	    double *x, int n, double *dys, DISS_KIND diss_kind,
+	    double *x, int n, double *dys, int diss_kind,
 	    int *jtmd, double *valmd, Rboolean has_NA, Rboolean *toomany_NA)
 {
     int nlk = 0;
@@ -422,9 +419,9 @@ void bswap2(int kk, int n, /* == nsam == 'sampsize', here in clara */
 
     if(trace_lev >= 2) {
 	if(trace_lev == 2)
-	    Rprintf("\n bswap2():");
+	    PySys_WriteStdout("\n bswap2():");
 	else
-	    Rprintf("\nclara()'s bswap2(*, s=%g): ", s);
+	    PySys_WriteStdout("\nclara()'s bswap2(*, s=%g): ", s);
     }
 
     s = s * 1.1 + 1.;/* value larger than all dissimilarities */
@@ -458,9 +455,9 @@ void bswap2(int kk, int n, /* == nsam == 'sampsize', here in clara */
 	nrepr[nmax] = 1;/* = .true. : found new representative */
 	if(trace_lev >= 2) {
 	    if(trace_lev == 2)
-		Rprintf(" %d", nmax);
+		PySys_WriteStdout(" %d", nmax);
 	    else
-		Rprintf("    new repr. %d\n", nmax);
+		PySys_WriteStdout("    new repr. %d\n", nmax);
 	}
 
 	/* update dysma[] : dysma[j] = D(j, nearest_representative) */
@@ -477,18 +474,18 @@ void bswap2(int kk, int n, /* == nsam == 'sampsize', here in clara */
 	*sky += dysma[j];
 
     if(trace_lev >= 2) /* >= 2 (?) */ {
-	Rprintf("  after build: medoids are");
+	PySys_WriteStdout("  after build: medoids are");
 	for (i = 1; i <= n; ++i)
-	    if(nrepr[i] == 1) Rprintf(" %2d", i);
+	    if(nrepr[i] == 1) PySys_WriteStdout(" %2d", i);
 	if(trace_lev >= 3) {
-	    Rprintf("\n  and min.dist dysma[1:n] are\n");
+	    PySys_WriteStdout("\n  and min.dist dysma[1:n] are\n");
 	    for (i = 1; i <= n; ++i) {
-		Rprintf(" %6.3g", dysma[i]);
-		if(i % 10 == 0) Rprintf("\n");
+		PySys_WriteStdout(" %6.3g", dysma[i]);
+		if(i % 10 == 0) PySys_WriteStdout("\n");
 	    }
-	    if(n % 10 != 0) Rprintf("\n");
-	} else Rprintf("\n");
-	Rprintf(" --> sky = sum_j D_j= %g\n", *sky);
+	    if(n % 10 != 0) PySys_WriteStdout("\n");
+	} else PySys_WriteStdout("\n");
+	PySys_WriteStdout(" --> sky = sum_j D_j= %g\n", *sky);
     }
 
     if (kk == 1)
@@ -552,7 +549,7 @@ L60:
 
     if (dzsky < 0.) { /* found an improving swap */
 	if(trace_lev >= 3)
-	    Rprintf( "   swp new %d <-> %d old; decreasing diss. by %g\n",
+	    PySys_WriteStdout( "   swp new %d <-> %d old; decreasing diss. by %g\n",
 		     hbest, nbest, dzsky);
 	nrepr[hbest] = 1;
 	nrepr[nbest] = 0;
@@ -560,13 +557,13 @@ L60:
 	goto L60;
     }
     if(trace_lev >= 2 && hbest != -1) // in my examples  hbest == -1 and it does not print:
-	Rprintf( "  Last swap: new %d <-> %d old; decreasing diss. by %g\n",
+	PySys_WriteStdout( "  Last swap: new %d <-> %d old; decreasing diss. by %g\n",
 		 hbest, nbest, dzsky);
 
 } /* End of bswap2() -------------------------------------------------- */
 
 /* selec() : called once [per random sample] from clara() */
-void selec(int kk, int n, int jpp, DISS_KIND diss_kind,
+void selec(int kk, int n, int jpp, int diss_kind,
 	   double *zb, int nsam, Rboolean has_NA, int *jtmd, double *valmd,
 	   int trace_lev,
 	   int *nrepr, int *nsel, double *dys, double *x, int *nr,
@@ -784,7 +781,7 @@ void selec(int kk, int n, int jpp, DISS_KIND diss_kind,
     return;
 } /* End selec() -----------------------------------------------------------*/
 
-void resul(int kk, int n, int jpp, DISS_KIND diss_kind, Rboolean has_NA,
+void resul(int kk, int n, int jpp, int diss_kind, Rboolean has_NA,
 	   int *jtmd, double *valmd, double *x, int *nrx, int *mtt, int correct_d)
 {
     /* correct_d : option for dist.computation:
@@ -1034,3 +1031,63 @@ void black(int kk, int jpp, int nsam, int *nbest,
     *ttsyl /= (double) (nsam);
     return;
 } /* black */
+
+
+
+/* Python packaging */
+static PyObject* cl_clara(PyObject *self, PyObject *args){
+    int n;
+    if (!PyArg_ParseTuple(args,"iiidiididii",
+            &n, &jpp, &kk, &x, &nran, &nsam, &dys, &mdata, &valmd, &jtmd, &diss_kind
+    ))
+        return NULL;
+    int result = fastfactorial(n);
+    return Py_BuildValue("i",result);
+}
+
+
+
+int/*logical*/ *py_rng,/*= {0,1};  0 : use clara's internal weak RNG;
+				     *	        1 : use common RNG with Python */
+int/*logical*/ *pam_like,/* if (1), we do "swap()" as in pam(), otherwise
+					  use the code as it was in clara() "forever"
+					  upto 2011-04 */
+int *correct_d,/* option for dist.computation: if (0), use the "fishy"
+			     formula to update distances in the NA-case,
+			     if (1), use a dysta2()-compatible formula */
+int *nrepr, /* logical (0/1): 1 = "is representative object"  */
+int *nsel,
+int *nbest,/* x[nbest[j],] : the j-th obs in the final sample */
+int *nr, int *nrx,/* prov. and final "medoids" aka representatives */
+double *radus, double *ttd, double *ratt,
+double *ttbes, double *rdbes, double *rabes,
+int *mtt, double *obj,
+double *avsyl, double *ttsyl, double *sylinf,
+int *jstop, int *trace_lev,
+double *tmp, /* = double [ 3 * nsam ] */
+int *itmp	/* = integer[ 6 * nsam ] */
+
+
+
+
+
+
+
+
+
+
+static PyMethodDef mainMethods[] = {
+        {"factorial",factorial,METH_VARARGS,"Calculate the factorial of n"},
+        {NULL,NULL,0,NULL}
+};
+
+static PyModuleDef cmath11 = {
+        PyModuleDef_HEAD_INIT,
+        "cmath11","Factorial Calculation",
+        -1,
+        mainMethods
+};
+
+PyMODINIT_FUNC PyInit_cmath11(void){
+    return PyModule_Create(&cmath11);
+}
