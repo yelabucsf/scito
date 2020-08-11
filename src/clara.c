@@ -1037,8 +1037,12 @@ void black(int kk, int jpp, int nsam, int *nbest,
 /* Python packaging */
 static PyObject* cl_clara(PyObject *self, PyObject *args){
     int n;
-    if (!PyArg_ParseTuple(args,"iiidiididii",
-            &n, &jpp, &kk, &x, &nran, &nsam, &dys, &mdata, &valmd, &jtmd, &diss_kind
+    if (!PyArg_ParseTuple(args,"iiidiididiiiiiiiiiiddddddiddddiidi",
+            &n, &jpp, &kk, &x, &nran, &nsam, &dys, &mdata, &valmd, &jtmd, &diss_kind,
+            &py_rng, &pam_like, &correct_d, &nrepr, &nsel, &nbest, &nr, &nrx, &radus,
+            &ttd, &ratt, &ttbes, &rdbes, &rabes, &mtt, &obj, &avsyl, &ttsyl, &sylinf,
+            &jstop, &trace_lev, &tmp, &itmp
+
     ))
         return NULL;
     int result = fastfactorial(n);
@@ -1047,25 +1051,6 @@ static PyObject* cl_clara(PyObject *self, PyObject *args){
 
 
 
-int/*logical*/ *py_rng,/*= {0,1};  0 : use clara's internal weak RNG;
-				     *	        1 : use common RNG with Python */
-int/*logical*/ *pam_like,/* if (1), we do "swap()" as in pam(), otherwise
-					  use the code as it was in clara() "forever"
-					  upto 2011-04 */
-int *correct_d,/* option for dist.computation: if (0), use the "fishy"
-			     formula to update distances in the NA-case,
-			     if (1), use a dysta2()-compatible formula */
-int *nrepr, /* logical (0/1): 1 = "is representative object"  */
-int *nsel,
-int *nbest,/* x[nbest[j],] : the j-th obs in the final sample */
-int *nr, int *nrx,/* prov. and final "medoids" aka representatives */
-double *radus, double *ttd, double *ratt,
-double *ttbes, double *rdbes, double *rabes,
-int *mtt, double *obj,
-double *avsyl, double *ttsyl, double *sylinf,
-int *jstop, int *trace_lev,
-double *tmp, /* = double [ 3 * nsam ] */
-int *itmp	/* = integer[ 6 * nsam ] */
 
 
 

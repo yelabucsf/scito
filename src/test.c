@@ -2,24 +2,20 @@
 #include "cluster.h"
 
 
-int fastfactorial(int n, int diss_kind){
+void fastfactorial(int n, int *res){
+    PySys_WriteStdout("LOLO %i", n);
+    *res = n + 2;
 
-    if (diss_kind == MANHATTAN)
-        PySys_WriteStdout("LOL");
-    if(n<=1)
-        return 1;
-    else
-        return n * fastfactorial(n-1, 1);
 }
 
 
 static PyObject* factorial(PyObject *self, PyObject *args){
     int n;
-    DISS_KIND diss_kind;
-    if (!PyArg_ParseTuple(args,"ii",&n, &diss_kind))
+    int res;
+    if (!PyArg_ParseTuple(args,"ii", &n, &res))
         return NULL;
-    int result = fastfactorial(n, diss_kind);
-    return Py_BuildValue("i",result);
+    //return Py_BuildValue("i",res);'
+    return Py_BuildValue("");
 }
 
 static PyMethodDef mainMethods[] = {
