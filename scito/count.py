@@ -5,6 +5,7 @@ import os
 import pandas as pd
 from scito.scitoSamples import ScitoSamples
 
+# TODO create a ScitoSamples object from DF. Create DF first
 
 def scito_count(ref: str, outfile: str, libraries: ScitoSamples,
                 tmp: str, n_threads: int = 1, out_type: str = "h5ad") -> None:
@@ -35,9 +36,11 @@ def scito_count(ref: str, outfile: str, libraries: ScitoSamples,
 
     with open(manifest_file) as f:
         manifest = json.load(f)
+    kallisto_index = os.path.join(ref, manifest["index_file"])
 
-    kallisto_index = os.path.join(ref, )
+
     cmd = ["kallisto", "bus", "-i", kallisto_index,
-           "-o", tmp, "-x", technology, "-t", str(n_threads)] + fastqs
+           "-o", tmp, "-x", libraries.technology, "-t", str(n_threads)] + libraries.fastqs
 
     # TODO barcode correction
+
