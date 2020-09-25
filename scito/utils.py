@@ -4,6 +4,9 @@ Utilities for the package
 
 import numpy as np
 import pandas as pd
+from typing import List, Generator
+import subprocess
+
 
 def count_collapser(data, bc):
     '''
@@ -120,3 +123,13 @@ def drop_identifier(a, n_top, bc_ids):
                "expression": top_a}
 
     return results
+
+
+def execute(cmd: List[str]) -> Generator:
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+        for stdout_line in iter(popen.stdout.readline, ""):
+            yield stdout_line
+        popen.stdout.close()
+        return_code = popen.wait()
+        if return_code:
+            raise subprocess.CalledProcessError(return_code, cmd)

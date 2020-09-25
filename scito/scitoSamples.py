@@ -31,7 +31,6 @@ class ScitoSamples():
         if self.technology == "scito":
             self.R3 = np.sort(np.array(df["R3"]))
 
-
         # test fastq presence
         regex = re.compile(r'R\d')
         read_arr = filter(regex.search, self.__dict__.keys())
@@ -40,6 +39,8 @@ class ScitoSamples():
 
         assert (len(absent) == 0), "ValueError: scito.ScitoSamples.from_df(). FASTQ files {} do not exist".format(absent)
         self.fastqs = cat_arr
+
+        # TODO need some QA on the df
 
 
 
