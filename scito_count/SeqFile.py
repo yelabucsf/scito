@@ -21,33 +21,26 @@ class SeqFile(object):
         self.read_records: FQRecord = None
 
     @classmethod
-    def import_record(cls, func):
-        @functools.wraps(func)
-        def text_parser(self, *args, **kwargs):
-            s3_interface: S3Interface = S3Interface(self.s3_bucket, self.s3_object_key)
-            with gzip.GzipFile(fileobj=s3_interface.full_name.get()["Body"], mode="r") as gzipfile:
-                for line in gzipfile:
-                    func(self, line, *args, **kwargs)
-        return text_parser
-
-
-def get_groups(seq, group_by):
-    data = []
-    for line in seq:
-        # Here the `startswith()` logic can be replaced with other
-        # condition(s) depending on the requirement.
-        if line.startswith(group_by):
-            if data:
-                yield data
-                data = []
-        data.append(line)
-
-    if data:
-        yield data
-
-
-
-
+    def import_record(cls, n_lines):
+        def import_record_inner(func):
+            @functools.wraps(func)
+            def text_parser(self, *args, **kwargs):
+                s3_interface: S3Interface = S3Interface(self.s3_bucket, self.s3_object_key)
+                with gzip.GzipFile(fileobj=s3_interface.full_name.get()["Body"], mode="r") as gzipfile:
+                    data = []
+                    counter = 0
+                    for line in gzipfile:
+                        line_decoded = line.decode('utf-8')
+                        if counter >= n_lines:
+                            yield func(data, *args, **kwargs)
+                            data = []
+                            counter = 0
+                        data.append(line_decoded.strip())
+                        counter += 1
+                    if data:
+                        yield func(data, *args, **kwargs)
+            return text_parser
+        return import_record_inner
 
 
 class FastqFile(SeqFile):
@@ -57,8 +50,8 @@ class FastqFile(SeqFile):
         if qc_scale not in ["phred", "solexa"]:
             raise ValueError("FastqFile(): Illegal quality scale")
 
-    @SeqFile.import_record
-    def import_record_fastq(self, line):
+    @SeqFile.import_record(4)   # FASTQ file - 4 lines per block
+    def _import_record_fastq(self):
         '''
         :return: read_block
         '''
@@ -67,7 +60,7 @@ class FastqFile(SeqFile):
 
 
     def read_record_block(self, ):
-        self.read_records: List[FQRecord] = [import_record_fastq(x) for x in SOME_ITERATOR]
+        self.read_records: List[FQRecord] = [self._import_record_fastq(x) for x in SOME_ITERATOR]
 
 
 
@@ -110,16 +103,18 @@ def get_groups(seq, n_lines):
     data = []
     counter = 0
     for line in seq:
+        line_decoded = line.decode('utf-8')
         # Here the `startswith()` logic can be replaced with other
         # condition(s) depending on the requirement.
         if counter >= n_lines:
             yield data
             data = []
-        data.append(line.strip())
+            counter = 0
+        data.append(line_decoded.strip())
         counter += 1
     if data:
         yield data
 
+gen = list()
 with gzip.GzipFile(samp, mode="r") as gzipfile:
-    for line in gzipfile:
-        get_groups(line.decode('utf-8'), 4)
+    gen.extend(get_groups(gzipfile, 4))
