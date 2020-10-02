@@ -47,7 +47,7 @@ class FastqFile(SeqFile):
             raise ValueError("FastqFile(): Illegal quality scale")
 
     @SeqFile.import_record(4)   # FASTQ file - 4 lines per block
-    def import_record_fastq(self, data):
+    def import_record_fastq(self, data) -> None:
         self.read_records: List[FQRecord] = list(FQAdtAtac.parse_adt_atac(read_block=data, read_start="TODO", read_end="TODO")) # TODO: map specific read/tech to the subclass
 
 

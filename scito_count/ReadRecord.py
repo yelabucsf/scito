@@ -19,11 +19,11 @@ class FQRecord(ReadRecord):
     __slots__ = "quality_score"
 
     @classmethod
-    def parse_read_block(cls, func_of_technology):
+    def parse_read_block(cls, func_of_technology) -> None:
         @functools.wraps(func_of_technology)
         def parse_read_block_wrapper(self, read_block, *args, **kwargs):
             self.read_id: str = read_block[0]
-            read_features: Tuple[str] = func_of_technology(read_block, *args, **kwargs)
+            read_features: Tuple[str] = func_of_technology(self, read_block, *args, **kwargs)
             self.seq: str = read_features[0]
             self.quality_score: str = read_features[1]
 
@@ -39,7 +39,7 @@ class FQAdtAtac(FQRecord):
     def __init__(self):
         pass
     @FQRecord.parse_read_block
-    def parse_adt_atac(self, read_block, read_start, read_end):
+    def parse_adt_atac(self, read_block: List[str], read_start: int, read_end: int) -> Tuple[str, str]:
         '''
         :param read_start: Int. Start position of the read. Depends on the technology
         :param read_end: Int. End position of the read. Depends on the technology
