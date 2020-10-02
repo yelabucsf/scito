@@ -6,7 +6,7 @@ from typing import List
 
 class SeqFile(object):
     __slots__ = "read_records", "s3_bucket", "s3_object_key", "technology", "read_type", "n_reads"
-    def __init__(self, s3_bucket, s3_object_key):
+    def __init__(self, s3_bucket, s3_object_key, config_file):
         self.s3_bucket: str = s3_bucket
         self.s3_object_key = s3_object_key
         if self.s3_object_key.split(".")[-1] not in ["gz", "gzip"]:
@@ -22,7 +22,7 @@ class SeqFile(object):
             @functools.wraps(func)
             def text_parser(self, *args, **kwargs):
                 s3_interface: S3Interface = S3Interface(self.s3_bucket, self.s3_object_key)
-                with gzip.GzipFile(fileobj=s3_interface.full_name.get()["Body"], mode="r") as gzipfile:
+                with gzip.GzipFile(fileobj=s3_interface.s3_obj.get()["Body"], mode="r") as gzipfile:
                     data: List[str] = []
                     counter = 0
                     for line in gzipfile:
@@ -64,65 +64,4 @@ if read_type not in allowed_read_types:
     raise ValueError("FQRecord(): unknown read type. Must be R1, R2 or R3")
 
 '''
-
-
-'''
-getsizeof()
-'''
-
-
-samp = "/Users/antonogorodnikov/Documents/Work/Python/scito/tests/count_test/mock_data/TESTX_H7YRLADXX_S1_L001_R1_001.fastq.gz"
-
-def get_groups(seq, n_lines):
-    data = []
-    counter = 0
-    for line in seq:
-        line_decoded = line.decode('utf-8')
-        # Here the `startswith()` logic can be replaced with other
-        # condition(s) depending on the requirement.
-        if counter >= n_lines:
-            yield data
-            data = []
-            counter = 0
-        data.append(line_decoded.strip())
-        counter += 1
-    if data:
-        yield data
-
-gen = list()
-with gzip.GzipFile(samp, mode="r") as gzipfile:
-    gen.extend(get_groups(gzipfile, 4))
-
-
-
-def import_record(n_lines):
-    def import_record_inner(func):
-        @functools.wraps(func)
-        def text_parser(*args, **kwargs):
-            with gzip.GzipFile(samp, mode="r") as gzipfile:
-                data: List[str] = []
-                counter = 0
-                for line in gzipfile:
-                    line_decoded = line.decode('utf-8')
-                    if counter >= n_lines:
-                        yield func(data, *args, **kwargs)
-                        data = []
-                        counter = 0
-                    data.append(line_decoded.strip())
-                    counter += 1
-                if data:
-                    yield func(data, *args, **kwargs)
-        return text_parser
-    return import_record_inner
-
-@import_record(4)   # FASTQ file - 4 lines per block
-def import_record_fastq(data):
-    gen = list()
-    id: str = data[0]
-    seq: str = data[1]
-    quality_score = data[3]
-    return [id, seq, quality_score]
-    #return gen
-
-kk = import_record_fastq()
 
