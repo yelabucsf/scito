@@ -1,12 +1,8 @@
-import os
-import boto3
-import re
 import gzip
-import functools
 
-from scito_count.ReadRecord import FQRecord
+from scito_count.ReadRecord import *
 from scito_count.S3Interface import S3Interface
-from typing import Dict, Generator, List, Optional, Tuple
+from typing import List
 
 class SeqFile(object):
     __slots__ = "read_records", "s3_bucket", "s3_object_key", "technology", "read_type", "n_reads"
@@ -52,12 +48,22 @@ class FastqFile(SeqFile):
 
     @SeqFile.import_record(4)   # FASTQ file - 4 lines per block
     def import_record_fastq(self, data):
-        self.read_records: List[FQRecord] = list(FQRecord(data))
+        self.read_records: List[FQRecord] = list(FQAdtAtac.parse_adt_atac(read_block=data, read_start="TODO", read_end="TODO")) # TODO: map specific read/tech to the subclass
 
 
 
 
 
+
+'''
+TODO 
+Read types somewhere
+
+allowed_read_types = ["R1", "R2", "R3"]
+if read_type not in allowed_read_types:
+    raise ValueError("FQRecord(): unknown read type. Must be R1, R2 or R3")
+
+'''
 
 
 '''
