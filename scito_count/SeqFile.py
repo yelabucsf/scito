@@ -6,17 +6,15 @@ from typing import List
 
 
 class SeqFile(object):
-    __slots__ = "read_records", "s3_bucket", "s3_object_key", "technology", "read_type", "n_reads"
+    __slots__ = "read_records", "s3_bucket", "s3_object_key", "technology", "n_reads", "profile"
 
-    def __init__(self, config_file: str, config_section: str):
-
-
-        self.s3_bucket: str =
-        self.s3_object_key = s3_object_key
+    def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings):
+        self.s3_bucket: str = s3_settings.bucket
+        self.s3_object_key: str = s3_settings.object_key
         if self.s3_object_key.split(".")[-1] not in ["gz", "gzip"]:
             raise ValueError("SeqFile(): object is not a gzip file")
-        self.technology: ReadSettings = technology
-        self.read_type: str = None
+        self.profile: str = s3_settings.profile
+        self.technology: ReadSettings = read_settings
         self.n_reads: str = None
         self.read_records: FQRecord = None
 
@@ -25,7 +23,7 @@ class SeqFile(object):
         def import_record_inner(func):
             @functools.wraps(func)
             def text_parser(self, *args, **kwargs):
-                s3_interface: S3Interface = S3Interface(self.s3_bucket, self.s3_object_key)
+                s3_interface: S3Interface = S3Interface(self.s3_bucket, self.s3_object_key, self.profile)
                 with gzip.GzipFile(fileobj=s3_interface.s3_obj.get()["Body"], mode="r") as gzipfile:
                     data: List[str] = []
                     counter = 0
