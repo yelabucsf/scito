@@ -1,17 +1,21 @@
 import gzip
-
 from scito_count.ReadRecord import *
 from scito_count.S3Interface import S3Interface
+from scito_count.ProcessSettings import *
 from typing import List
+
 
 class SeqFile(object):
     __slots__ = "read_records", "s3_bucket", "s3_object_key", "technology", "read_type", "n_reads"
-    def __init__(self, s3_bucket, s3_object_key, config_file):
-        self.s3_bucket: str = s3_bucket
+
+    def __init__(self, config_file: str, config_section: str):
+
+
+        self.s3_bucket: str =
         self.s3_object_key = s3_object_key
         if self.s3_object_key.split(".")[-1] not in ["gz", "gzip"]:
             raise ValueError("SeqFile(): object is not a gzip file")
-        self.technology: str = None
+        self.technology: ReadSettings = technology
         self.read_type: str = None
         self.n_reads: str = None
         self.read_records: FQRecord = None
@@ -35,7 +39,9 @@ class SeqFile(object):
                         counter += 1
                     if data:
                         yield func(data, *args, **kwargs)
+
             return text_parser
+
         return import_record_inner
 
 
@@ -46,22 +52,9 @@ class FastqFile(SeqFile):
         if qc_scale not in ["phred", "solexa"]:
             raise ValueError("FastqFile(): Illegal quality scale")
 
-    @SeqFile.import_record(4)   # FASTQ file - 4 lines per block
+    @SeqFile.import_record(4)  # FASTQ file - 4 lines per block
     def import_record_fastq(self, data) -> None:
-        self.read_records: List[FQRecord] = list(FQAdtAtac.parse_adt_atac(read_block=data, read_start="TODO", read_end="TODO")) # TODO: map specific read/tech to the subclass
-
-
-
-
-
-
-'''
-TODO 
-Read types somewhere
-
-allowed_read_types = ["R1", "R2", "R3"]
-if read_type not in allowed_read_types:
-    raise ValueError("FQRecord(): unknown read type. Must be R1, R2 or R3")
-
-'''
+        self.read_records: List[FQRecord] = list(FQAdtAtac.parse_adt_atac(read_block=data,
+                                                                          read_start=self.technology.start,
+                                                                          read_end=self.technology.end))
 
