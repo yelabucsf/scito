@@ -56,5 +56,4 @@ class FastqFile(SeqFile):
                                                                             read_start=self.technology.start,
                                                                             read_end=self.technology.end))
 
-        # Todo make class instantiation work with classmethod
 

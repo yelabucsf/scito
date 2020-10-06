@@ -23,9 +23,10 @@ class FQRecord(ReadRecord):
         @functools.wraps(func_of_technology)
         def parse_read_block_wrapper(self, read_block, *args, **kwargs):
             self.read_id: str = read_block[0]
-            read_features: Tuple[str] = func_of_technology(self, read_block, *args, **kwargs)
-            self.seq: str = read_features[0]
-            self.quality_score: str = read_features[1]
+            func_of_technology(self, read_block, *args, **kwargs)
+
+            #self.seq: str = read_features[0]
+            #self.quality_score: str = read_features[1]
 
             if not self.read_id.startswith("@"):
                 raise ValueError("FQRecord(): passed read is NOT in FASTQ format")
@@ -35,11 +36,9 @@ class FQRecord(ReadRecord):
 
 
 class FQAdtAtac(FQRecord):
-    def __init__(self):
-        pass
-
     @FQRecord.parse_read_block
-    def parse_adt_atac(self, read_block: List[str], read_start: int, read_end: int) -> Tuple[str, str]:
+    def __init__(self, read_block: List[str], read_start: int, read_end: int):
+
         '''
         :param read_start: Int. Start position of the read. Depends on the technology
         :param read_end: Int. End position of the read. Depends on the technology
@@ -48,4 +47,5 @@ class FQAdtAtac(FQRecord):
         quality_score = read_block[3][read_start: read_end]
         if len(seq) < read_end:
             raise ValueError("FQAdtAtacR1.parse_adt_atac_r1: encountered read is truncated. Aborting")
-        return seq, quality_score
+        self.seq = seq
+        self.quality_score = quality_score
