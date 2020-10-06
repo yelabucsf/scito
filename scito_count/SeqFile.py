@@ -44,15 +44,17 @@ class SeqFile(object):
 
 
 class FastqFile(SeqFile):
-    def __init__(self, qc_scale="phred"):
-        super().__init__(qc_scale)
+    def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, qc_scale="phred"):
+        super().__init__(s3_settings, read_settings)
         self.qc_scale = qc_scale
         if qc_scale not in ["phred", "solexa"]:
             raise ValueError("FastqFile(): Illegal quality scale")
 
     @SeqFile.import_record(4)  # FASTQ file - 4 lines per block
     def import_record_fastq(self, data) -> None:
-        self.read_records: List[FQRecord] = list(FQAdtAtac.parse_adt_atac(read_block=data,
-                                                                          read_start=self.technology.start,
-                                                                          read_end=self.technology.end))
+        self.read_records: List[FQRecord] = list(FQAdtAtac().parse_adt_atac(read_block=data,
+                                                                            read_start=self.technology.start,
+                                                                            read_end=self.technology.end))
+
+        # Todo make class instantiation work with classmethod
 

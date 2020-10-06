@@ -19,7 +19,7 @@ class FQRecord(ReadRecord):
     __slots__ = "quality_score"
 
     @classmethod
-    def parse_read_block(cls, func_of_technology) -> None:
+    def parse_read_block(cls, func_of_technology):
         @functools.wraps(func_of_technology)
         def parse_read_block_wrapper(self, read_block, *args, **kwargs):
             self.read_id: str = read_block[0]
@@ -31,13 +31,13 @@ class FQRecord(ReadRecord):
                 raise ValueError("FQRecord(): passed read is NOT in FASTQ format")
             if not re.match('^[ATGCN]+$', self.seq):
                 raise ValueError("FQRecord(): passed read is NOT a DNA sequence")
-
         return parse_read_block_wrapper
 
 
 class FQAdtAtac(FQRecord):
     def __init__(self):
         pass
+
     @FQRecord.parse_read_block
     def parse_adt_atac(self, read_block: List[str], read_start: int, read_end: int) -> Tuple[str, str]:
         '''
@@ -49,5 +49,3 @@ class FQAdtAtac(FQRecord):
         if len(seq) < read_end:
             raise ValueError("FQAdtAtacR1.parse_adt_atac_r1: encountered read is truncated. Aborting")
         return seq, quality_score
-
-
