@@ -24,10 +24,6 @@ class FQRecord(ReadRecord):
         def parse_read_block_wrapper(self, read_block, *args, **kwargs):
             self.read_id: str = read_block[0]
             func_of_technology(self, read_block, *args, **kwargs)
-
-            #self.seq: str = read_features[0]
-            #self.quality_score: str = read_features[1]
-
             if not self.read_id.startswith("@"):
                 raise ValueError("FQRecord(): passed read is NOT in FASTQ format")
             if not re.match('^[ATGCN]+$', self.seq):

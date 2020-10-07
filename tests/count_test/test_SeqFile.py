@@ -13,8 +13,7 @@ class TestSeqFile(TestCase):
         print(s3_set.__dict__, read_set.__dict__)
 
     def test_import_config(self):
-        self.assertEqual(self.seq_file.profile, "gvaihir")
-        self.assertEqual(self.seq_file.s3_bucket, "ucsf-genomics-prod-project-data")
+        self.assertEqual(self.seq_file.s3_interface.obj_size(), 9945950)
 
 
 
@@ -25,10 +24,11 @@ class TestFastqFile(TestCase):
     print(s3_set.__dict__, read_set.__dict__)
 
     def test_import_config(self):
-        self.assertEqual(self.fq_file.profile, "gvaihir")
-        self.assertEqual(self.fq_file.s3_bucket, "ucsf-genomics-prod-project-data")
+        self.assertEqual(self.fq_file.s3_interface.obj_size(), 9945950)
 
     def test_import_record_fastq(self):
         self.fq_file.import_record_fastq()
-        print(self.fq_file.read_records[0])
+        lol = next(self.fq_file.read_records)
+        self.assertEqual(lol.seq, "TCGTCGGCAG")
+        print("!!!!!{}".format(lol.seq))
 
