@@ -18,9 +18,9 @@ class TestSeqFile(TestCase):
 
 
 
-class TestFastqFile(TestCase):
+class TestFQFile(TestCase):
     def setUp(self) -> None:
-        self.fq_file = FastqFile(s3_settings=s3_set, read_settings=read_set, qc_scale="phred")
+        self.fq_file = FQFile(s3_settings=s3_set, read_settings=read_set, qc_scale="phred")
     print(s3_set.__dict__, read_set.__dict__)
 
     def test_import_config(self):

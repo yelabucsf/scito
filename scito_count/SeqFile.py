@@ -5,8 +5,13 @@ from scito_count.ProcessSettings import *
 from typing import List
 
 class SeqFile(object):
+    '''
+    Class containing all sequencing records of a file + meta data
+    :param s3_settings: S3Settings. Configuration for an S3 access. See ProcessSettings.py
+    :param read_settings: ReadSettings. Configuration for the read format. See ProcessSettings.py
+    :return SeqFile object
+    '''
     __slots__ = "read_records", "s3_interface", "technology", "n_reads"
-
     def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings):
         self.s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, s3_settings.profile)
         if s3_settings.object_key.split(".")[-1] not in ["gz", "gzip"]:
@@ -15,6 +20,11 @@ class SeqFile(object):
         self.n_reads: str = None
         self.read_records: FQRecord = None
 
+    '''
+    Classmethod to accept a method from subclass and process a set of lanes in input files
+    :param n_lines: int. Number of lanes in a block. E.g. fastq file has a 4-lane block
+    :return: Void. But writes a generator in self.read_records with ReadRecords as individual element. See ReadRecord.py
+    '''
 
     @classmethod
     def import_record(cls, n_lines):
@@ -39,9 +49,11 @@ class SeqFile(object):
 
         return import_record_inner
 
-
-
-class FastqFile(SeqFile):
+class FQFile(SeqFile):
+    '''
+    Subclass of SeqFile. Also contains:
+    :attr qc_scale: str. Format of quality score.
+    '''
     def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, qc_scale="phred"):
         super().__init__(s3_settings, read_settings)
         self.qc_scale = qc_scale
@@ -52,3 +64,4 @@ class FastqFile(SeqFile):
     @SeqFile.import_record(4)  # FASTQ file - 4 lines per block
     def import_record_fastq(self, data):
         return FQAdtAtac(read_block=data, read_start=int(self.technology.start), read_end=int(self.technology.end))
+
