@@ -12,6 +12,12 @@ read_set3 = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/te
                          "ATAC ADT R3")
 
 
+upl_test_s3 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
+                     "ATAC ADT R2 UPLOAD TEST")
+upl_test_read = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
+                         "ATAC ADT R2 UPLOAD TEST")
+
+
 
 
 class TestSeqExport(TestCase):
@@ -24,10 +30,17 @@ class TestSeqExport(TestCase):
         arranged_read2 = FQAdtAtacArranger((read2, read3))
         self.seq_export_arr_r2 = SeqExport(arranged_read2)
         self.seq_export_arr_r2.s3_upload(s3_set2)
-        self.assertEqual(1, 2 - 1)
+
+        uploaded_r2 = FQFile(s3_settings=upl_test_s3, read_settings=upl_test_read, qc_scale="phred")
+        uploaded_r2.import_record_fastq()
+        lol = next(uploaded_r2.read_records)
+        self.assertEqual(lol.seq, "TCGTCGGCAGCGTCAGACGAG")
+        self.assertTrue(issubclass(type(uploaded_r2), SeqFile))
+        self.assertFalse(issubclass(type(uploaded_r2), List))
+        print("!!!!!{}".format(lol.seq))
 
     def test_s3_upload_r3(self):
         read3 = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
         self.seq_export_r3 = SeqExport(read3)
         self.seq_export_r3.s3_upload(s3_set3)
-        self.assertEqual(1, 2 - 1)
+        self.assertEqual(1, 2 - 1)  # dummy test
