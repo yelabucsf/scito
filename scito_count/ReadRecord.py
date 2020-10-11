@@ -5,14 +5,17 @@ import functools
 
 class ReadRecord(object):
     __slots__ = "read_id", "seq"
-    """@classmethod
-    def parse_read_block(cls, func_of_filetype):
-        @functools.wraps(func_of_filetype)
-        def block_parser(self, *args, **kwargs):
-            parsed_features: Tuple[str] = func_of_filetype(*args, **kwargs)   # tuple of parsed features, specific to each subclass
-            return parsed_features
-        return block_parser
-"""
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def read_block_to_text(cls, func_of_read_type):
+        @functools.wraps(func_of_read_type)
+        def read_block_to_text_wrapper(self, *args, **kwargs):
+            export_block: str = "\n".join(func_of_read_type(self, *args, **kwargs))+"\n"
+            return export_block
+        return read_block_to_text_wrapper
 
 
 class FQRecord(ReadRecord):
@@ -30,6 +33,12 @@ class FQRecord(ReadRecord):
                 raise ValueError("FQRecord(): passed read is NOT a DNA sequence")
         return parse_read_block_wrapper
 
+    @ReadRecord.read_block_to_text
+    def fq_block_to_text(self):
+        block: List[str] = [self.read_id, self.seq, "+", self.quality_score]
+        return block
+
+
 
 class FQAdtAtac(FQRecord):
     @FQRecord.parse_read_block
@@ -42,6 +51,6 @@ class FQAdtAtac(FQRecord):
         seq = read_block[1][read_start: read_end]
         quality_score = read_block[3][read_start: read_end]
         if len(seq) < read_end:
-            raise ValueError("FQAdtAtacR1.parse_adt_atac_r1: encountered read is truncated. Aborting")
+            raise ValueError("FQAdtAtac(): encountered read is truncated. Aborting")
         self.seq = seq
         self.quality_score = quality_score

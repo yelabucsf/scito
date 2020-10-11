@@ -30,5 +30,7 @@ class TestFQFile(TestCase):
         self.fq_file.import_record_fastq()
         lol = next(self.fq_file.read_records)
         self.assertEqual(lol.seq, "TCGTCGGCAG")
+        self.assertTrue(issubclass(type(self.fq_file), SeqFile))
+        self.assertFalse(issubclass(type(self.fq_file), List))
         print("!!!!!{}".format(lol.seq))
 

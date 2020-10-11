@@ -11,5 +11,10 @@ class TestFQAdtAtac(TestCase):
         print("!!!!!{}".format([self.FQAdtAtac.seq, self.FQAdtAtac.quality_score]))
         self.assertEqual(self.FQAdtAtac.seq, "AGGACNATNTAACNCTANTNTCTANCTANTNC"[:16])
 
+    def test_read_block_to_text(self):
+        lol = self.FQAdtAtac.fq_block_to_text()
+        print(lol)
+        self.assertEqual(lol, "@identifier\nAGGACNATNTAACNCT\n+\nD:KGAPOJGPADOSJA\n")
+
 
 
