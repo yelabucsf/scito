@@ -1,5 +1,5 @@
 from unittest import TestCase
-from scito_count.S3Interface import S3Interface
+from scito_count.S3Interface import *
 
 
 class TestS3Interface(TestCase):
@@ -12,5 +12,7 @@ class TestS3Interface(TestCase):
         print(self.s3_interface.obj_size())
         self.assertEqual(self.s3_interface.obj_size(), 9945950)
 
-
-
+    def test_get_bytes(self):
+        lol = self.s3_interface.get_bytes_s3(2, 6)["Body"].read()
+        print(lol)
+        self.assertEqual(lol, b'\x08\x08s\x01i')

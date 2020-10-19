@@ -1,6 +1,10 @@
 from scito_count.SeqFile import *
 from scito_count.ReadRecord import *
 
+'''
+Class primarily for kallisto BUS test. Will be obsolete fi binary search works faster
+'''
+
 class ReadArranger(object):
     __slots__ = "reads"
 
