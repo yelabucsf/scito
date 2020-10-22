@@ -1,20 +1,15 @@
 import struct
-from typing import List, Tuple
-
 from scito_count.S3Interface import S3Interface
 from scito_count.ProcessSettings import *
 
 '''
-Class calculates offset for each BGZF block and 
+Class calculates offset for each BGZF block and output a generator with block boundaries (start, end)
 '''
 
 
 class BlockSplit(object):
-    __slots__ = "offset_list", "handle", "curr_offset", "s3_interface"
-
     def __init__(self, s3_settings: S3Settings):
         self.s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, s3_settings.profile)
-        self.offset_list: List[Tuple[int, int]] = None
         self.curr_offset: int = 0
 
     def _get_bgzf_block_size(self):
@@ -22,8 +17,8 @@ class BlockSplit(object):
         Method to scan each BGZF header to get size of the block
         :return: int. Block size
         '''
-        self.handle = self.s3_interface.get_bytes_s3(self.curr_offset, self.curr_offset + 64)
-        magic = self.handle.read(4)    # MAGIC 18 bytes of a single block header
+        self.handle = self.s3_interface.get_bytes_s3(self.curr_offset, self.curr_offset + 32)
+        magic = self.handle.read(4)    # MAGIC 4 bytes of a single block gzip ID
         if not magic:
             raise StopIteration
         _bgzf_magic = b"\x1f\x8b\x08\x04"

@@ -51,6 +51,6 @@ class FQAdtAtac(FQRecord):
         seq = read_block[1][read_start: read_end]
         quality_score = read_block[3][read_start: read_end]
         if len(seq) < read_end:
-            raise ValueError("FQAdtAtac(): encountered read is truncated. Aborting")
+            raise ValueError("FQAdtAtacSplit(): encountered read is truncated. Aborting")
         self.seq = seq
         self.quality_score = quality_score

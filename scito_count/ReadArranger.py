@@ -19,7 +19,7 @@ class FQAdtAtacArranger(ReadArranger):
     '''
     Class contains only read2 and read3 - per technology description. So FQAdtAtacArranger.reads[0] is "read2"
     and FQAdtAtacArranger.reads[1] is "read3"
-    :return generator.FQAdtAtac. read2 (Cell barcode 16nt) + 5nt of well barcode
+    :return generator.FQAdtAtacSplit. read2 (Cell barcode 16nt) + 5nt of well barcode
     '''
     def arrange(self):
         for read2, read3 in zip(self.reads[0].read_records, self.reads[1].read_records):
