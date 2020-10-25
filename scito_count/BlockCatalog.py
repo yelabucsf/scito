@@ -8,7 +8,7 @@ Class to parse BGZF file and split into multiple chunks and copy those chunks as
 '''
 
 
-class FileSplit(object):
+class BlockCatalog(object):
     __slots__ = "ranges", "block_split", "n_parts"
 
     def __init__(self, block_split: BlockSplit, n_parts: int):
@@ -17,7 +17,7 @@ class FileSplit(object):
         self.ranges = None
 
     @classmethod
-    def create_ranges(cls, func_of_technology):
+    def create_catalog(cls, func_of_technology):
         @functools.wraps(func_of_technology)
         def create_range_wrapper(self, *args, **kwargs):
             ranges = list(self.block_split)
@@ -25,14 +25,14 @@ class FileSplit(object):
             while len(ranges) < self.n_parts:
                 arr_temp = [func_of_technology(self, x, *args, **kwargs) for x in ranges]
                 ranges = functools.reduce(operator.iconcat, arr_temp, [])
-            self.ranges = ranges
-
+            self.ranges = [(x[0][0], x[-1][-1]) for x in ranges]
         return create_range_wrapper
 
 
-class FQAdtAtacSplit(FileSplit):
-    @FileSplit.create_ranges
-    def adt_atac_ranges(self, ranges, overlap):
+
+class FQAdtAtacCatalog(BlockCatalog):
+    @BlockCatalog.create_catalog
+    def adt_atac_catalog(self, ranges, overlap):
         ranges = np.array_split(ranges, 2)
         if overlap == 0:
             first_half = np.array(ranges[0])
