@@ -2,3 +2,4 @@
 /scripts/kallisto_index.sh
 /tests/garbage.py
 /tests/config_test.ini
+/scripts/

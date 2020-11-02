@@ -43,7 +43,7 @@ class FQRecord(ReadRecord):
 class FQAdtAtac(FQRecord):
     @FQRecord.parse_read_block
     def __init__(self, read_block: List[str], read_start: int, read_end: int):
-
+        super().__init__()
         '''
         :param read_start: Int. Start position of the read. Depends on the technology
         :param read_end: Int. End position of the read. Depends on the technology

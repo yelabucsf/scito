@@ -20,10 +20,12 @@ class SeqExport(object):
         else:
             raise TypeError("SeqExport(): Unknown file format")
 
-    def s3_upload(self, s3_settings: S3Settings):
+    def s3_upload(self, s3_settings: S3Settings, verbose=False):
         new_s3_key = "/".join([os.path.dirname(s3_settings.object_key),
                                "READY_"+os.path.basename(s3_settings.object_key)])
         s3_interface: S3Interface = S3Interface(s3_settings.bucket, new_s3_key, s3_settings.profile)
+        if verbose:
+            print("Starting upload to {s3_settings.object_key}")
         para_file = BytesIO()
         with gzip.GzipFile(fileobj=para_file, mode='wb') as gz:
             for read_block in self.reads_to_export:
