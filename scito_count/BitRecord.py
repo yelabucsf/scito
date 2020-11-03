@@ -1,5 +1,6 @@
 from typing import List, Tuple
 import functools
+import struct
 from scito_count.ReadRecord import *
 
 
@@ -7,28 +8,45 @@ class BitRecord(object):
     def __init__(self):
         pass
 
-    def get_seq_fragment(self, read_record, start: int=0 , seq_length: int=0):
+    def get_seq_fragment(self, read_record, start: int=0 , seq_length: int=0) -> str:
         '''
         extracts read string
         :param read_record: ReadRecord
         '''
-        seq = read_record.seq
+        seq: str = read_record.seq
         if seq_length == 0:
             seq_length = len(seq)
         return seq[start: start + seq_length]
 
-    def bit_seq(self):
-        pass
-        # TODO implement in case decide to skip BUS Tools
+    def dna_to_twobit(self, dna: str) -> int:
+        x = 0
+        for nt in dna:
+            if nt == "A":
+                x += 0
+            elif nt == "C":
+                x += 1
+            elif nt == "G":
+                x += 2
+            elif nt == "T":
+                x += 3
+            x <<= 2
+        x >>= 2
+        return x
 
+    # TODO implement smaller BUS (sBUS) when we want to skip bustools
+    # TODO Encode into smaller uint
+    def sbus_encode(self):
+        pass
 
 class BUSRecord(BitRecord):
-    __slots__ = "bc", "umi", "seq"
     @classmethod
     def construct_bus(cls, func_of_technology):
         @functools.wraps(func_of_technology)
         def construct_bus_wrapper(self, *args, **kwargs):
-            func_of_technology(self, *args, **kwargs)
+            int_bc, int_umi, int_seq = func_of_technology(self, *args, **kwargs)
+            flag = 0 # TODO include some additional info like technology or smth
+            byte_string = struct.pack('<QQLLLL', int_bc, int_umi, int_seq, 1, flag, 0)
+            return byte_string
         return construct_bus_wrapper
 
 
@@ -42,11 +60,12 @@ class AdtAtacBus(BUSRecord):
         Reads are already arranged and trimmed
         '''
         # TODO refactor this piece
+        bc = self.get_seq_fragment(reads[0],0 ,0)
+        umi = self.get_seq_fragment(reads[1], 10, 18)
+        seq = self.get_seq_fragment(reads[1], 0, 5)
 
-        self.bc = self.get_seq_fragment(reads[0],0 ,0)
-        self.umi = self.get_seq_fragment(reads[1], 10, 18)
-        self.seq = self.get_seq_fragment(reads[1], 0, 5)
-        return self
+        int_bc, int_umi, int_seq = [self.dna_to_twobit(x) for x in (bc, umi, seq)]
+        return int_bc, int_umi, int_seq
 
 
 
