@@ -1,4 +1,3 @@
-from typing import List, Tuple
 import functools
 import struct
 from scito_count.ReadRecord import *
