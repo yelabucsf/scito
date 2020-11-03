@@ -4,7 +4,7 @@ import numpy as np
 from scito_count.BlockSplit import *
 
 '''
-Class to parse BGZF file and split into multiple chunks and copy those chunks as byte ranges from one s3 object to multiple
+Class to create a catalog of byte ranges to split files, based on all detected BGZF blocks from BlockSplit
 '''
 
 

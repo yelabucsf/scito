@@ -6,13 +6,13 @@ Class primarily for kallisto BUS test. Will be obsolete fi binary search works f
 '''
 
 class ReadArranger(object):
-    __slots__ = "reads"
+    __slots__ = "seq_files"
 
-    def __init__(self, reads):
+    def __init__(self, seq_files):
         '''
-        :param reads: Tuple[SeqFile]. Contains tuple of SeqFiles in the order R1, R2, R3 if applicable
+        :param seq_files: Tuple[SeqFile]. Contains tuple of SeqFiles in the order R1, R2, R3 if applicable
         '''
-        self.reads: Tuple[SeqFile] = reads
+        self.reads: Tuple[SeqFile] = seq_files
 
 
 class FQAdtAtacArranger(ReadArranger):
