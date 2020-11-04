@@ -48,9 +48,10 @@ class FQAdtAtac(FQRecord):
         :param read_start: Int. Start position of the read. Depends on the technology
         :param read_end: Int. End position of the read. Depends on the technology
         '''
+        if len(read_block[1]) < read_end:
+            raise ValueError("FQAdtAtacSplit(): encountered read is truncated. Aborting")
         seq = read_block[1][read_start: read_end]
         quality_score = read_block[3][read_start: read_end]
-        if len(seq) < read_end:
-            raise ValueError("FQAdtAtacSplit(): encountered read is truncated. Aborting")
+
         self.seq = seq
         self.quality_score = quality_score

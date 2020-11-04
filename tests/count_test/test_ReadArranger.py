@@ -4,28 +4,17 @@ from scito_count.SeqFile import *
 
 
 
-class TestFQAdtAtacArranger(TestCase):
+class TestFQArrangerAdtAtac(TestCase):
     def setUp(self) -> None:
-
-        s3_set2 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                             "ATAC ADT R2")
-        read_set2 = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                                 "ATAC ADT R2")
-
-
-        s3_set3 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                             "ATAC ADT R3")
-        read_set3 = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                                 "ATAC ADT R3")
-        read2 = FQFile(s3_settings=s3_set2, read_settings=read_set2, qc_scale="phred")
-        read3 = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
-        self.test_read_arranger = FQAdtAtacArranger((read2, read3))
-
-
+        read_block1 = ["@identifier", "AGGACNATNTAACNCTANTNTCTANCTANTNC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
+        read_block2 = ["@identifier", "AGGACNATNTAACNCTANTNTCTANCTANTNC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
+        read_record1 = FQAdtAtac(read_block=read_block1, read_start=0, read_end=16)
+        read_record2 = FQAdtAtac(read_block=read_block2, read_start=3, read_end=21)
+        self.fq_arranger_adt_atac = FQArrangerAdtAtac((read_record1, read_record2))
 
     def test_arrange(self):
-        lol = next(self.test_read_arranger.arrange())
+        lol = self.fq_arranger_adt_atac.arrange()
         print(lol.seq, lol.read_id, lol.quality_score)
-        self.assertEqual(lol.seq, "TCGTCGGCAGCGTCAGACGAG")
-        self.assertEqual(lol.quality_score, "FFFFFFFFFFFFFFFFFFFFF")
+        self.assertEqual(lol.seq, "AGGACNATNTAACNCTNTAAC")
+        self.assertEqual(lol.quality_score, "D:KGAPOJGPADOSJAGPADO")
 

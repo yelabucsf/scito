@@ -15,8 +15,8 @@ class SeqExport(object):
         '''
         if issubclass(type(reads_object), SeqFile):
             self.reads_to_export = reads_object.read_records
-        elif issubclass(type(reads_object), ReadArranger):
-            self.reads_to_export = reads_object.arrange()
+       # elif issubclass(type(reads_object), ReadArranger): # TODO refactor for SeqArranger
+       #     self.reads_to_export = reads_object.arrange()
         else:
             raise TypeError("SeqExport(): Unknown file format")
 

@@ -27,7 +27,7 @@ class TestSeqExport(TestCase):
     def test_s3_upload_r2(self):
         read2 = FQFile(s3_settings=s3_set2, read_settings=read_set2, qc_scale="phred")
         read3 = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
-        arranged_read2 = FQAdtAtacArranger((read2, read3))
+        arranged_read2 = FQArrangerAdtAtac((read2, read3))
         self.seq_export_arr_r2 = SeqExport(arranged_read2)
         self.seq_export_arr_r2.s3_upload(s3_set2)
 
