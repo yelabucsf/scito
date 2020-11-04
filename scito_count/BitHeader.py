@@ -22,7 +22,7 @@ class BUSHeader(BitHeader):
             return header
         return output_header_wrapper
 
-class AdtAtacBusHeader(BUSHeader):
+class BUSHeaderAdtAtac(BUSHeader):
     def __init__(self):
         super().__init__()
         self.bc_len = struct.pack('<L', 21)

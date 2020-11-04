@@ -49,7 +49,7 @@ class BUSRecord(BitRecord):
         return construct_bus_wrapper
 
 
-class AdtAtacBus(BUSRecord):
+class BUSAdtAtac(BUSRecord):
     @BUSRecord.construct_bus
     def construct_record(self, reads):
         '''

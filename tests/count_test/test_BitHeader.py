@@ -4,7 +4,7 @@ from scito_count.BitHeader import *
 
 class TestAdtAtacBusHeader(TestCase):
     def setUp(self) -> None:
-        self.adt_atac_bus_header = AdtAtacBusHeader()
+        self.adt_atac_bus_header = BUSHeaderAdtAtac()
 
     def test_output_adt_atac_header(self):
         header = self.adt_atac_bus_header.output_adt_atac_header()
