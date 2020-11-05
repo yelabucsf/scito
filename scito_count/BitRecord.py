@@ -33,7 +33,6 @@ class BitRecord(object):
         return x
 
     # TODO implement smaller BUS (sBUS) when we want to skip bustools
-    # TODO Encode into smaller uint
     def sbus_encode(self):
         pass
 

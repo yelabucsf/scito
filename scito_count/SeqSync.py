@@ -33,7 +33,7 @@ class FQSyncTwoReads(FQSync):
     '''
     This class for tech with 2 reads only.
     '''
-    # TODO For now it looses the first synced read which is no big dial. Refactor to keep it???
+    # TODO For now it looses the first synced read which is no big deal. Refactor to keep it???
     @FQSync.sync
     def two_read_sync(self):
         counter = 0
