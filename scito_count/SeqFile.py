@@ -63,5 +63,5 @@ class FQFile(SeqFile):
 
     @SeqFile.import_record(4)  # FASTQ file - 4 lines per block
     def import_record_fastq(self, data):
-        return FQAdtAtac(read_block=data, read_start=int(self.technology.start), read_end=int(self.technology.end))
+        return FQRecordAdtAtac(read_block=data, read_start=int(self.technology.start), read_end=int(self.technology.end))
 

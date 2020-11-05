@@ -40,7 +40,7 @@ class FQRecord(ReadRecord):
 
 
 
-class FQAdtAtac(FQRecord):
+class FQRecordAdtAtac(FQRecord):
     @FQRecord.parse_read_block
     def __init__(self, read_block: List[str], read_start: int, read_end: int):
         super().__init__()

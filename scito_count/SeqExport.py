@@ -1,5 +1,5 @@
 from scito_count.SeqFile import *
-from scito_count.ReadArranger import *
+from scito_count.SeqArranger import *
 from scito_count.ProcessSettings import *
 from scito_count.S3Interface import S3Interface
 from io import BytesIO
@@ -15,8 +15,8 @@ class SeqExport(object):
         '''
         if issubclass(type(reads_object), SeqFile):
             self.reads_to_export = reads_object.read_records
-       # elif issubclass(type(reads_object), ReadArranger): # TODO refactor for SeqArranger
-       #     self.reads_to_export = reads_object.arrange()
+        elif issubclass(type(reads_object), SeqArranger): #
+            self.reads_to_export = reads_object.arrange_sequences()
         else:
             raise TypeError("SeqExport(): Unknown file format")
 

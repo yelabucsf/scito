@@ -16,7 +16,7 @@ class ReadArranger(object):
         self.read_records = read_records
 
 
-class FQArrangerAdtAtac(ReadArranger):
+class FQReadArrangerAdtAtac(ReadArranger):
     '''
     Class contains only read2 and read3 - per technology description. self.read_records[0] is read2, self.read_records[1]
     is read3
@@ -31,7 +31,7 @@ class FQArrangerAdtAtac(ReadArranger):
 
         read2_block = [read2.read_id, read2.seq + read3.seq[5:10], "+", # magic number
                        read2.quality_score + read3.quality_score[5:10]] # magic number
-        fixed_read2 = FQAdtAtac(read_block=read2_block, read_start=0, read_end=len(read2_block[1]))
+        fixed_read2 = FQRecordAdtAtac(read_block=read2_block, read_start=0, read_end=len(read2_block[1]))
 
         return fixed_read2
 

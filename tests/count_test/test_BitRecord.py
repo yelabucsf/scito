@@ -1,13 +1,13 @@
 from unittest import TestCase
 import struct
-from scito_count.BitRecord import BitRecord, BUSAdtAtac
-from scito_count.ReadRecord import FQAdtAtac
+from scito_count.BitRecord import BitRecord, BUSRecordAdtAtac
+from scito_count.ReadRecord import FQRecordAdtAtac
 
 read_block1 = ["@identifier", "AGGACAATATAACACTAATATCTAACTAATAC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
-read1 = FQAdtAtac(read_block=read_block1, read_start=0, read_end=16)
+read1 = FQRecordAdtAtac(read_block=read_block1, read_start=0, read_end=16)
 
 read_block2 = ["@identifier", "AGGACAATATAACACTAATATCTAACTAATAC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
-read2 = FQAdtAtac(read_block=read_block2, read_start=0, read_end=18)
+read2 = FQRecordAdtAtac(read_block=read_block2, read_start=0, read_end=18)
 
 class TestBitRecord(TestCase):
     def setUp(self) -> None:
@@ -22,7 +22,7 @@ class TestBitRecord(TestCase):
 
 class TestAdtAtacBus(TestCase):
     def setUp(self) -> None:
-        self.test_adt_atac_bus = BUSAdtAtac()
+        self.test_adt_atac_bus = BUSRecordAdtAtac()
 
     def test_adt_atac_bus_callable(self):
         lol = self.test_adt_atac_bus.construct_record((read1, read2))
