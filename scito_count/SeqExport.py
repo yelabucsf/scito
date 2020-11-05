@@ -1,4 +1,3 @@
-from scito_count.SeqFile import *
 from scito_count.SeqArranger import *
 from scito_count.ProcessSettings import *
 from scito_count.S3Interface import S3Interface
