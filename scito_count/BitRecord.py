@@ -13,6 +13,8 @@ class BitRecord(object):
         :param read_record: ReadRecord
         '''
         seq: str = read_record.seq
+        if seq_length > len(read_record.seq):
+            raise ValueError(f"BitRecord.get_seq_fragment(): sequence {read_record.read_id} is truncated. Aborting!")
         if seq_length == 0:
             seq_length = len(seq)
         return seq[start: start + seq_length]

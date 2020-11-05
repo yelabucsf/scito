@@ -13,9 +13,10 @@ class SeqSync(object):
     def __init__(self, seq_files, ground_truth):
         self.seq_files = seq_files
         self.ground_truth = ground_truth
+        self.is_synched = False
         if ground_truth not in seq_files.keys():
-            raise KeyError("SeqSync(): dictionary key for ground_truth is not found in provided seq_files dictionary."
-                           "Current dictionary contains {seq_files.keys()}")
+            raise KeyError(f"SeqSync(): dictionary key for ground_truth is not found in provided seq_files dictionary."
+                           f"Current dictionary contains {seq_files.keys()}")
         ground_truth_record = next(self.seq_files[ground_truth].read_records)
         self.ground_truth_id = ground_truth_record.read_id.split(" ")[0]
 
@@ -25,6 +26,7 @@ class FQSync(SeqSync):
         @functools.wraps(func_of_technology)
         def sync_wrapper(self, *args, **kwargs):
             func_of_technology(self, *args, **kwargs)
+            self.is_synched = True  # Checkup for class calls
             return self.seq_files
         return sync_wrapper
 

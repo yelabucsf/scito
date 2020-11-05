@@ -24,6 +24,7 @@ class TestFQSyncTwoReads(TestCase):
     def test_two_read_NOSYNC(self):
         lol2 = next(self.sync_two_reads.seq_files["read2"].read_records)
         lol3 = next(self.sync_two_reads.seq_files["read3"].read_records)
+        self.assertFalse(self.sync_two_reads.is_synched)
         self.assertNotEqual(lol2.read_id, lol3.read_id)
 
 
@@ -32,4 +33,5 @@ class TestFQSyncTwoReads(TestCase):
         self.sync_two_reads.two_read_sync()
         lol2 = next(self.sync_two_reads.seq_files["read2"].read_records)
         lol3 = next(self.sync_two_reads.seq_files["read3"].read_records)
+        self.assertTrue(self.sync_two_reads.is_synched)
         self.assertEqual(lol2.read_id, lol3.read_id)

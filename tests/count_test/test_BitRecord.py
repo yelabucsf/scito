@@ -26,4 +26,4 @@ class TestAdtAtacBus(TestCase):
 
     def test_adt_atac_bus_callable(self):
         lol = self.test_adt_atac_bus.construct_record((read1, read2))
-        self.assertEqual(struct.unpack("<Q", lol[8:16])[0], 1136)
+
