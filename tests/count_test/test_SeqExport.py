@@ -23,7 +23,7 @@ upl_test_read = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scit
 
 
 
-class TestSeqExport(TestCase):
+class TestFQExport(TestCase):
     def setUp(self) -> None:
         pass
 
@@ -35,8 +35,8 @@ class TestSeqExport(TestCase):
         self.sync_two_reads = FQSyncTwoReads(dict_reads, 'read2')
         self.sync_two_reads.two_read_sync()
         self.fq_seq_arranger_adt_atac = FQSeqArrangerAdtAtac(self.sync_two_reads)
-        self.seq_export_arr_r2 = SeqExport(self.fq_seq_arranger_adt_atac)
-        self.seq_export_arr_r2.s3_upload(s3_set2)
+        self.seq_export_arr_r2 = FQExport(self.fq_seq_arranger_adt_atac)
+        self.seq_export_arr_r2.fq_s3_upload(s3_settings=s3_set2)
 
         uploaded_r2 = FQFile(s3_settings=upl_test_s3, read_settings=upl_test_read, qc_scale="phred")
         uploaded_r2.import_record_fastq()
@@ -48,6 +48,6 @@ class TestSeqExport(TestCase):
 
     def test_s3_upload_r3(self):
         read3 = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
-        self.seq_export_r3 = SeqExport(read3)
-        self.seq_export_r3.s3_upload(s3_set3)
+        self.seq_export_r3 = FQExport(read3)
+        self.seq_export_r3.fq_s3_upload(s3_settings=s3_set3)
         self.assertEqual(1, 2 - 1)  # dummy test
