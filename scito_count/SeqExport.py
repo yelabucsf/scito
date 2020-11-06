@@ -37,7 +37,8 @@ class SeqExport(object):
                     para_file,
                     {'ContentType': str(type(self.reads_to_export)), 'ContentEncoding': encoding,
                      'ServerSideEncryption': 'aws:kms', 'SSEKMSKeyId': 'alias/managed-s3-key'})
-
+                if not para_file.closed:
+                    para_file.close()
 
             return s3_upload_wrapper
         return s3_upload_inner
@@ -59,10 +60,9 @@ class BUSExport(SeqExport):
 
     @SeqExport.s3_upload(file_type='BUS', encoding='bus')
     def bus_s3_upload(self, s3_settings, para_file):
-        with para_file as f:
-            f.write(self.header)
-            for read_block in self.reads_to_export:
-                f.write(read_block)
+        para_file.write(self.header)
+        for read_block in self.reads_to_export:
+            para_file.write(read_block)
 
 
 

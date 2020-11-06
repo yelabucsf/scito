@@ -53,4 +53,17 @@ class TestFQExport(TestCase):
         self.assertEqual(1, 2 - 1)  # dummy test
 
 
-    #def test_bus_s3_upload(self):
+    def test_bus_s3_upload(self):
+        read2 = FQFile(s3_settings=s3_set2, read_settings=read_set2, qc_scale="phred")
+        read3 = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
+        dict_reads = {"read2": read2,
+                      "read3": read3}
+        self.sync_two_reads = FQSyncTwoReads(dict_reads, 'read2')
+        self.sync_two_reads.two_read_sync()
+        self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
+        self.bus_file_adt_atac.bus_file_stream_adt_atac()
+        self.adt_atac_bus_header = BUSHeaderAdtAtac()
+        header = self.adt_atac_bus_header.output_adt_atac_header()
+        to_export = BUSExport(reads_object=self.bus_file_adt_atac, header=header)
+        to_export.bus_s3_upload(s3_settings=s3_set3)
+        self.assertEqual(1, 2 - 1)  # dummy test

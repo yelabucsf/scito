@@ -60,7 +60,7 @@ class BUSRecordAdtAtac(BUSRecord):
         Reads are already arranged and trimmed
         '''
         # TODO refactor this piece
-        bc = self.get_seq_fragment(reads[0],0 ,0)
+        bc = self.get_seq_fragment(reads[0], 0, 21)
         umi = self.get_seq_fragment(reads[1], 10, 18)
         seq = self.get_seq_fragment(reads[1], 0, 5)
 

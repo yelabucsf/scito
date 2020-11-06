@@ -10,7 +10,7 @@ class BUSHeader(BitHeader):
     def __init__(self):
         super().__init__()
         self.magic = b'BUS\0'
-        self.version = b'gvai'  # proprietary version for sito-seq
+        self.version = struct.pack('<L', 1)
 
     @classmethod
     def output_header(cls, func_of_technology):
