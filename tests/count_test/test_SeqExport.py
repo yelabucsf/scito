@@ -51,3 +51,6 @@ class TestFQExport(TestCase):
         self.seq_export_r3 = FQExport(read3)
         self.seq_export_r3.fq_s3_upload(s3_settings=s3_set3)
         self.assertEqual(1, 2 - 1)  # dummy test
+
+
+    #def test_bus_s3_upload(self):

@@ -13,12 +13,6 @@ s3_set3 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/
 read_set3 = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
                          "ATAC ADT R3")
 
-ground = FQFile(s3_settings=s3_set2, read_settings=read_set2)
-async_file = FQFile(s3_settings=s3_set3, read_settings=read_set3)
-dict_reads = {"read2": ground,
-              "read3": async_file}
-sync_two_reads = FQSyncTwoReads(dict_reads, 'read2')
-sync_two_reads.two_read_sync()
 
 class TestBUSFileAdtAtac(TestCase):
     def setUp(self) -> None:
