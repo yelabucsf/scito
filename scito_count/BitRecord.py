@@ -1,5 +1,6 @@
 import functools
 import struct
+import numpy as np
 from scito_count.ReadRecord import *
 
 
@@ -30,6 +31,8 @@ class BitRecord(object):
                 x += 2
             elif nt == "T":
                 x += 3
+            else:
+                x += np.random.choice([0,1,2,3])
             x <<= 2
         x >>= 2
         return x
