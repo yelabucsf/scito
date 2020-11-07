@@ -3,10 +3,10 @@ import struct
 from scito_count.BitRecord import BitRecord, BUSRecordAdtAtac
 from scito_count.ReadRecord import FQRecordAdtAtac
 
-read_block1 = ["@identifier", "AGGACAATATAACACTAATATCTAACTAATAC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
-read1 = FQRecordAdtAtac(read_block=read_block1, read_start=0, read_end=16)
+read_block1 = ["@identifier", "AGGACNATATAACACTAATATCTAACTAATAC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
+read1 = FQRecordAdtAtac(read_block=read_block1, read_start=0, read_end=21)
 
-read_block2 = ["@identifier", "AGGACAATATAACACTAATATCTAACTAATAC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
+read_block2 = ["@identifier", "AGGACAATATNACACTAATATCTAACTAATAC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
 read2 = FQRecordAdtAtac(read_block=read_block2, read_start=0, read_end=18)
 
 class TestBitRecord(TestCase):
@@ -16,8 +16,8 @@ class TestBitRecord(TestCase):
     def test_get_seq_fragment(self):
         seq_1 = self.test_bin_record.get_seq_fragment(read1, 0,0)
         seq_2 = self.test_bin_record.get_seq_fragment(read2, 6, 10)
-        self.assertEqual(seq_1, "AGGACAATATAACACT")
-        self.assertEqual(seq_2, "ATATAACACT")
+        self.assertEqual(seq_1, "AGGACNATATAACACT")
+        self.assertEqual(seq_2, "ATATNACACT")
 
 
 class TestAdtAtacBus(TestCase):
