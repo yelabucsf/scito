@@ -7,11 +7,15 @@ class SeqArranger(object):
     :param seq_sync: SeqSync. Synced generators of multiple reads to be arranged
     :returns: generator of ReadRecords
     '''
-    __slots__ = "seq_sync"
+    __slots__ = 'seq_sync', 'read_records'
     def __init__(self, seq_sync: SeqSync):
         self.seq_sync = seq_sync
 
 class FQSeqArrangerAdtAtac(SeqArranger):
+    def __init__(self, seq_sync):
+        super().__init__(seq_sync)
+        self.read_records = self.arrange_sequences()
+
     def arrange_sequences(self):
         # checking consistency of seq_files dictionary
         supplied_names = self.seq_sync.seq_files.keys()

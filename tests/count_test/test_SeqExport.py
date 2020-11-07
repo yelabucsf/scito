@@ -54,7 +54,7 @@ class TestFQExport(TestCase):
 
 
     def test_bus_s3_upload(self):
-        read2 = FQFile(s3_settings=s3_set2, read_settings=read_set2, qc_scale="phred")
+        read2 = FQFile(s3_settings=upl_test_s3, read_settings=upl_test_read, qc_scale="phred")
         read3 = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
         dict_reads = {"read2": read2,
                       "read3": read3}

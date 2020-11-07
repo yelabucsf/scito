@@ -13,10 +13,8 @@ class SeqExport(object):
         :param reads_object: generator.ReadRecord. Accepts SeqFile or generator.ReadArranger.
         If SeqFile - keeps only attribute read_records. If ReadArranger - keeps entire object. Both resolve to ReadRecord's
         '''
-        if issubclass(type(reads_object), SeqFile):
+        if issubclass(type(reads_object), (SeqFile, SeqArranger)):
             self.reads_to_export = reads_object.read_records
-        elif issubclass(type(reads_object), SeqArranger):
-            self.reads_to_export = reads_object.arrange_sequences()
         elif issubclass(type(reads_object), BitFile):
             self.reads_to_export = reads_object.bit_records
         else:

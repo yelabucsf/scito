@@ -22,7 +22,7 @@ class TestFQSeqArrangerAdtAtac(TestCase):
         self.fq_seq_arranger_adt_atac = FQSeqArrangerAdtAtac(self.sync_two_reads)
 
     def test_arrange_sequences(self):
-        lol = self.fq_seq_arranger_adt_atac.arrange_sequences()
+        lol = self.fq_seq_arranger_adt_atac.read_records
         test_lol = next(lol)
         self.assertEqual(test_lol.read_id, '@A00351:376:HC5C3DSXY:3:2412:16721:32800 2:N:0:CACGAGAA')
         self.assertEqual(test_lol.seq, 'TCGTCGGCAGGGCAG')
