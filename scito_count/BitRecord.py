@@ -2,7 +2,7 @@ import functools
 import struct
 import numpy as np
 from scito_count.ReadRecord import *
-
+from numba import jit
 
 class BitRecord(object):
     def __init__(self):
@@ -20,6 +20,7 @@ class BitRecord(object):
             seq_length = len(seq)
         return seq[start: start + seq_length]
 
+    @jit
     def dna_to_twobit(self, dna: str) -> int:
         x = 0
         for nt in dna:
