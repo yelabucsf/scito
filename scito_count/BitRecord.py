@@ -3,6 +3,7 @@ import struct
 import numpy as np
 from scito_count.ReadRecord import *
 from numba import jit
+
 @jit(nopython=True)
 def dna_to_twobit(dna: str) -> int:
     x: int = 0
@@ -70,7 +71,7 @@ class BUSRecordAdtAtac(BUSRecord):
         umi = self.get_seq_fragment(reads[1], 10, 18)
         seq = self.get_seq_fragment(reads[1], 0, 5)
 
-        int_bc, int_umi, int_seq = [self.dna_to_twobit(x) for x in (bc, umi, seq)]
+        int_bc, int_umi, int_seq = [dna_to_twobit(x) for x in (bc, umi, seq)]
         return int_bc, int_umi, int_seq
 
 
