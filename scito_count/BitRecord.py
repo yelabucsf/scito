@@ -2,26 +2,6 @@ import functools
 import struct
 import numpy as np
 from scito_count.ReadRecord import *
-from numba import jit
-
-@jit(nopython=True)
-def dna_to_twobit(dna: str) -> int:
-    x: int = 0
-    for nt in dna:
-        if nt == "A":
-            x += 0
-        elif nt == "C":
-            x += 1
-        elif nt == "G":
-            x += 2
-        elif nt == "T":
-            x += 3
-        else:
-            x += 0
-            #x += np.random.choice([0,1,2,3])
-        x <<= 2
-    x >>= 2
-    return x
 
 class BitRecord(object):
     def __init__(self):
@@ -39,7 +19,22 @@ class BitRecord(object):
             seq_length = len(seq)
         return seq[start: start + seq_length]
 
-
+    def dna_to_twobit(dna: str) -> int:
+        x: int = 0
+        for nt in dna:
+            if nt == "A":
+                x += 0
+            elif nt == "C":
+                x += 1
+            elif nt == "G":
+                x += 2
+            elif nt == "T":
+                x += 3
+            else:
+                x += np.random.choice([0,1,2,3])
+            x <<= 2
+        x >>= 2
+        return x
 
     # TODO implement smaller BUS (sBUS) when we want to skip bustools
     def sbus_encode(self):
@@ -71,7 +66,7 @@ class BUSRecordAdtAtac(BUSRecord):
         umi = self.get_seq_fragment(reads[1], 10, 18)
         seq = self.get_seq_fragment(reads[1], 0, 5)
 
-        int_bc, int_umi, int_seq = [dna_to_twobit(x) for x in (bc, umi, seq)]
+        int_bc, int_umi, int_seq = [self.dna_to_twobit(x) for x in (bc, umi, seq)]
         return int_bc, int_umi, int_seq
 
 
