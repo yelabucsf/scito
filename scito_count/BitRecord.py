@@ -22,7 +22,7 @@ class BitRecord(object):
         return seq[start: start + seq_length]
 
     @staticmethod
-    @jit(nopython=True)
+    @jit
     def dna_to_twobit(dna: str) -> int:
         x: int = 0
         for nt in dna:
