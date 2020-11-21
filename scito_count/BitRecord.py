@@ -2,7 +2,7 @@ import functools
 import struct
 import numpy as np
 from scito_count.ReadRecord import *
-from numba import jit
+from numba import jit, typeof
 
 class BitRecord(object):
     def __init__(self):
@@ -38,6 +38,7 @@ class BitRecord(object):
                 #x += np.random.choice([0,1,2,3])
             x <<= 2
         x >>= 2
+        print(typeof(x))
         return x
 
     # TODO implement smaller BUS (sBUS) when we want to skip bustools
