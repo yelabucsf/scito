@@ -21,7 +21,7 @@ class BitRecord(object):
         return seq[start: start + seq_length]
 
     @staticmethod
-    @jit
+    @jit(nopython=True)
     def dna_to_twobit(dna: str) -> int:
         x: int = 0
         for nt in dna:
@@ -34,7 +34,8 @@ class BitRecord(object):
             elif nt == "T":
                 x += 3
             else:
-                x += np.random.choice([0,1,2,3])
+                x += 0
+                #x += np.random.choice([0,1,2,3])
             x <<= 2
         x >>= 2
         return x
