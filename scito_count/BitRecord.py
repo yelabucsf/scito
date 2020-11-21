@@ -39,7 +39,7 @@ class BitRecord(object):
                 #x += np.random.choice([0,1,2,3])
             x <<= 2
         x >>= 2
-        print(nb.typeof(x))
+        print(nb.typeof(nt))
         return x
 
     # TODO implement smaller BUS (sBUS) when we want to skip bustools
