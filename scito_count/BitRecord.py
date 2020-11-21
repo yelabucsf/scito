@@ -20,8 +20,9 @@ class BitRecord(object):
             seq_length = len(seq)
         return seq[start: start + seq_length]
 
-    @jit
-    def dna_to_twobit(self, dna: str) -> int:
+    @staticmethod
+    @jit(nopython=True)
+    def dna_to_twobit(dna: str) -> int:
         x: int = 0
         for nt in dna:
             if nt == "A":
