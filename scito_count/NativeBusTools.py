@@ -33,7 +33,7 @@ class NativeBusTools(object):
                  n_threads: int):
         corrector = f"bustools correct -w {whitelist} -p {in_file}"
         sorter = f"bustools sort -t {n_threads} -p"
-        counter = f"bustools count -o {out_file} -g {gene_map} -e {ecmap} -t {txnames} --genecounts"
+        counter = f"bustools count -o {out_file} -g {gene_map} -e {ecmap} -t {txnames}"
         self._run_pipe([corrector, sorter, counter])
 
 
