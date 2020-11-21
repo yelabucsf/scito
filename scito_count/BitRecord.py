@@ -3,7 +3,6 @@ import struct
 import numpy as np
 from scito_count.ReadRecord import *
 from numba import jit
-import numba as nb
 
 class BitRecord(object):
     def __init__(self):
@@ -22,7 +21,7 @@ class BitRecord(object):
         return seq[start: start + seq_length]
 
     @staticmethod
-    @jit
+    @jit(nopython=True)
     def dna_to_twobit(dna: str) -> int:
         x: int = 0
         for nt in dna:
@@ -39,7 +38,6 @@ class BitRecord(object):
                 #x += np.random.choice([0,1,2,3])
             x <<= 2
         x >>= 2
-        print(nb.typeof(nt))
         return x
 
     # TODO implement smaller BUS (sBUS) when we want to skip bustools
