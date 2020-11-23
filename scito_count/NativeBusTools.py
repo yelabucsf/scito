@@ -23,18 +23,14 @@ class NativeBusTools(object):
                 stderr = curr_process.stderr.read()
                 raise RuntimeError(f"NativeBusTools._run_pipe(): BUStools exited with error: {stderr}")
 
-    def bus_pipe(self,
+    def bus_correct_sort(self,
                  whitelist: str,
                  in_file: str,
                  out_file: str,
-                 gene_map: str,
-                 ecmap: str,
-                 txnames: str,
                  n_threads: int):
         corrector = f"bustools correct -w {whitelist} -p {in_file}"
-        sorter = f"bustools sort -t {n_threads} -p"
-        counter = f"bustools count -o {out_file} -g {gene_map} -e {ecmap} -t {txnames}"
-        self._run_pipe([corrector, sorter, counter])
+        sorter = f"bustools sort -t {n_threads} -o {out_file}"
+        self._run_pipe([corrector, sorter])
 
 
 
