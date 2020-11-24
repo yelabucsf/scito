@@ -6,6 +6,7 @@ from scito_count.BitFile import *
 from typing import List
 
 class NativeBusTools(object):
+    __slots__ = 'bus_file', 'processed_bus_file', 'bus_out_generator'
     def __init__(self, bus_header: BUSHeader, bus_records: BUSFile):
         self.bus_file = BytesIO()
         self.bus_file.write(bus_header)
@@ -16,11 +17,11 @@ class NativeBusTools(object):
 
     def run_pipe(self, cmds: List[str]):
         curr_process = sp.Popen(cmds[0].split(" "), stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
-        out = curr_process.communicate(input=self.bus_file.getvalue())[0]
+        self.processed_bus_file = curr_process.communicate(input=self.bus_file.getvalue())[0]
+        self.bus_file = 'Deleted input after processing'
         for curr_step in cmds[:1]:
             curr_process = sp.Popen(curr_step.split(" "), stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
-            out = curr_process.communicate(input=out)[0]
-
+            self.processed_bus_file = curr_process.communicate(input=self.processed_bus_file)[0]
 
     def _bus_correct(self,
                      whitelist: str,):
