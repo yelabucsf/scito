@@ -1,4 +1,5 @@
 import subprocess as sp
+import functools
 from io import BytesIO
 from scito_count.BitHeader import *
 from scito_count.BitFile import *
@@ -10,27 +11,31 @@ class NativeBusTools(object):
         self.bus_file.write(bus_header)
         for read_block in bus_records:
             self.bus_file.write(read_block)
+        self.bus_file.seek(0)
 
 
-    def _run_pipe(self, cmds: List[str]):
-        prev_process: None = None
-        for step in cmds:
-            curr_process: sp.Popen = sp.Popen(step.split(" "), stdin=prev_process, stdout=sp.PIPE, stderr=sp.PIPE)
-            prev_process: sp.Popen = curr_process
-            curr_process.wait()
-            returncode = curr_process.returncode
-            if returncode == -1:
-                stderr = curr_process.stderr.read()
-                raise RuntimeError(f"NativeBusTools._run_pipe(): BUStools exited with error: {stderr}")
+    def run_pipe(self, cmds: List[str]):
+        curr_process = sp.Popen(cmds[0].split(" "), stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
+        out = curr_process.communicate(input=self.bus_file.getvalue())[0]
+        for curr_step in cmds[:1]:
+            curr_process = sp.Popen(curr_step.split(" "), stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
+            out = curr_process.communicate(input=out)[0]
 
-    def bus_correct_sort(self,
-                 whitelist: str,
-                 in_file: str,
-                 out_file: str,
-                 n_threads: int):
-        corrector = f"bustools correct -w {whitelist} -p {in_file}"
-        sorter = f"bustools sort -t {n_threads} -o {out_file}"
-        self._run_pipe([corrector, sorter])
+
+    def _bus_correct(self,
+                     whitelist: str,):
+        return f'bustools correct -w {whitelist}'
+
+    def _bus_sort(self,
+                  threads: int=1,
+                  memory: int=None):  # ToDo implement memory cap
+        return f'bustools sort -t {threads}'
+
+    def _bus_count(self,
+                   gene_map: str,
+                   ec_map: str,
+                   tx_names: str):
+        return f'bustools count {gene_map} {ec_map} {tx_names}'
 
 
 
