@@ -2,7 +2,6 @@ import functools
 import struct
 import numpy as np
 from scito_count.ReadRecord import *
-from numba import jit
 
 class BitRecord(object):
     def __init__(self):
