@@ -14,10 +14,16 @@ read_set3 = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/te
                          "ATAC ADT R3")
 
 
+upl_test_s3 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
+                         "ATAC ADT R2 UPLOAD TEST")
+upl_test_read = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
+                             "ATAC ADT R2 UPLOAD TEST")
+
+
 class TestBUSFileAdtAtac(TestCase):
     def setUp(self) -> None:
-        ground = FQFile(s3_settings=s3_set2, read_settings=read_set2)
-        async_file = FQFile(s3_settings=s3_set3, read_settings=read_set3)
+        ground = FQFile(s3_settings=upl_test_s3, read_settings=upl_test_read, qc_scale="phred")
+        async_file = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
         dict_reads = {"read2": ground,
                       "read3": async_file}
         self.sync_two_reads = FQSyncTwoReads(dict_reads, 'read2')
@@ -25,12 +31,13 @@ class TestBUSFileAdtAtac(TestCase):
         self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
 
 
+
     def test_bus_file_stream_adt_atac(self):
         self.bus_file_adt_atac.bus_file_stream_adt_atac()
         bit_rec = BitRecord()
-        bc = bit_rec.dna_to_twobit('TCGTCGGCAGCGTCAG')
-        umi = bit_rec.dna_to_twobit('GCTTTAAG')
-        seq = bit_rec.dna_to_twobit('GCGTG')
+        bc = bit_rec.dna_to_twobit('TCGTCGGCAGCGTCAGCTGGA')
+        umi = bit_rec.dna_to_twobit('CCTTTAAG')
+        seq = bit_rec.dna_to_twobit('GCTAT')
         pack = struct.pack('<QQLLLL', bc, umi, seq, 1, 0, 0)
         lol = next(self.bus_file_adt_atac.bit_records)
         self.assertEqual(lol, pack)
