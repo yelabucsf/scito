@@ -4,7 +4,6 @@ from scito_count.ProcessSettings import *
 from scito_count.SeqArranger import *
 from scito_count.SeqSync import *
 
-
 s3_set2 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
                      "ATAC ADT R2")
 read_set2 = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
@@ -21,7 +20,19 @@ upl_test_read = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scit
                              "ATAC ADT R2 UPLOAD TEST")
 
 
-
 class TestNativeBusTools(TestCase):
+    def setUp(self) -> None:
+        ground = FQFile(s3_settings=upl_test_s3, read_settings=upl_test_read, qc_scale="phred")
+        async_file = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
+        dict_reads = {"read2": ground,
+                      "read3": async_file}
+        self.sync_two_reads = FQSyncTwoReads(dict_reads, 'read2')
+        self.sync_two_reads.two_read_sync()
+        self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
+        self.bus_file_adt_atac.bus_file_stream_adt_atac()
+        adt_atac_bus_header = BUSHeaderAdtAtac()
+        self.header = adt_atac_bus_header.output_adt_atac_header()
+
     def test_run_pipe(self):
+        self.native_bus_tools = NativeBusTools(bus_header=self.header, bus_records=self.bus_file_adt_atac.bit_records)
         self.fail()

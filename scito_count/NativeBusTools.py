@@ -23,16 +23,16 @@ class NativeBusTools(object):
             curr_process = sp.Popen(curr_step.split(" "), stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
             self.processed_bus_file = curr_process.communicate(input=self.processed_bus_file)[0]
 
-    def _bus_correct(self,
+    def bus_correct(self,
                      whitelist: str,):
         return f'bustools correct -w {whitelist}'
 
-    def _bus_sort(self,
+    def bus_sort(self,
                   threads: int=1,
                   memory: int=None):  # ToDo implement memory cap
         return f'bustools sort -t {threads}'
 
-    def _bus_count(self,
+    def bus_count(self,
                    gene_map: str,
                    ec_map: str,
                    tx_names: str):
