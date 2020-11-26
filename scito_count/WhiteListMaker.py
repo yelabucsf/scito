@@ -3,6 +3,8 @@ from io import BytesIO
 from scito_count.S3Interface import *
 from scito_count.ProcessSettings import *
 
+# Slow - 2.5 min just to assemble a whitelist
+
 class WhiteListMaker(object):
     def __init__(self, s3_settings: S3SettingsWhitelist):
         '''
