@@ -67,7 +67,7 @@ class BUSExport(SeqExport):
 
 
 class BitExport(SeqExport):
-    @SeqExport.s3_upload(file_type='BUS', encoding='bus')
+    @SeqExport.s3_upload(file_type='SORTED_BUS', encoding='bus')
     def processed_bus_upload(self, s3_settings, para_file):
         para_file.write(self.reads_to_export)
 
