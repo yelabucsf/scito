@@ -19,3 +19,10 @@ class ReadSettings(ProcessSettings):
         relevant_attr = ['technology', 'read start', 'read end']
         self.technology, self.start, self.end = [self._section_settings[x] for x in relevant_attr]
 
+
+class S3SettingsWhitelist(S3Settings):
+    def __init__(self, config_section: str, config_file: str):
+        super().__init__(config_section, config_file)
+        wl_attributes = ['cell barcodes', 'batch barcodes']
+        self.cbc, self.bbc = [self._section_settings[x] for x in wl_attributes]
+

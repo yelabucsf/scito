@@ -3,3 +3,4 @@
 /tests/garbage.py
 /tests/config_test.ini
 /scripts/
+/whitelists/test_list.whl
