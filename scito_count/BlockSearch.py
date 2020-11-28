@@ -5,8 +5,8 @@ Class searches starting of the BGZF header in a blindly split file
 '''
 
 class BlockSearch(object):
-    def __init__(self, file_path: str):
-        self.handle = open(file_path, 'rb')
+    def __init__(self, handle):
+        self.handle = handle
         self._bgzf_magic = b'\x1f\x8b\x08\x04'
 
 

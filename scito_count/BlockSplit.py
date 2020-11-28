@@ -1,3 +1,4 @@
+from scito_count.BlockSearch import *
 import struct
 
 '''
@@ -21,6 +22,9 @@ class BlockSplit(object):
         if not magic:
             raise StopIteration
         if magic != b"\x1f\x8b\x08\x04":
+            self.handle.seek(0)
+            block_search = BlockSearch(self.handle)
+
             raise ValueError(
                 r"A BGZF (e.g. a BAM file) block should start with "
                 r"%r, not %r; handle.tell() now says %r"
