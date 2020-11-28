@@ -48,7 +48,7 @@ class BlockSplit(object):
         if block_size is None:
             raise ValueError("BlockSplit._get_bgzf_block_size(): Missing BC, this isn't a BGZF file!")
         curr_pos = self.handle.tell()
-        next_block = curr_pos - 18 + block_size
+        next_block = curr_pos - 18 + block_size # 18 bytes is the BGZF full header
         self.handle.seek(next_block)
         return block_size
 
