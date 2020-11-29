@@ -21,16 +21,12 @@ class BlockSplit(object):
         magic = self.handle.read(4)
         if not magic:
             raise StopIteration
-        if magic != b"\x1f\x8b\x08\x04":
-            self.handle.seek(0)
-            block_search = BlockSearch(self.handle)
-
+        while magic != _bgzf_magic:
             raise ValueError(
                 r"A BGZF (e.g. a BAM file) block should start with "
                 r"%r, not %r; handle.tell() now says %r"
                 % (_bgzf_magic, magic, self.handle.tell())
             )
-
         self.handle.seek(6 + self.handle.tell())
         extra_len = struct.unpack("<H", self.handle.read(2))[0]
 
@@ -56,12 +52,17 @@ class BlockSplit(object):
         self.handle.seek(next_block)
         return block_size
 
-
-
     def generate_blocks(self):
         while True:
             start_offset = self.handle.tell()
             try:
+                block_size = self._get_bgzf_block_size()
+            except ValueError:
+                self.handle.seek(0)
+                block_search = BlockSearch(self.handle)
+                real_header = block_search.header_search()
+                self.handle.seek(real_header)
+                start_offset = self.handle.tell()
                 block_size = self._get_bgzf_block_size()
             except StopIteration:
                 break
