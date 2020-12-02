@@ -13,6 +13,6 @@ class TestS3Interface(TestCase):
         self.assertEqual(self.s3_interface.obj_size(), 9945950)
 
     def test_get_bytes(self):
-        lol = self.s3_interface.get_bytes_s3(2, 6)["Body"].read()
+        lol = self.s3_interface.get_bytes_s3(2, 6).read()
         print(lol)
         self.assertEqual(lol, b'\x08\x08s\x01i')

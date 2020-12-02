@@ -1,4 +1,5 @@
 from scito_count.BlockSearch import *
+from scito_count.BlockIO import BlockIO
 from io import BytesIO
 import struct
 
@@ -9,9 +10,11 @@ Returns a generator of tuples of (block start, block end)
 
 
 class BlockSplit(object):
-    __slots__ = "ranges", "handle"
-    def __init__(self, handle: BytesIO):
-        self.handle = handle
+    __slots__ = "ranges", "handle", 'block_start', 'block_end',
+    def __init__(self, handle: BlockIO):
+        self.handle = handle.data_stream
+        self.block_start = handle.block_start
+        self.block_end = handle.block_end
         self.ranges = None
 
     def _get_bgzf_block_size(self):
@@ -68,5 +71,6 @@ class BlockSplit(object):
                 block_size = self._get_bgzf_block_size()
             except StopIteration:
                 break
-            yield start_offset, start_offset + block_size-1
+            yield start_offset + self.block_start,\
+                  start_offset + self.block_start + block_size-1
 
