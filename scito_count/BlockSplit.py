@@ -1,5 +1,5 @@
 from scito_count.BlockSearch import *
-from scito_count.BlockIO import BlockIO
+from scito_count.BlocksIO import *
 from io import BytesIO
 import struct
 
@@ -11,7 +11,10 @@ Returns a generator of tuples of (block start, block end)
 
 class BlockSplit(object):
     __slots__ = "ranges", "handle", 'block_start', 'block_end',
-    def __init__(self, handle: BlockIO):
+    def __init__(self, handle):
+        '''
+        :param handle: BlocksIO
+        '''
         self.handle = handle.data_stream
         self.block_start = handle.block_start
         self.block_end = handle.block_end

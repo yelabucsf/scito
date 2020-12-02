@@ -1,14 +1,13 @@
 from unittest import TestCase
 from scito_count.ProcessSettings import *
-from scito_count.BlockIO import *
+from scito_count.BlocksIO import BlocksIO
 
 s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
                     "IO TEST")
 
 class TestBlockIO(TestCase):
     def setUp(self) -> None:
-        print("lol")
-        self.block_io = BlockIO(s3_set, '0-100')
+        self.block_io = BlocksIO(s3_set, '0-100')
         self.block_io.get_object_part()
 
     def test_get_object_part(self):
