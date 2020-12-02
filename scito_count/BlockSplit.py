@@ -1,15 +1,17 @@
 from scito_count.BlockSearch import *
+from io import BytesIO
 import struct
 
 '''
 Class to create a catalog of BGZF blocks in a single file. Runs on an EC2 instance with ephemeral SSD for the best IOPS
+Returns a generator of tuples of (block start, block end)
 '''
 
 
 class BlockSplit(object):
     __slots__ = "ranges", "handle"
-    def __init__(self, file_path: str):
-        self.handle = open(file_path, 'rb')
+    def __init__(self, handle: BytesIO):
+        self.handle = handle
         self.ranges = None
 
     def _get_bgzf_block_size(self):

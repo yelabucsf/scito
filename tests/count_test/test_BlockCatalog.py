@@ -2,11 +2,12 @@ from unittest import TestCase
 from scito_count.BlockCatalog import *
 from scito_count.BlockSplit import *
 
-handle = "mock_data/TEST_FASTQ.fastq.gz"
+handle_in = "mock_data/TEST_FASTQ.fastq.gz"
 
 
 class TestFQAdtAtacSplit(TestCase):
     def setUp(self) -> None:
+        handle = open(handle_in, 'rb')
         block_split = BlockSplit(handle)
         split = block_split.generate_blocks()
         self.fq_adt_atac_catalog = FQAdtAtacCatalog(block_split=split, n_parts=4)

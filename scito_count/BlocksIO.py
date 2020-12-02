@@ -1,9 +1,35 @@
+from scito_count.BlockSplit import *
 from scito_count.BlockCatalog import *
+from scito_count.S3Interface import *
 from scito_count.ProcessSettings import *
+from io import BytesIO
 import os
 
-class CatalogExport(object):
-    def __init__(self, catalog: BlockCatalog):
+'''
+Class to import ranges of bytes from s3 directly to RAM
+'''
+
+class BlocksIO(object):
+    __slots__ = 'block_start', 'block_end', 's3_interface', 'data_stream'
+    def __init__(self, s3_settings: S3Settings, byte_range: str):
+        '''
+        :param byte_range: comes from an SQS. Format "start-end"
+        '''
+        self.block_start, self.block_end = [int(x) for x in byte_range.split("-")]
+        self.s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, s3_settings.profile)
+        self.data_stream = BytesIO()
+
+    def get_object_part(self):
+        self.data_stream.write(self.s3_interface.get_bytes_s3(self.block_start, self.block_end))
+        self.data_stream.seek(0)
+
+
+
+
+
+class CatalogExport(SeqExport):
+    def __init__(self, catalog: BlockCatalog, reads_object):
+        super().__init__(reads_object)
         self.catalog = catalog
 
     def catalog_s3_upload(self, s3_settings: S3Settings):
