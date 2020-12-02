@@ -11,7 +11,7 @@ Class to create a catalog of byte ranges to split files, based on all detected B
 class BlockCatalog(object):
     __slots__ = "ranges", "block_split", "n_parts"
 
-    def __init__(self, block_split: BlockSplit, n_parts: int):
+    def __init__(self, block_split, n_parts: int):
         self.block_split = block_split
         self.n_parts = n_parts
         self.ranges = None

@@ -1,15 +1,16 @@
 from unittest import TestCase
 from scito_count.BlockSplit import *
+from scito_count.ProcessSettings import *
 
-handle_in = "mock_data/TEST_FASTQ.fastq.gz"
-handle_1_in = 'mock_data/TEST_FASTQ_blind_split/xab'
-handle_2_in = 'mock_data/TEST_FASTQ_blind_split/xac'
+s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
+                    "IO TEST FQ")
 
 
 
 class TestBlockSplit(TestCase):
     def setUp(self) -> None:
-        handle = open(handle_in, 'rb')
+        handle = BlocksIO(s3_set, '0-101000')
+        handle.get_object_part()
         self.block_split = BlockSplit(handle)
 
     def test__get_bgzf_block_size(self):
@@ -24,20 +25,21 @@ class TestBlockSplit(TestCase):
 
     def test_generate_blocks_full(self):
         lol = list(self.block_split.generate_blocks())
-        self.assertEqual(len(lol), 16)
-
-
+        self.assertEqual(len(lol), 14)
 
     def test_generate_blocks_search(self):
-        handle_1 = open(handle_1_in, 'rb')
-        block_split = BlockSplit(handle_1)
+        handle = BlocksIO(s3_set, '7001-14000')
+        handle.get_object_part()
+        block_split = BlockSplit(handle)
         lol = block_split.generate_blocks()
         next_lol = next(lol)
-        self.assertEqual(next_lol, (332, 7717))
+        self.assertEqual(next_lol, (7332, 14717))
 
     def test_generate_blocks_search(self):
-        handle_2 = open(handle_2_in, 'rb')
-        block_split = BlockSplit(handle_2)
+        handle = BlocksIO(s3_set, '14001-21000')
+        handle.get_object_part()
+        block_split = BlockSplit(handle)
         lol = block_split.generate_blocks()
         next_lol = next(lol)
-        self.assertEqual(next_lol, (718, 8153))
+        self.assertEqual(next_lol, (14718, 22153))
+

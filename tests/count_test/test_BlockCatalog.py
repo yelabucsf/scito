@@ -1,13 +1,16 @@
 from unittest import TestCase
 from scito_count.BlockCatalog import *
 from scito_count.BlockSplit import *
+from scito_count.ProcessSettings import *
 
-handle_in = "mock_data/TEST_FASTQ.fastq.gz"
-
+s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
+                    "IO TEST FQ")
 
 class TestFQAdtAtacSplit(TestCase):
     def setUp(self) -> None:
-        handle = open(handle_in, 'rb')
+        self.block_io = BlocksIO(s3_set, '0-101000')
+        self.block_io.get_object_part()
+        handle = self.block_io
         block_split = BlockSplit(handle)
         split = block_split.generate_blocks()
         self.fq_adt_atac_catalog = FQAdtAtacCatalog(block_split=split, n_parts=4)
