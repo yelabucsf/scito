@@ -9,12 +9,11 @@ Class to create a catalog of byte ranges to split files, based on all detected B
 
 
 class BlockCatalog(object):
-    __slots__ = "ranges", "block_split", "n_parts"
+    __slots__ = "block_split", "n_parts"
 
     def __init__(self, block_split, n_parts: int):
         self.block_split = block_split
         self.n_parts = n_parts
-        self.ranges = None
 
     @classmethod
     def create_catalog(cls, func_of_technology):
@@ -25,7 +24,8 @@ class BlockCatalog(object):
             while len(ranges) < self.n_parts:
                 arr_temp = [func_of_technology(self, x, *args, **kwargs) for x in ranges]
                 ranges = functools.reduce(operator.iconcat, arr_temp, [])
-            self.ranges = [(x[0][0], x[-1][-1]) for x in ranges]
+            for x in ranges:
+                yield (x[0][0], x[-1][-1])
         return create_range_wrapper
 
 

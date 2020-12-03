@@ -11,7 +11,7 @@ class TestBlockSplit(TestCase):
     def setUp(self) -> None:
         handle = BlocksIO(s3_set, '0-101000')
         handle.get_object_part()
-        self.block_split = BlockSplit(handle)
+        self.block_split: BlockSplit = BlockSplit(handle)
 
     def test__get_bgzf_block_size(self):
         lol = self.block_split._get_bgzf_block_size()

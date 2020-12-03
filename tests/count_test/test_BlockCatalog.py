@@ -16,8 +16,7 @@ class TestFQAdtAtacSplit(TestCase):
         self.fq_adt_atac_catalog = FQAdtAtacCatalog(block_split=split, n_parts=4)
 
     def test_adt_atac_ranges(self):
-        self.fq_adt_atac_catalog.adt_atac_catalog(overlap=0)
-        print(len(self.fq_adt_atac_catalog.ranges[0] * len(self.fq_adt_atac_catalog.ranges)))
-        print(self.fq_adt_atac_catalog.ranges)
-        self.assertEqual(self.fq_adt_atac_catalog.ranges[0][1], 29576)
-        self.assertEqual(len(self.fq_adt_atac_catalog.ranges), 4)
+        lol = self.fq_adt_atac_catalog.adt_atac_catalog(overlap=0)
+        list_lol = list(lol)
+        self.assertEqual(list_lol[0][1], 29576)
+        self.assertEqual(len(list_lol), 4)

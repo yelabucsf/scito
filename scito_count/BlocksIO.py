@@ -3,6 +3,7 @@ from scito_count.BlockCatalog import *
 from scito_count.S3Interface import *
 from scito_count.ProcessSettings import *
 from scito_count.SeqExport import *
+import struct
 from io import BytesIO
 import os
 
@@ -27,11 +28,28 @@ class BlocksIO(object):
     def close(self):
         self.data_stream.close()
 
-'''
+
+
+class BlockRangeExport(object):
+    def __init__(self, block_split):
+        '''
+        :param block_split: BlockSplit type
+        '''
+        self.block_generator = block_split.generate_blocks()
+
+    def byte_blocks(self):
+        self.byte_block_gen = self._byte_blocks()
+
+    def _byte_blocks(self):
+        for block_start, block_end in self.block_generator:
+            byte_string = struct.pack('<QQ', block_start, block_end)
+            yield byte_string
+
+
+"""
 class CatalogExport(SeqExport):
-    def __init__(self, catalog: BlockCatalog, reads_object):
-        super().__init__(reads_object)
-        self.catalog = catalog
+    def __init__(self, catalog: BlockCatalog):
+        ...
 
     def catalog_s3_upload(self, s3_settings: S3Settings):
         new_s3_key = "/".join([os.path.dirname(s3_settings.object_key),
@@ -48,4 +66,4 @@ class CatalogExport(SeqExport):
             {'ContentType': str(type(self.reads_to_export)), 'ContentEncoding': 'gzip',
              'ServerSideEncryption': 'aws:kms', 'SSEKMSKeyId': 'alias/managed-s3-key'})
 
-'''
+"""
