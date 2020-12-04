@@ -6,7 +6,7 @@ from scito_count.BitFile import *
 from typing import List
 from warnings import warn
 
-class NativeBusTools(object):
+class BUSTools(object):
     __slots__ = 'bus_file', 'processed_bus_file'
     def __init__(self, bus_header: BUSHeader, bus_records: BUSFile):
         self.bus_file = BytesIO()

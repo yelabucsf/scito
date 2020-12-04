@@ -28,12 +28,6 @@ class BlocksIO(object):
     def close(self):
         self.data_stream.close()
 
-    def export_block_ranges(self, block_bytes):
-        '''
-        Method to write block ranges in binary format to s3
-        :param block_bytes: BlockBytes object
-        '''
-
 
 
 

@@ -2,7 +2,7 @@ from scito_count.SeqArranger import *
 from scito_count.ProcessSettings import *
 from scito_count.BitFile import *
 from scito_count.S3Interface import S3Interface
-from scito_count.NativeBusTools import *
+from scito_count.BUSTools import *
 from io import BytesIO
 import os
 
@@ -18,7 +18,7 @@ class SeqExport(object):
             self.reads_to_export = reads_object.read_records
         elif issubclass(type(reads_object), BitFile):
             self.reads_to_export = reads_object.bit_records
-        elif issubclass(type(reads_object), NativeBusTools):
+        elif issubclass(type(reads_object), BUSTools):
             self.reads_to_export = reads_object.processed_bus_file # a complete binary string of a BUS File
         else:
             raise TypeError("SeqExport(): Unknown file format")
