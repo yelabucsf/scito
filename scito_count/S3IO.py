@@ -7,6 +7,9 @@ from scito_utils.S3InterfaceGen import *
 from io import BytesIO
 import os
 
+'''
+Class to upload binary data to s3
+'''
 
 class S3IO(object):
     __slots__ = 'byte_seq', 's3_settings', 'misc_id'
