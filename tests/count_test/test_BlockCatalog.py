@@ -12,11 +12,11 @@ class TestFQAdtAtacSplit(TestCase):
         self.block_io.get_object_part()
         handle = self.block_io
         block_split = BlockSplit(handle)
-        split = block_split.generate_blocks()
-        self.fq_adt_atac_catalog = FQAdtAtacCatalog(block_split=split, n_parts=4)
+        block_split.generate_blocks()
+        self.fq_adt_atac_catalog = FQAdtAtacCatalog(block_split=block_split, n_parts=4)
 
     def test_adt_atac_ranges(self):
-        lol = self.fq_adt_atac_catalog.adt_atac_catalog(overlap=0)
-        list_lol = list(lol)
+        self.fq_adt_atac_catalog.adt_atac_catalog(overlap=0)
+        list_lol = list(self.fq_adt_atac_catalog.ranges)
         self.assertEqual(list_lol[0][1], 29576)
         self.assertEqual(len(list_lol), 4)

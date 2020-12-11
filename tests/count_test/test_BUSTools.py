@@ -1,6 +1,6 @@
 from unittest import TestCase
-from scito_count.SeqExport import *
 from scito_count.SeqSync import *
+from scito_count.BUSTools import *
 
 s3_set2 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
                      "ATAC ADT R2")

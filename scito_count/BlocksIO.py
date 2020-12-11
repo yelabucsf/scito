@@ -2,7 +2,6 @@ from scito_count.BlockSplit import *
 from scito_count.BlockCatalog import *
 from scito_count.S3Interface import *
 from scito_count.ProcessSettings import *
-from scito_count.SeqExport import *
 from scito_count.BlockByte import *
 from io import BytesIO
 import os

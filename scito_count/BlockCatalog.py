@@ -16,7 +16,10 @@ class BlockCatalog(object):
         :param block_split: BlockSplit type
         :param n_parts: Number of parts to split the file to
         '''
-        self.block_split = block_split
+        if block_split.ranges is None:
+            raise AttributeError('BlockCatalog(): passed an instance of BlockSplit class without generated blocks.'
+                                 'Run generate_blocks() method on the object passed to block_split argument')
+        self.block_split = block_split.ranges
         self.n_parts = n_parts
         self.ranges = None
 

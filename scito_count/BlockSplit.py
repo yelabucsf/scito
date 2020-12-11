@@ -20,6 +20,9 @@ class BlockSplit(object):
         self.block_end = handle.block_end
         self.ranges = None
 
+    def generate_blocks(self):
+        self.ranges = self._inner_generate_blocks()
+
     def _get_bgzf_block_size(self):
         '''
         Method to scan each BGZF header to get size of the block
@@ -60,7 +63,7 @@ class BlockSplit(object):
         self.handle.seek(next_block)
         return block_size
 
-    def generate_blocks(self):
+    def _inner_generate_blocks(self):
         while True:
             start_offset = self.handle.tell()
             try:

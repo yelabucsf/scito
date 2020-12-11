@@ -18,28 +18,29 @@ class TestBlockSplit(TestCase):
         self.assertEqual(lol, 7332)
 
     def test_generate_blocks(self):
-        lol = self.block_split.generate_blocks()
-        next(lol)
-        next_lol = next(lol)
+        self.block_split.generate_blocks()
+        next(self.block_split.ranges)
+        next_lol = next(self.block_split.ranges)
         self.assertEqual(next_lol, (7332, 14717))
 
     def test_generate_blocks_full(self):
-        lol = list(self.block_split.generate_blocks())
+        self.block_split.generate_blocks()
+        lol = list(self.block_split.ranges)
         self.assertEqual(len(lol), 14)
 
     def test_generate_blocks_search(self):
         handle = BlocksIO(s3_set, '7001-14000')
         handle.get_object_part()
         block_split = BlockSplit(handle)
-        lol = block_split.generate_blocks()
-        next_lol = next(lol)
+        block_split.generate_blocks()
+        next_lol = next(block_split.ranges)
         self.assertEqual(next_lol, (7332, 14717))
 
     def test_generate_blocks_search(self):
         handle = BlocksIO(s3_set, '14001-21000')
         handle.get_object_part()
         block_split = BlockSplit(handle)
-        lol = block_split.generate_blocks()
-        next_lol = next(lol)
+        block_split.generate_blocks()
+        next_lol = next(block_split.ranges)
         self.assertEqual(next_lol, (14718, 22153))
 
