@@ -35,7 +35,7 @@ class S3IO(object):
                 para_file.seek(0)
                 new_interface.s3_obj.upload_fileobj(
                     para_file,
-                    {'ContentType': str(type(self.byte_seq)), 'ContentEncoding': encoding,
+                    {'ContentType': file_type, 'ContentEncoding': encoding,
                      'ServerSideEncryption': 'aws:kms', 'SSEKMSKeyId': 'alias/managed-s3-key'})
                 if not para_file.closed:
                     para_file.close()
