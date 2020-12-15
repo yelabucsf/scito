@@ -9,6 +9,7 @@ class ContentTablesIO(object):
     __slots__ = 'content_table', 's3_settings'
     def __init__(self, s3_settings):
         self.s3_settings = s3_settings
+        self.content_table = None
 
     def content_table_stream(self):
         content_table_gen = self._private_generate_content_tables()
