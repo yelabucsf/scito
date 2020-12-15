@@ -1,10 +1,13 @@
-from scito_count.ProcessSettings import *
+from scito_count.ContentTablesIO import *
+import numpy as np
 
 '''
-Class to pull pieces of tables of content from s3, sort, deduplicate
+Class to take ContentTablesIO stream, sort, deduplicate and send to BlockCatalog
 '''
 
 class ContentTable(object):
-    __slots__ = 'content_table'
-    def __init__(self, s3_settings):
-        ...
+    def __init__(self, content_tables_io):
+        unsorted_arr = np.frombuffer(content_tables_io.content_table, ('int64', (2)))
+        self.content_table_arr = np.unique(unsorted_arr, axis=0)
+
+
