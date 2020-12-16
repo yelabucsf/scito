@@ -12,14 +12,12 @@ Class to upload binary data to s3
 '''
 
 class S3IO(object):
-    __slots__ = 'byte_seq', 's3_settings', 'misc_id'
-    def __init__(self, byte_seq, s3_settings, misc_id=''):
+    __slots__ = 's3_settings', 'misc_id'
+    def __init__(self, s3_settings, misc_id=''):
         '''
-        :param byte_seq: generator of byte strings or full byte string
         :param s3_settings: S3Settings object
         :param misc_id: additional ID to append to the basename of the S3 key
         '''
-        self.byte_seq = byte_seq
         self.s3_settings = s3_settings
         self.misc_id = misc_id
 
@@ -27,11 +25,14 @@ class S3IO(object):
     def s3_upload(cls, file_type: str, encoding: str):
         def s3_upload_inner(func_of_format):
             @functools.wraps(func_of_format)
-            def s3_upload_wrapper(self, *args, **kwargs):
+            def s3_upload_wrapper(self, byte_seq, *args, **kwargs):
+                '''
+                :param byte_seq: generator of byte strings or full byte string
+                '''
                 interface_gen = S3InterfaceGen(self.s3_settings, file_type, self.misc_id)
                 new_interface = interface_gen.new_key()
                 para_file = BytesIO()
-                func_of_format(self, para_file, *args, **kwargs)
+                func_of_format(self, byte_seq, para_file, *args, **kwargs)
                 para_file.seek(0)
                 new_interface.s3_obj.upload_fileobj(
                     para_file,
@@ -47,12 +48,12 @@ class S3IO(object):
 
 class BUSToolsExport(S3IO):
     @S3IO.s3_upload(file_type='SORTED_BUS', encoding='bus')
-    def processed_bus_upload(self, para_file):
-        para_file.write(self.byte_seq)
+    def processed_bus_upload(self, byte_seq, para_file):
+        para_file.write(byte_seq)
 
 
 class BlockByteExport(S3IO):
     @S3IO.s3_upload(file_type='BLOCK_BYTE', encoding='(int64, int64)')
-    def block_range_upload(self, para_file):
-        for read_block in self.byte_seq:
+    def block_range_upload(self, byte_seq, para_file):
+        for read_block in byte_seq:
             para_file.write(read_block)

@@ -47,8 +47,8 @@ class TestS3IO(TestCase):
         self.native_bus_tools.run_pipe([self.native_bus_tools.bus_sort()])
 
     def test_bus_tools_export(self):
-        bt_export = BUSToolsExport(self.native_bus_tools.processed_bus_file, s3_set2)
-        bt_export.processed_bus_upload()
+        bt_export = BUSToolsExport(s3_settings=s3_set2)
+        bt_export.processed_bus_upload(byte_seq=self.native_bus_tools.processed_bus_file)
         lol = S3Interface(test_s3_set.bucket, test_s3_set.object_key, test_s3_set.profile)
         header = BUSHeaderAdtAtac()
         h = header.output_adt_atac_header()
@@ -62,8 +62,8 @@ class TestS3IO(TestCase):
         self.block_split: BlockSplit = BlockSplit(handle)
         lol = BlockByte(self.block_split)
         lol.byte_blocks()
-        bb_export = BlockByteExport(lol.byte_block_gen, io_s3_set, '0-101000')
-        bb_export.block_range_upload()
+        bb_export = BlockByteExport(s3_settings=io_s3_set, misc_id='0-101000')
+        bb_export.block_range_upload(lol.byte_block_gen)
 
         kk = S3Interface(io_s3_set.bucket, 'anton/scito/mock/fastq/TEST_FASTQ.BLOCK_BYTE.0-101000', io_s3_set.profile)
         test_kk = kk.get_bytes_s3(0, 15).read()
