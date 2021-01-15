@@ -1,28 +1,21 @@
 import configparser
+from typing import Dict
 
-class ProcessSettings(object):
-    def __init__(self, config_file: str, config_section: str):
-        config = configparser.ConfigParser()
-        config.read(config_file)
-        self._section_settings = config[config_section]
+def process_settings(config_file: str, config_section: str, settings_scope: str) -> Dict:
 
-class S3Settings(ProcessSettings):
-    def __init__(self, config_section: str, config_file: str):
-        super().__init__(config_section, config_file)
-        relevant_attr = ['bucket', 'key', 'profile']
-        self.bucket, self.object_key, self.profile = [self._section_settings[x] for x in relevant_attr]
+    scopes = {
+        's3_settings': ['bucket', 'key', 'profile'],
+        'read_settings': ['technology', 'read start', 'read end'],
+        'whitelist_settings': ['cell barcodes', 'batch barcodes']
+    }
 
+    if settings_scope not in scopes:
+        raise ValueError(f'processSettings(): {settings_scope} is not a supported type of configuration')
 
-class ReadSettings(ProcessSettings):
-    def __init__(self, config_section: str, config_file: str):
-        super().__init__(config_section, config_file)
-        relevant_attr = ['technology', 'read start', 'read end']
-        self.technology, self.start, self.end = [self._section_settings[x] for x in relevant_attr]
+    config_init = configparser.ConfigParser()
+    config_init.read(config_file)
+    config = config_init[config_section]
+    scope = scopes[settings_scope]
+    return {x: config[x] for x in scope}
 
-
-class S3SettingsWhitelist(S3Settings):
-    def __init__(self, config_section: str, config_file: str):
-        super().__init__(config_section, config_file)
-        wl_attributes = ['cell barcodes', 'batch barcodes']
-        self.cbc, self.bbc = [self._section_settings[x] for x in wl_attributes]
 
