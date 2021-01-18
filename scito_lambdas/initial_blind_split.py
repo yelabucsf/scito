@@ -1,7 +1,8 @@
 from urllib.parse import unquote_plus
 
-from scito_count.S3Interface import *
-from scito_count.ProcessSettings import *
+
+from scito_count.blind_byte_range import *
+from scito_count.SQSInterface import *
 
 
 def initial_blind_split_handler(event, context):
@@ -16,8 +17,17 @@ def initial_blind_split_handler(event, context):
         raise ValueError('initial_blind_split_handler(): config file is > 100kB. Make sure you uploaded the right file')
     s3_interface.s3_obj.download_file(local_key)
 
-    # process settings
-    s3_settings = S3Settings(local_key, 'SCITO')
+    # id of this lambda
+    lambda_name = 'lambda-0'
+
+
+    s3_settings = S3Settings(local_key, 'SCITO') # process only SCITO-seq config section
+    sqs_interface = SQSInterface()
+    blind_range = blind_byte_range(s3_settings)
+
+
+
+
 
 
 
