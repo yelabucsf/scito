@@ -1,3 +1,15 @@
+from urllib.parse import unquote_plus
+
+from scito_count import *
+
+
+def initial_blind_split_handler(event, context):
+    record = event['Records']
+    s3_bucket = record['s3']['bucket']['name']
+    s3_key = unquote_plus(record['s3']['object']['key'])
+    local_key = s3_key.replace('/', '_')
+
+
 
 
 
