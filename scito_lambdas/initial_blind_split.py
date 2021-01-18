@@ -1,13 +1,25 @@
 from urllib.parse import unquote_plus
 
-from scito_count import *
+from scito_count.S3Interface import *
+from scito_count.ProcessSettings import *
 
 
 def initial_blind_split_handler(event, context):
+
+    # download config
     record = event['Records']
     s3_bucket = record['s3']['bucket']['name']
     s3_key = unquote_plus(record['s3']['object']['key'])
     local_key = s3_key.replace('/', '_')
+    s3_interface = S3Interface(s3_bucket, s3_key)
+    if s3_interface.obj_size() > int(1e5):
+        raise ValueError('initial_blind_split_handler(): config file is > 100kB. Make sure you uploaded the right file')
+    s3_interface.s3_obj.download_file(local_key)
+
+    # process settings
+    s3_settings = S3Settings(local_key, 'SCITO')
+
+
 
 
 
