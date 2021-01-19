@@ -1,11 +1,23 @@
 from urllib.parse import unquote_plus
-
+from configparser import  ConfigParser
+from typing import List, Tuple
 
 from scito_count.blind_byte_range import *
 from scito_count.SQSInterface import *
 
+def get_config(config_file: str) -> ConfigParser:
+    config_init = ConfigParser()
+    config_init.read(config_file)
+    return config_init
+
+def post_range_toSQS(blind_range: Tuple[int,int], queue):
+    queue.send_message(MessageBody=msg_body)
+
 
 def initial_blind_split_handler(event, context):
+
+    # id of this lambda
+    lambda_name = 'lambda-0'
 
     # download config
     record = event['Records']
@@ -17,13 +29,16 @@ def initial_blind_split_handler(event, context):
         raise ValueError('initial_blind_split_handler(): config file is > 100kB. Make sure you uploaded the right file')
     s3_interface.s3_obj.download_file(local_key)
 
-    # id of this lambda
-    lambda_name = 'lambda-0'
+    config_init = get_config(local_key)
+    config_sections = config_init.sections()
+    if len(config_sections) > 3:
+        raise ValueError('initial_blind_split_handler(): current pipeline supports only technologies 3 FASTQ files per sample')
 
+    s3_settings: List[S3Settings] = [S3Settings(local_key, x) for x in config_sections]
+    blind_ranges = [blind_byte_range(x) for x in s3_settings]
 
-    s3_settings = S3Settings(local_key, 'SCITO') # process only SCITO-seq config section
     sqs_interface = SQSInterface()
-    blind_range = blind_byte_range(s3_settings)
+
 
 
 
