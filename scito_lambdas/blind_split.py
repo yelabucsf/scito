@@ -21,7 +21,7 @@ def blind_split_handler(event, context):
     if len(config_sections) > 3:
         raise ValueError('initial_blind_split_handler(): current pipeline supports only technologies 3 FASTQ files per sample')
 
-    # sending messages to the queue
+    # sending messages to the queue per config section
     for section in config_sections:
         s3_settings = S3Settings(local_key, section)
         sqs_interface = SQSInterface(s3_settings, lambda_name)
