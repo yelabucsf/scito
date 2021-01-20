@@ -1,6 +1,5 @@
 from unittest import TestCase
 import struct
-from scito_count.ProcessSettings import *
 from scito_count.ContentTablesIO import *
 
 s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",

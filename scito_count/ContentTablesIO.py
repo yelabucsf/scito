@@ -1,5 +1,4 @@
 from io import BytesIO
-from scito_count.ProcessSettings import *
 from scito_count.S3Interface import *
 '''
 Class to pull pieces of tables of content from s3 into a ByteIO stream

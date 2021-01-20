@@ -1,8 +1,6 @@
 import boto3
 import os
-import json
-from scito_count.ProcessSettings import *
-from scito_utils.SQSSettings import *
+
 
 '''
 class to create SQS queue, read and send messages
@@ -17,6 +15,10 @@ class SQSInterface(object):
         self.queue_name = '_'.join([prefix,
                                    os.path.basename(s3_settings.object_key).split(".")[0]])
         self.dead_letter_name = '_'.join([self.queue_name, 'DEAD-LETTER'])
+
+        self.sqs_settings = {'DelaySeconds': '5',
+                             'KmsMasterKeyId': 'alias/managed-sns-key',
+                             'maxReceiveCount': '10'}
 
 
     def queue_exists(self, dead_letter=False) -> bool:

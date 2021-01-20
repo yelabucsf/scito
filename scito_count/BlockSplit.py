@@ -4,7 +4,7 @@ from io import BytesIO
 import struct
 
 '''
-Class to create a catalog of BGZF blocks in a single file. Runs on an EC2 instance with ephemeral SSD for the best IOPS
+Class to create a catalog of BGZF blocks in a single file.
 Returns a generator of tuples of (block start, block end)
 '''
 

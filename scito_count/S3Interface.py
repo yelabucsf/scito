@@ -2,7 +2,7 @@ import boto3
 
 
 class S3Interface(object):
-    def __init__(self, bucket: str, object_key: str, profile: str):
+    def __init__(self, bucket: str, object_key: str, profile: str = ""):
         if profile == "":
             session = boto3.Session()
         else:
