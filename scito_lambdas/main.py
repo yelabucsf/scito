@@ -1,6 +1,12 @@
 from scito_lambdas.lambda_utils import *
 
-def blind_split_handler(event, context):
+def main_handler(event, context):
+    '''
+    Function is triggered by an upload event. The downstream lambdas are created programmatically
+    :param event:
+    :param context:
+    :return:
+    '''
 
     # id of this lambda
     lambda_name = 'blind-split'
