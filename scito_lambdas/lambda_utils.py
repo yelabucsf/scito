@@ -23,16 +23,6 @@ def init_config(config_file: Union[str, StringIO]) -> Dict:
     return dict(config_init._sections)
 
 
-def bucket_key(record: Dict) -> Tuple:
-    '''
-    returns bucket name and object key for a record in the event triggered by S3 upload
-    :param record: Dict. Single record in the event object
-    :return: Tuple(str, str). S3 bucket and s3 object key
-    '''
-    s3_bucket = record['s3']['bucket']['name']
-    s3_key = unquote_plus(record['s3']['object']['key'])
-    return s3_bucket, s3_key
-
 def construct_s3_interface(s3_bucket: str, s3_key: str) -> S3Interface:
     '''
     Constructs an S3Interface object
@@ -45,21 +35,20 @@ def construct_s3_interface(s3_bucket: str, s3_key: str) -> S3Interface:
         raise ValueError('initial_blind_split_handler(): config file is > 100kB. Make sure you uploaded the right file')
     return s3_interface
 
-def config_sqs_import(message: str) -> StringIO:
-    config_buf = StringIO(message)
-    config_buf.seek(0)
-    return config_buf
-
 
 def finalize_message(msg: Dict, blind_range: Tuple) -> str:
-    msg['byte_range'] = f'{blind_range[0]}_{blind_range[1]}'
+    msg['byte_range'] = f'{blind_range[0]}-{blind_range[1]}'
     finalized_msg = json.dumps(msg)
     return finalized_msg
 
+def config_sqs_import(config_message: str) -> StringIO:
+    config_buf = StringIO(config_message)
+    config_buf.seek(0)
+    return config_buf
 
-
-
-
+def que_name_from_arn(arn: str):
+    deconstructed_arn = arn.split(':')
+    return deconstructed_arn[-1]
 
 
 # IMPURE FUNCTIONS - have side effects
