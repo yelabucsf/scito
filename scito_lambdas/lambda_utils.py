@@ -1,20 +1,27 @@
 from urllib.parse import unquote_plus
 from configparser import  ConfigParser
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Union
 import json
-
+from io import StringIO
 from scito_count.blind_byte_range import *
 from scito_count.SQSInterface import *
 
-def init_config(config_file: str) -> ConfigParser:
+def init_config(config_file: Union[str, StringIO]) -> Dict:
     '''
     Initializes a config file
-    :param config_file: str. Location of a config file in a local filesystem
-    :return: ConfigParser
+    :param config_file: Union[str, StringIO]. Location of a config file in a local filesystem, or a StringIO buffer
+    :return: Dict
     '''
     config_init = ConfigParser()
-    config_init.read(config_file)
-    return config_init
+    config_type = type(config_file).__name__
+    if config_type == 'StringIO':
+        config_init.read_file(config_file)
+    elif config_type == 'str':
+        config_init.read(config_file)
+    else:
+        raise ValueError(f'init_config(): {config_type} is not a supported input type')
+    return dict(config_init._sections)
+
 
 def bucket_key(record: Dict) -> Tuple:
     '''
@@ -37,6 +44,19 @@ def construct_s3_interface(s3_bucket: str, s3_key: str) -> S3Interface:
     if s3_interface.obj_size() > int(1e5):
         raise ValueError('initial_blind_split_handler(): config file is > 100kB. Make sure you uploaded the right file')
     return s3_interface
+
+def config_sqs_import(message: str) -> StringIO:
+    config_buf = StringIO(message)
+    config_buf.seek(0)
+    return config_buf
+
+
+def finalize_message(msg: Dict, blind_range: Tuple) -> str:
+    msg['byte_range'] = f'{blind_range[0]}_{blind_range[1]}'
+    finalized_msg = json.dumps(msg)
+    return finalized_msg
+
+
 
 
 

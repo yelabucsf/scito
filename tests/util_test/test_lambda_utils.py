@@ -1,11 +1,42 @@
 from unittest import TestCase
 from scito_lambdas.lambda_utils import *
 
+from io import StringIO
 
 class Test_1(TestCase):
-    def test_init_config(self):
+    def test_init_config_fromIO(self):
+        with open("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini") as cfg:
+            lol = StringIO(cfg.read())
+        config_init = init_config(lol)
+        section = config_init[list(config_init.keys())[2]]
+        self.assertEqual(section['key'], 'anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
+
+
+    def test_init_config_fromFile(self):
         config_init = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
+        section = config_init[list(config_init.keys())[2]]
+        self.assertEqual(section['key'], 'anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
+
+
+class Test_2(TestCase):
+    def test_construct_s3_interface(self):
+        s3_interface = construct_s3_interface('ucsf-genomics-prod-project-data',
+                                              'anton/scito/mock/fastq/config_test.ini')
+
+        config_buf = StringIO(s3_interface.s3_obj.get()["Body"].read().decode('utf-8'))
+        config_init = init_config(config_buf)
         config_sections = config_init.sections()
         section = config_init[config_sections[2]]
         self.assertEqual(section['key'], 'anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
+
+
+class Test_3(TestCase):
+    def test_config_sqs_import(self):
+        config_buf = config_sqs_import('[local test]\nbucket = ucsf-genomics-prod-project-data\n'
+                                       'key = anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
+        config_init = init_config(config_buf)
+        section = config_init[list(config_init.keys())[0]]
+        self.assertEqual(section['key'], 'anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
+
+
 
