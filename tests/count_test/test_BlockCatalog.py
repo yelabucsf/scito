@@ -1,6 +1,5 @@
 from unittest import TestCase
 from scito_count.BlockCatalog import *
-from scito_count.BlockSplit import *
 from scito_count.ProcessSettings import *
 from scito_count.ContentTable import *
 
