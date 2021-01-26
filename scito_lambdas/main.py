@@ -23,7 +23,7 @@ def main_handler(event, context):
     s3_key = unquote_plus(record['s3']['object']['key'])
     s3_interface = construct_s3_interface(s3_bucket, s3_key)
     config_str = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
-    config_buf = StringIO(config_str)
+    config_buf = config_sqs_import(config_str)
 
     # parse config
     config_init = init_config(config_buf)
@@ -31,9 +31,11 @@ def main_handler(event, context):
     if len(config_sections) > 3:
         raise ValueError('initial_blind_split_handler(): current pipeline supports only technologies 3 FASTQ files per sample')
 
+
+
     # sending messages to the queue per config section
     for section in config_sections:
-        # !!!!!TODO create a lambda per each section
+        # !!!!!TODO create a lambda
 
         s3_settings = S3Settings(config_buf, section)
         sqs_interface = SQSInterface(s3_settings, lambda_name)

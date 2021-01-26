@@ -10,7 +10,7 @@ def init_config(config_file: Union[str, StringIO]) -> Dict:
     '''
     Initializes a config file
     :param config_file: Union[str, StringIO]. Location of a config file in a local filesystem, or a StringIO buffer
-    :return: Dict
+    :return: Dict. Config sections
     '''
     config_init = ConfigParser()
     config_type = type(config_file).__name__
@@ -35,7 +35,6 @@ def construct_s3_interface(s3_bucket: str, s3_key: str) -> S3Interface:
         raise ValueError('initial_blind_split_handler(): config file is > 100kB. Make sure you uploaded the right file')
     return s3_interface
 
-
 def finalize_message(msg: Dict, blind_range: Tuple) -> str:
     msg['byte_range'] = f'{blind_range[0]}-{blind_range[1]}'
     finalized_msg = json.dumps(msg)
@@ -50,16 +49,31 @@ def que_name_from_arn(arn: str):
     deconstructed_arn = arn.split(':')
     return deconstructed_arn[-1]
 
+def construct_process_name(config: str, prefix: str):
+    '''
+    constructs unique service name based on the processed FASTQ file name for Lambda and SQS
+    :param config: str. FUll config.ini file in the form of string
+    :param prefix: str. String representing current step (name of the lambda fucntion)
+    :return: str. Newly generated unique service name
+    '''
+    config_buf = config_sqs_import(config)
+    config_init = init_config(config_buf)
+    s3_key = list(config_init.values())[0]['key']
+    split_key = s3_key.split('/')[-2:]
+    process_name = '_'.join([prefix]+split_key)
+    return process_name
+
+
 
 # IMPURE FUNCTIONS - have side effects
 # TODO refactor this
-def create_dead_letter_queue(sqs_interface: SQSInterface) -> None:
+def create_dead_letter_queue(sqs_interface) -> None:
     sqs_interface.sqs.create_queue(QueueName=sqs_interface.dead_letter_name,
                                    Attributes={'DelaySeconds': sqs_interface.sqs_settings.delay_seconds,
                                                'KmsMasterKeyId': sqs_interface.sqs_settings.kms_master_key_id})
 
 # TODO refactor this
-def create_main_queue(sqs_interface: SQSInterface, dead_letter_arn: str) -> None:
+def create_main_queue(sqs_interface, dead_letter_arn: str) -> None:
     redrive_policy = {
         'deadLetterTargetArn': dead_letter_arn,
         'maxReceiveCount': sqs_interface.sqs_settings.maxReceiveCount

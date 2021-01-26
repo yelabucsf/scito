@@ -6,15 +6,15 @@ from scito_count.ContentTable import *
 s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
                     "IO TEST FQ")
 
-class TestFQAdtAtacSplit(TestCase):
+class TestBlockCatalog(TestCase):
     def setUp(self) -> None:
         self.content_tab_gen = ContentTablesIO(s3_set)
         self.content_tab_gen.content_table_stream()
-        self.fq_adt_atac_catalog = FQAdtAtacCatalog(n_parts=4)
+        self.fq_adt_atac_catalog = BlockCatalog(n_parts=4)
 
-    def test_adt_atac_ranges(self):
+    def test_create_catalog(self):
         lol = ContentTable(self.content_tab_gen)
-        self.fq_adt_atac_catalog.adt_atac_catalog(content_table=lol.content_table_arr, overlap=0)
+        self.fq_adt_atac_catalog.create_catalog(content_table=lol.content_table_arr, overlap=0)
         list_lol = self.fq_adt_atac_catalog.ranges
         self.assertEqual(list_lol[0][1], 29576)
         self.assertEqual(len(list_lol), 4)

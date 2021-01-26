@@ -1,5 +1,6 @@
 from scito_lambdas.lambda_utils import *
 from scito_count.ContentTable import *
+from scito_count.BlockCatalog import *
 
 
 def catalog_build_handler(event, context):
@@ -9,7 +10,7 @@ def catalog_build_handler(event, context):
         raise ValueError('blind_split_handler(): trigger for this function should contain only a single record')
     record = event['Records'][0]
 
-    # TODO pass the right event. For now it's an SQS message
+    # TODO pass the correct event. For now it's an SQS message
     record_deconstructed = json.loads(record['body'])
     config_buf = config_sqs_import(record_deconstructed['config'])
     s3_settings = S3Settings(config_buf, record_deconstructed['section'])
@@ -21,6 +22,11 @@ def catalog_build_handler(event, context):
     # produce content table with all BGZF ranges
     content_table = ContentTable(content_tables_io)
 
+    # create catalog of BGZF blocks
+    block_catalog = BlockCatalog(n_parts=8000)
+    block_catalog.create_catalog(content_table=content_table.content_table_arr, overlap=overlap)
+
+    # Create SQS
 
 
 

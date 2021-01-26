@@ -8,7 +8,7 @@ class Test_1(TestCase):
         with open("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini") as cfg:
             lol = StringIO(cfg.read())
         config_init = init_config(lol)
-        section = config_init[list(config_init.keys())[2]]
+        section = list(config_init.values())[2]
         self.assertEqual(section['key'], 'anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
 
 
@@ -25,8 +25,7 @@ class Test_2(TestCase):
 
         config_buf = StringIO(s3_interface.s3_obj.get()["Body"].read().decode('utf-8'))
         config_init = init_config(config_buf)
-        config_sections = config_init.sections()
-        section = config_init[config_sections[2]]
+        section = list(config_init.values())[2]
         self.assertEqual(section['key'], 'anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
 
 
@@ -35,7 +34,7 @@ class Test_3(TestCase):
         config_buf = config_sqs_import('[local test]\nbucket = ucsf-genomics-prod-project-data\n'
                                        'key = anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
         config_init = init_config(config_buf)
-        section = config_init[list(config_init.keys())[0]]
+        section = list(config_init.values())[0]
         self.assertEqual(section['key'], 'anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
 
 

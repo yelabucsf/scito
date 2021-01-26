@@ -1,22 +1,21 @@
 from unittest import TestCase
 from scito_count.SQSInterface import *
 from scito_count.ProcessSettings import *
-from scito_utils.SQSSettings import *
+from scito_lambdas.lambda_utils import *
 import time
 
 
-s3_set2 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                     "ATAC ADT R2")
 
 
 class TestSQSInterface(TestCase):
     def setUp(self) -> None:
-        self.sqs_interface = SQSInterface(s3_set2, 'unitTest')
-        self.sqs_settings = SQSSettings()
+        with open("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini") as cfg:
+            lol = cfg.read()
+        self.sqs_interface = SQSInterface(lol, 'unit-test')
         try:
             self.sqs_interface.sqs.create_queue(QueueName=self.sqs_interface.dead_letter_name,
-                                                Attributes={'DelaySeconds': self.sqs_settings.delay_seconds,
-                                                            'KmsMasterKeyId': self.sqs_settings.kms_master_key_id})
+                                                Attributes={'DelaySeconds': self.sqs_interface.sqs_settings.delay_seconds,
+                                                            'KmsMasterKeyId': self.sqs_interface.sqs_settings.kms_master_key_id})
         except:
             pass
         self.active_sqs = self.sqs_interface.sqs.get_queue_by_name(QueueName=self.sqs_interface.dead_letter_name)

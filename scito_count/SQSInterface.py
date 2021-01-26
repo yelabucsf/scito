@@ -1,19 +1,24 @@
+from scito_lambdas.lambda_utils import *
+from scito_count.ProcessSettings import *
+
 import boto3
-import os
 
 
 '''
 class to create SQS queue, read and send messages
 '''
 class SQSInterface(object):
-    def __init__(self, s3_settings, prefix):
+    def __init__(self, config: str, prefix: str):
+        config_buf = config_sqs_import(config)
+        config_init = init_config(config_buf)
+        s3_settings = S3Settings(config_buf, list(config_init.keys())[0])
         if s3_settings.profile == "":
             session = boto3.Session()
         else:
             session = boto3.Session(profile_name=s3_settings.profile)
+
         self.sqs = session.resource("sqs")
-        self.queue_name = '_'.join([prefix,
-                                   os.path.basename(s3_settings.object_key).split(".")[0]])
+        self.queue_name = construct_process_name(config, prefix)
         self.dead_letter_name = '_'.join([self.queue_name, 'DEAD-LETTER'])
 
         self.sqs_settings = {'DelaySeconds': '5',

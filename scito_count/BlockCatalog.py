@@ -18,30 +18,22 @@ class BlockCatalog(object):
         self.n_parts = n_parts
         self.ranges = None
 
-    @classmethod
-    def create_catalog(cls, func_of_technology):
-        @functools.wraps(func_of_technology)
-        def create_range_wrapper(self, content_table, *args, **kwargs):
-            '''
-            :param content_table: ContentTable type
-            '''
-            ranges = func_of_technology(self, content_table, *args, **kwargs)
-            while len(ranges) < self.n_parts:
-                arr_temp = [func_of_technology(self, x, *args, **kwargs) for x in ranges]
-                ranges = functools.reduce(operator.iconcat, arr_temp, [])
-            self.ranges = [(x[0][0], x[-1][-1]) for x in ranges]
-        return create_range_wrapper
+    def create_catalog(self, content_table, overlap):
+        '''
+        :param content_table: ContentTable type
+        '''
+        ranges = self._half_split(content_table, overlap)
+        while len(ranges) < self.n_parts:
+            arr_temp = [self._half_split(x, overlap) for x in ranges]
+            ranges = functools.reduce(operator.iconcat, arr_temp, [])
+        self.ranges = [(x[0][0], x[-1][-1]) for x in ranges]
 
-
-
-class FQAdtAtacCatalog(BlockCatalog):
-    @BlockCatalog.create_catalog
-    def adt_atac_catalog(self, content_table, overlap):
-        content_table = np.array_split(content_table, 2)
-        if overlap == 0:
-            first_half = np.array(content_table[0])
-            second_half = np.array(content_table[1])
-        else:
-            first_half = np.concatenate((content_table[0], content_table[1][:overlap]))
-            second_half = np.concatenate((content_table[0][-overlap:], content_table[1]))
-        return [first_half, second_half]
+    def _half_split(self, content_table, overlap):
+            content_table = np.array_split(content_table, 2)
+            if overlap == 0:
+                first_half = np.array(content_table[0])
+                second_half = np.array(content_table[1])
+            else:
+                first_half = np.concatenate((content_table[0], content_table[1][:overlap]))
+                second_half = np.concatenate((content_table[0][-overlap:], content_table[1]))
+            return [first_half, second_half]
