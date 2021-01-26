@@ -65,7 +65,6 @@ def construct_process_name(config: Dict, prefix: str):
     return process_name
 
 
-
 # IMPURE FUNCTIONS - have side effects
 # TODO refactor this
 def create_dead_letter_queue(sqs_interface) -> None:

@@ -6,9 +6,9 @@ from io import StringIO
 def main_handler(event, context):
     '''
     Function is triggered by an upload event. The downstream lambdas are created programmatically
-    :param event:
+    :param event: S3 records
     :param context:
-    :return:
+    :return: void
     '''
 
     # id of this lambda
@@ -26,25 +26,27 @@ def main_handler(event, context):
     config_buf = config_sqs_import(config_str)
 
     # parse config
-    config_init = init_config(config_buf)
-    config_sections = config_init.keys()
+    config = init_config(config_buf)
+    config_sections = config.keys()
     if len(config_sections) > 3:
         raise ValueError('initial_blind_split_handler(): current pipeline supports only technologies 3 FASTQ files per sample')
 
+    # Create queues
+    queue_name = construct_process_name(config, lambda_name)
+    sqs_interface = SQSInterface(config, queue_name)
+    if not sqs_interface.queue_exists(dead_letter=True):
+        create_dead_letter_queue(sqs_interface)
+    dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
+    if not sqs_interface.queue_exists(dead_letter=False):
+        create_main_queue(sqs_interface, dead_letter.attributes['QueueArn'])
+    main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
 
+    # !!!!!TODO create a lambda
 
     # sending messages to the queue per config section
     for section in config_sections:
-        # !!!!!TODO create a lambda
 
-        s3_settings = S3Settings(config_buf, section)
-        sqs_interface = SQSInterface(s3_settings, lambda_name)
-        if not sqs_interface.queue_exists(dead_letter=True):
-            create_dead_letter_queue(sqs_interface)
-        dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
-        if not sqs_interface.queue_exists(dead_letter=False):
-            create_main_queue(sqs_interface, dead_letter.attributes['QueueArn'])
-        main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
+        s3_settings = S3Settings(config, section)
         blind_ranges = blind_byte_range(s3_settings)
 
         # construct message
