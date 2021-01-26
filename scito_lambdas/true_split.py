@@ -11,10 +11,11 @@ def true_split_record(record: Dict):
     # get config
     record_deconstructed = json.loads(record['body'])
     config_buf = config_sqs_import(record_deconstructed['config'])
-    s3_settings = S3Settings(config_buf, record_deconstructed['section'])
+    config = init_config(config_buf)
+    s3_settings = S3Settings(config, record_deconstructed['section'])
 
     # Check if origin queue is correct
-    origin_sqs_interface = SQSInterface(s3_settings, previous_lambda)
+    origin_sqs_interface = SQSInterface(config, previous_lambda)
     origin_queue = que_name_from_arn(record['eventSourceARN'])
     expected_queue = origin_sqs_interface.queue_name
     if expected_queue != origin_queue:
