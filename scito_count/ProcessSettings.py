@@ -4,14 +4,6 @@ import configparser
 
 class ProcessSettings(object):
     def __init__(self, config: Dict, config_section: str):
-        config = configparser.ConfigParser()
-        config_type = type(config).__name__0
-        if config_type == 'StringIO':
-            config.read_file(config)
-        elif config_type == 'str':
-            config.read(config)
-        else:
-            raise ValueError(f'init_config(): {config_type} is not a supported input type')
         self._section_settings = config[config_section]
 
 class S3Settings(ProcessSettings):
