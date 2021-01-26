@@ -8,10 +8,8 @@ import boto3
 class to create SQS queue, read and send messages
 '''
 class SQSInterface(object):
-    def __init__(self, config: str, prefix: str):
-        config_buf = config_sqs_import(config)
-        config_init = init_config(config_buf)
-        s3_settings = S3Settings(config_buf, list(config_init.keys())[0])
+    def __init__(self, config: Dict, prefix: str):
+        s3_settings = S3Settings(config, list(config.keys())[0])
         if s3_settings.profile == "":
             session = boto3.Session()
         else:

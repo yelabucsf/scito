@@ -10,12 +10,13 @@ import time
 class TestSQSInterface(TestCase):
     def setUp(self) -> None:
         with open("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini") as cfg:
-            lol = cfg.read()
-        self.sqs_interface = SQSInterface(lol, 'unit-test')
+            lol = StringIO(cfg.read())
+        config = init_config(lol)
+        self.sqs_interface = SQSInterface(config, 'unit-test')
         try:
             self.sqs_interface.sqs.create_queue(QueueName=self.sqs_interface.dead_letter_name,
-                                                Attributes={'DelaySeconds': self.sqs_interface.sqs_settings.delay_seconds,
-                                                            'KmsMasterKeyId': self.sqs_interface.sqs_settings.kms_master_key_id})
+                                                Attributes={'DelaySeconds': self.sqs_interface.sqs_settings['DelaySeconds'],
+                                                            'KmsMasterKeyId': self.sqs_interface.sqs_settings['KmsMasterKeyId']})
         except:
             pass
         self.active_sqs = self.sqs_interface.sqs.get_queue_by_name(QueueName=self.sqs_interface.dead_letter_name)
@@ -25,18 +26,17 @@ class TestSQSInterface(TestCase):
         self.assertFalse(self.sqs_interface.queue_exists(dead_letter=False))
 
     def test_messages_pending(self):
-        time.sleep(10)
         msg_body = 'Hello World'
         self.assertFalse(self.sqs_interface.messages_pending(dead_letter=True))
-        time.sleep(5)
         self.active_sqs.send_message(MessageBody=msg_body)
-        time.sleep(5)
+        time.sleep(20)
         self.active_sqs.reload()
         self.assertTrue(self.sqs_interface.messages_pending(dead_letter=True))
         msgs = []
         for message in self.active_sqs.receive_messages():
             msgs.append(message.body)
-        time.sleep(5)
+            message.delete()
+        time.sleep(60)
         self.active_sqs.reload()
         self.assertFalse(self.sqs_interface.messages_pending(dead_letter=True))
 

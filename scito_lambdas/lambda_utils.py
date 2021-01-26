@@ -3,6 +3,8 @@ from configparser import  ConfigParser
 from typing import List, Tuple, Dict, Union
 import json
 from io import StringIO
+import re
+import os
 from scito_count.blind_byte_range import *
 from scito_count.SQSInterface import *
 
@@ -49,17 +51,16 @@ def que_name_from_arn(arn: str):
     deconstructed_arn = arn.split(':')
     return deconstructed_arn[-1]
 
-def construct_process_name(config: str, prefix: str):
+def construct_process_name(config: Dict, prefix: str):
     '''
     constructs unique service name based on the processed FASTQ file name for Lambda and SQS
     :param config: str. FUll config.ini file in the form of string
     :param prefix: str. String representing current step (name of the lambda fucntion)
     :return: str. Newly generated unique service name
     '''
-    config_buf = config_sqs_import(config)
-    config_init = init_config(config_buf)
-    s3_key = list(config_init.values())[0]['key']
-    split_key = s3_key.split('/')[-2:]
+    s3_key = list(config.values())[0]['key']
+    key_base = os.path.basename(s3_key).split('.')[0]
+    split_key = key_base.split('/')[-2:]
     process_name = '_'.join([prefix]+split_key)
     return process_name
 
