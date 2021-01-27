@@ -28,6 +28,9 @@ def catalog_parser(sync_ranges, config: Dict) -> str:
 
 def catalog_build_handler(event, context):
     lambda_name = 'catalog-build'
+
+    # TODO check if lambda is correct
+
     if len(event['Records']) > 1:
         raise ValueError('blind_split_handler(): trigger for this function should contain only a single record')
 

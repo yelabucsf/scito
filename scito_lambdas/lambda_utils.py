@@ -1,6 +1,6 @@
 from urllib.parse import unquote_plus
 from configparser import  ConfigParser
-from typing import List, Tuple, Dict, Union
+from typing import List, Tuple, Dict, Union, Type
 import json
 from io import StringIO
 import re
@@ -86,7 +86,7 @@ def origin_vs_expected_queue(record: Dict, previous_lambda: str) -> Tuple:
     return origin_queue, expected_queue
 
 
-def seq_file_factory(technology: str):
+def seq_file_factory(technology: str) -> Type[SeqFile]:
     technologies = {
         'scito ATAC': FQFile
     }

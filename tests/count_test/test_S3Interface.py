@@ -16,3 +16,10 @@ class TestS3Interface(TestCase):
         lol = self.s3_interface.get_bytes_s3(2, 6).read()
         print(lol)
         self.assertEqual(lol, b'\x08\x08s\x01i')
+
+    def test_async_ob_size(self):
+        s3_interface = S3Interface(bucket="ucsf-genomics-prod-project-data",
+                                   object_key="anton/scito/mock/fastq/TEST_FASTQ.fastq.gz",
+                                   profile="gvaihir")
+        print(self.s3_interface.obj_size())
+        self.assertEqual(self.s3_interface.obj_size(), 9945950)

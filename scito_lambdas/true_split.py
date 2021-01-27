@@ -33,8 +33,8 @@ def true_split_record(record: Dict):
 
     # delete queues if they are empty
     # TODO build a logic to delete a queue
-    active_queue = origin_sqs_interface.sqs.get_queue_by_name(QueueName=origin_sqs_interface.queue_name)
-    active_queue.reload()
+    #active_queue = origin_sqs_interface.sqs.get_queue_by_name(QueueName=origin_sqs_interface.queue_name)
+    #active_queue.reload()
 
 
     # TODO Create next lambda
@@ -45,8 +45,10 @@ def true_split_record(record: Dict):
 
 def true_split_handler(event, context):
     lambda_name = 'true-split'
+    # TODO check if lambda is correct
+
     if len(event['Records']) > 10:
         raise ValueError('true_split_handler(): allowed lambda batch is up to 10 messages')
-    for record in event:
-        true_split_record(record)
+    [true_split_record(record) for record in event['Records']]
+
 
