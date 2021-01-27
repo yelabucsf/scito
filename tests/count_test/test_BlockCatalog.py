@@ -1,13 +1,12 @@
 from unittest import TestCase
-from scito_count.BlockCatalog import *
-from scito_count.ProcessSettings import *
-from scito_count.ContentTable import *
+from scito_lambdas.lambda_utils import *
 
-s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                    "IO TEST FQ")
+
 
 class TestBlockCatalog(TestCase):
     def setUp(self) -> None:
+        config = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
+        s3_set = S3Settings(config, "IO TEST FQ")
         self.content_tab_gen = ContentTablesIO(s3_set)
         self.content_tab_gen.content_table_stream()
         self.fq_adt_atac_catalog = BlockCatalog(n_parts=4)

@@ -5,8 +5,10 @@ import json
 from io import StringIO
 import re
 import os
-from scito_count.blind_byte_range import *
+
+from scito_count.ContentTable import *
 from scito_count.SQSInterface import *
+from scito_count.BlockCatalog import *
 
 def init_config(config_file: Union[str, StringIO]) -> Dict:
     '''
@@ -37,8 +39,14 @@ def construct_s3_interface(s3_bucket: str, s3_key: str) -> S3Interface:
         raise ValueError('initial_blind_split_handler(): config file is > 100kB. Make sure you uploaded the right file')
     return s3_interface
 
+def parse_range(byte_range: Union[Tuple, List, np.ndarray]) -> str:
+    if len(byte_range) !=2:
+        raise ValueError(f'parse_range(): byte range should contain only 2 values: start and end. Passed {len(byte_range)}')
+    return f'{byte_range[0]}-{byte_range[1]}'
+
+
 def finalize_message(msg: Dict, blind_range: Tuple) -> str:
-    msg['byte_range'] = f'{blind_range[0]}-{blind_range[1]}'
+    msg['byte_range'] = parse_range(blind_range)
     finalized_msg = json.dumps(msg)
     return finalized_msg
 
@@ -53,7 +61,7 @@ def que_name_from_arn(arn: str):
 
 def construct_process_name(config: Dict, prefix: str):
     '''
-    constructs unique service name based on the processed FASTQ file name for Lambda and SQS
+    constructs unique service name based on the processed FASTQ file name for Lambda and SQS - FOR ALL sections of the config
     :param config: str. FUll config.ini file in the form of string
     :param prefix: str. String representing current step (name of the lambda fucntion)
     :return: str. Newly generated unique service name

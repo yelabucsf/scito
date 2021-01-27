@@ -1,4 +1,5 @@
 from scito_lambdas.lambda_utils import *
+from scito_count.blind_byte_range import *
 from io import StringIO
 
 
@@ -34,11 +35,11 @@ def main_handler(event, context):
     # Create queues
     queue_name = construct_process_name(config, lambda_name)
     sqs_interface = SQSInterface(config, queue_name)
-    if not sqs_interface.queue_exists(dead_letter=True):
-        create_dead_letter_queue(sqs_interface)
+    if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
+        raise ValueError('main_handler(): SQS queues with provided names already exist')
+    create_dead_letter_queue(sqs_interface)
     dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
-    if not sqs_interface.queue_exists(dead_letter=False):
-        create_main_queue(sqs_interface, dead_letter.attributes['QueueArn'])
+    create_main_queue(sqs_interface, dead_letter.attributes['QueueArn'])
     main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
 
     # !!!!!TODO create a lambda

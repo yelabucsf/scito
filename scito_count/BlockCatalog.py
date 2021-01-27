@@ -26,7 +26,7 @@ class BlockCatalog(object):
         while len(ranges) < self.n_parts:
             arr_temp = [self._half_split(x, overlap) for x in ranges]
             ranges = functools.reduce(operator.iconcat, arr_temp, [])
-        self.ranges = [(x[0][0], x[-1][-1]) for x in ranges]
+        self.ranges = np.array([(x[0][0], x[-1][-1]) for x in ranges])
 
     def _half_split(self, content_table, overlap):
             content_table = np.array_split(content_table, 2)
