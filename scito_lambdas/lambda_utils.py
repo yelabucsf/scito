@@ -9,6 +9,7 @@ import os
 from scito_count.ContentTable import *
 from scito_count.SQSInterface import *
 from scito_count.BlockCatalog import *
+from scito_count.SeqFile import *
 
 def init_config(config_file: Union[str, StringIO]) -> Dict:
     '''
@@ -26,6 +27,16 @@ def init_config(config_file: Union[str, StringIO]) -> Dict:
         raise ValueError(f'init_config(): {config_type} is not a supported input type')
     return dict(config_init._sections)
 
+def config_sqs_import(config_message: str) -> StringIO:
+    config_buf = StringIO(config_message)
+    config_buf.seek(0)
+    return config_buf
+
+def config_from_record(record: Dict) -> Dict:
+    record_deconstructed = json.loads(record['body'])
+    config_buf = config_sqs_import(record_deconstructed['config'])
+    config = init_config(config_buf)
+    return config
 
 def construct_s3_interface(s3_bucket: str, s3_key: str) -> S3Interface:
     '''
@@ -50,11 +61,6 @@ def finalize_message(msg: Dict, blind_range: Tuple) -> str:
     finalized_msg = json.dumps(msg)
     return finalized_msg
 
-def config_sqs_import(config_message: str) -> StringIO:
-    config_buf = StringIO(config_message)
-    config_buf.seek(0)
-    return config_buf
-
 def que_name_from_arn(arn: str):
     deconstructed_arn = arn.split(':')
     return deconstructed_arn[-1]
@@ -71,6 +77,20 @@ def construct_process_name(config: Dict, prefix: str):
     split_key = key_base.split('/')[-2:]
     process_name = '_'.join([prefix]+split_key)
     return process_name
+
+def origin_vs_expected_queue(record: Dict, previous_lambda: str) -> Tuple:
+    config = config_from_record(record)
+    origin_sqs_interface = SQSInterface(config, previous_lambda)
+    origin_queue = que_name_from_arn(record['eventSourceARN'])
+    expected_queue = origin_sqs_interface.queue_name
+    return origin_queue, expected_queue
+
+
+def seq_file_factory(technology: str):
+    technologies = {
+        'scito ATAC': FQFile
+    }
+    return technologies[technology]
 
 
 # IMPURE FUNCTIONS - have side effects

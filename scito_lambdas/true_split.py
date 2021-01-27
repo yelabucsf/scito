@@ -15,10 +15,8 @@ def true_split_record(record: Dict):
     s3_settings = S3Settings(config, record_deconstructed['section'])
 
     # Check if origin queue is correct
-    origin_sqs_interface = SQSInterface(config, previous_lambda)
-    origin_queue = que_name_from_arn(record['eventSourceARN'])
-    expected_queue = origin_sqs_interface.queue_name
-    if expected_queue != origin_queue:
+    origin_queue, expected_queue = origin_vs_expected_queue(record, previous_lambda)
+    if origin_queue != expected_queue:
         raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
                          f'expecting from {expected_queue}, receiving from {origin_queue}')
 

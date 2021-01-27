@@ -11,14 +11,15 @@ class SeqFile(object):
     :param read_settings: ReadSettings. Configuration for the read format. See ProcessSettings.py
     :return SeqFile object
     '''
-    __slots__ = "read_records", "s3_interface", "technology", "n_reads"
-    def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings):
+    __slots__ = "read_records", "s3_interface", "technology", "n_reads", "byte_range"
+    def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, byte_range: str):
         self.s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, s3_settings.profile)
         if s3_settings.object_key.split(".")[-1] not in ["gz", "gzip"]:
             raise ValueError("SeqFile(): object is not a gzip file")
         self.technology: ReadSettings = read_settings
         self.n_reads: str = None
         self.read_records: FQRecord = None
+        self.byte_range: str = byte_range
 
     '''
     Classmethod to accept a method from subclass and process a set of lanes in input files
@@ -31,7 +32,7 @@ class SeqFile(object):
         def import_record_inner(func):
             @functools.wraps(func)
             def text_parser(self, *args, **kwargs):
-                with gzip.GzipFile(fileobj=self.s3_interface.s3_obj.get()["Body"], mode="r") as gzipfile:
+                with gzip.GzipFile(fileobj=self.s3_interface.s3_obj.get(Range=f"bytes={self.byte_range}")["Body"], mode="r") as gzipfile:
                     data: List[str] = []
                     counter = 0
                     for line in gzipfile:
@@ -54,8 +55,8 @@ class FQFile(SeqFile):
     Subclass of SeqFile. Also contains:
     :attr qc_scale: str. Format of quality score.
     '''
-    def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, qc_scale="phred"):
-        super().__init__(s3_settings, read_settings)
+    def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, byte_range: str, qc_scale="phred"):
+        super().__init__(s3_settings, read_settings, byte_range)
         self.qc_scale = qc_scale
         if qc_scale not in ["phred", "solexa"]:
             raise ValueError("FastqFile(): Illegal quality scale")
