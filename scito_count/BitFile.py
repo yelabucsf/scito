@@ -30,7 +30,7 @@ class BUSFileAdtAtac(BUSFile):
     @BUSFile.bus_file_stream
     def bus_file_stream_adt_atac(self):
         bus_container = BUSRecordAdtAtac()
-        for read2, read3 in zip(self.seq_sync.seq_files['read2'].read_records,
-                                self.seq_sync.seq_files['read3'].read_records):
+        for read2, read3 in zip(self.seq_sync.seq_files[0].read_records,
+                                self.seq_sync.seq_files[1].read_records):
             bus_record = bus_container.construct_record((read2, read3))
             yield bus_record

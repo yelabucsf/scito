@@ -7,6 +7,7 @@ import re
 import os
 
 from scito_count.ContentTable import *
+from scito_count.BitFile import *
 from scito_count.SQSInterface import *
 from scito_count.BlockCatalog import *
 from scito_count.SeqFile import *
@@ -84,13 +85,6 @@ def origin_vs_expected_queue(record: Dict, previous_lambda: str) -> Tuple:
     origin_queue = que_name_from_arn(record['eventSourceARN'])
     expected_queue = origin_sqs_interface.queue_name
     return origin_queue, expected_queue
-
-
-def seq_file_factory(technology: str) -> Type[SeqFile]:
-    technologies = {
-        'scito ATAC': FQFile
-    }
-    return technologies[technology]
 
 
 # IMPURE FUNCTIONS - have side effects
