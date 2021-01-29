@@ -42,7 +42,7 @@ class TestAWSExportIO(TestCase):
         self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
         self.bus_file_adt_atac.bus_file_stream_adt_atac()
         adt_atac_bus_header = BUSHeaderAdtAtac()
-        self.header = adt_atac_bus_header.output_adt_atac_header()
+        self.header = adt_atac_bus_header.output_header()
         self.native_bus_tools = BUSTools(bus_header=self.header, bus_records=self.bus_file_adt_atac.bit_records)
         self.native_bus_tools.run_pipe([self.native_bus_tools.bus_sort()])
 
@@ -51,7 +51,7 @@ class TestAWSExportIO(TestCase):
         bt_export.processed_bus_upload_s3(byte_seq=self.native_bus_tools.processed_bus_file)
         lol = S3Interface(test_s3_set.bucket, test_s3_set.object_key, test_s3_set.profile)
         header = BUSHeaderAdtAtac()
-        h = header.output_adt_atac_header()
+        h = header.output_header()
         test_h = lol.get_bytes_s3(0, 44).read()
         self.assertEqual(h, test_h)
 

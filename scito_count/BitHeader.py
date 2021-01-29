@@ -13,14 +13,14 @@ class BUSHeader(BitHeader):
         self.version = struct.pack('<L', 1)
 
     @classmethod
-    def output_header(cls, func_of_technology):
+    def parent_output_header(cls, func_of_technology):
         @functools.wraps(func_of_technology)
-        def output_header_wrapper(self, *args, **kwargs):
+        def parent_output_header_wrapper(self, *args, **kwargs):
             header = b''.join([self.magic,
                                self.version,
                                func_of_technology(self, *args, **kwargs)])
             return header
-        return output_header_wrapper
+        return parent_output_header_wrapper
 
 class BUSHeaderAdtAtac(BUSHeader):
     def __init__(self):
@@ -30,7 +30,7 @@ class BUSHeaderAdtAtac(BUSHeader):
         self.text = b'scito-seq ADT 10x ATAC v1'
         self.tlen = struct.pack('<L', len(self.text))
 
-    @BUSHeader.output_header
-    def output_adt_atac_header(self):
+    @BUSHeader.parent_output_header
+    def output_header(self):
         return b''.join([self.bc_len, self.umi_len, self.tlen, self.text])
 

@@ -5,6 +5,8 @@ from scito_count.ProcessSettings import *
 from scito_count.SeqSync import *
 import functools
 
+
+
 class BitFile(object):
     __slots__ = 'seq_sync', 'bit_records'
 

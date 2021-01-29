@@ -63,7 +63,7 @@ def bus_constructor_record(record: Dict):
     bus_file_adt_atac = BUSFileAdtAtac(sync_two_reads)
     bus_file_adt_atac.bus_file_stream_adt_atac()
     adt_atac_bus_header = BUSHeaderAdtAtac()
-    header = adt_atac_bus_header.output_adt_atac_header()
+    header = adt_atac_bus_header.output_header()
     native_bus_tools = BUSTools(bus_header=header, bus_records=bus_file_adt_atac.bit_records)
     native_bus_tools.run_pipe([native_bus_tools.bus_sort()])
 

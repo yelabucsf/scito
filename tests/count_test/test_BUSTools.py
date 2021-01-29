@@ -29,7 +29,7 @@ class TestNativeBusTools(TestCase):
         self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
         self.bus_file_adt_atac.bus_file_stream_adt_atac()
         adt_atac_bus_header = BUSHeaderAdtAtac()
-        self.header = adt_atac_bus_header.output_adt_atac_header()
+        self.header = adt_atac_bus_header.output_header()
 
     def test_run_pipe_text(self):
         self.native_bus_tools = BUSTools(bus_header=self.header, bus_records=self.bus_file_adt_atac.bit_records)
