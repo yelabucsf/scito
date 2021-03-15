@@ -2,11 +2,12 @@ from scito_count.BlocksIO import *
 from scito_count.BlockSplit import *
 from scito_lambdas.lambda_utils import *
 from scito_count.AWSExportIO import *
+from scito_count.LambdaInterface import *
 
 
 # TODO refactor into smaller scopes
 def true_split_record(record: Dict):
-    previous_lambda = 'blind-split'
+    previous_lambda = 'genomics-blind-split'
 
     # get config
     record_deconstructed = json.loads(record['body'])
@@ -37,14 +38,9 @@ def true_split_record(record: Dict):
     #active_queue.reload()
 
 
-    # TODO Create next lambda
-
-
-
-
 
 def true_split_handler(event, context):
-    lambda_name = 'true-split'
+    lambda_name = 'genomics-true-split'
     # TODO check if lambda is correct
 
     if len(event['Records']) > 10:

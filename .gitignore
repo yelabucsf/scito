@@ -4,3 +4,4 @@
 /tests/config_test.ini
 /scripts/
 /whitelists/test_list.whl
+/scito_lambdas/LambdaSettings.py

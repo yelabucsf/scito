@@ -1,5 +1,6 @@
 from scito_lambdas.lambda_utils import *
 from scito_count.BlockCatalog import *
+from scito_count.LambdaInterface import *
 
 def catalog_wrapper(config: Dict, section: str):
     s3_settings = S3Settings(config, section)
@@ -7,6 +8,7 @@ def catalog_wrapper(config: Dict, section: str):
     content_tables_io.content_table_stream()
     content_table = ContentTable(content_tables_io)
     block_catalog = BlockCatalog(n_parts=8000) # magic number targeting 2**13 lambda processes
+
     # TODO logic for overlap
     block_catalog.create_catalog(content_table=content_table.content_table_arr, overlap=overlap)
     return block_catalog
@@ -27,7 +29,7 @@ def catalog_parser(sync_ranges, config: Dict) -> str:
 
 
 def catalog_build_handler(event, context):
-    lambda_name = 'catalog-build'
+    lambda_name = 'genomics-catalog-build'
 
     # TODO check if lambda is correct
 
@@ -52,7 +54,22 @@ def catalog_build_handler(event, context):
     create_main_queue(sqs_interface, dead_letter.attributes['QueueArn'])
     main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
 
-    # TODO !!! Create Lambda
+
+    # create lambda
+    lambda_interface = LambdaInterface(config, lambda_name)
+    if lambda_interface.function_exists():
+        raise lambda_interface.aws_lambda.exceptions.ResourceNotFoundException(f'main_handler(): function with the name'
+                                                                               f'{lambda_interface.lambda_name} already '
+                                                                               f'exists.')
+    # TODO attach settings
+    lambda_interface.aws_lambda.create_function(FunctionName=lambda_interface.lambda_name)
+
+
+    lambda_interface.aws_lambda.create_event_source_mapping(EventSourceArn=main_queue.attributes['QueueArn'],
+                                                            FunctionName=lambda_interface.lambda_name,
+                                                            Enabled=True,
+                                                            BatchSize=10)
+
 
     # construct message
     msg_constant_part = {

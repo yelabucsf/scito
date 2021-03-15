@@ -74,7 +74,7 @@ def construct_process_name(config: Dict, prefix: str):
     :return: str. Newly generated unique service name
     '''
     s3_key = list(config.values())[0]['key']
-    key_base = os.path.basename(s3_key).split('.')[0]
+    key_base = s3_key.split('.')[0]
     split_key = key_base.split('/')[-2:]
     process_name = '_'.join([prefix]+split_key)
     return process_name

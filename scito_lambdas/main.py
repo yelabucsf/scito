@@ -1,5 +1,6 @@
 from scito_lambdas.lambda_utils import *
 from scito_count.blind_byte_range import *
+from scito_count.LambdaInterface import *
 from io import StringIO
 
 
@@ -13,7 +14,7 @@ def main_handler(event, context):
     '''
 
     # id of this lambda
-    lambda_name = 'blind-split'
+    lambda_name = 'genomics-blind-split'
 
     # config to buffer
     if len(event['Records']) > 1:
@@ -42,7 +43,22 @@ def main_handler(event, context):
     create_main_queue(sqs_interface, dead_letter.attributes['QueueArn'])
     main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
 
-    # !!!!!TODO create a lambda
+
+    # Create lambda
+    lambda_interface = LambdaInterface(config, lambda_name)
+    if lambda_interface.function_exists():
+        raise lambda_interface.aws_lambda.exceptions.ResourceNotFoundException(f'main_handler(): function with the name'
+                                                                               f'{lambda_interface.lambda_name} already '
+                                                                               f'exists.')
+    # TODO attach settings
+    lambda_interface.aws_lambda.create_function(FunctionName=lambda_interface.lambda_name)
+
+
+    lambda_interface.aws_lambda.create_event_source_mapping(EventSourceArn=main_queue.attributes['QueueArn'],
+                                                            FunctionName=lambda_interface.lambda_name,
+                                                            Enabled=True,
+                                                            BatchSize=10)
+
 
     # sending messages to the queue per config section
     for section in config_sections:

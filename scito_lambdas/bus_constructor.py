@@ -24,7 +24,7 @@ def settings_for_sections(record: Dict) -> Dict:
 
 
 def bus_constructor_record(record: Dict):
-    previous_lambda = 'catalog-build'
+    previous_lambda = 'genomics-catalog-build'
 
     # get config
     record_deconstructed = json.loads(record['body'])
@@ -72,7 +72,7 @@ def bus_constructor_record(record: Dict):
 
 
 def bus_constructor_handler(event, context):
-    lambda_name = 'bus-constructor'
+    lambda_name = 'genomics-bus-constructor'
 
     #TODO check if lambda is correct
     if len(event['Records']) > 2:

@@ -3,6 +3,7 @@ from scito_count.ProcessSettings import *
 
 import boto3
 
+from scito_lambdas.lambda_utils import construct_process_name
 
 '''
 class to create SQS queue, read and send messages
