@@ -5,6 +5,10 @@ import boto3
 
 from scito_lambdas.lambda_utils import construct_process_name
 
+class SQSInterfaceError(Exception):
+    '''Errors corresponding to misuse of SQSInterface'''
+
+
 '''
 class to create SQS queue, read and send messages
 '''

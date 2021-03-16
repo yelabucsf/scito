@@ -3,14 +3,12 @@ from scito_count.blind_byte_range import *
 from scito_count.LambdaInterface import *
 from io import StringIO
 
-
-
-def main_handler(event, context):
+def main_handler(event: Dict, context) -> None:
     '''
     Function is triggered by an upload event. The downstream lambdas are created programmatically
-    :param event: S3 records
+    :param event: Dict. S3 records
     :param context:
-    :return: void
+    :return: None
     '''
 
     # id of this lambda
@@ -18,7 +16,7 @@ def main_handler(event, context):
 
     # config to buffer
     if len(event['Records']) > 1:
-        raise ValueError('blind_split_handler(): trigger for this function should contain only a single record')
+        raise ValueError('main_handler(): trigger for this function should contain only a single record')
     record = event['Records'][0]
 
     s3_bucket = record['s3']['bucket']['name']
@@ -31,13 +29,13 @@ def main_handler(event, context):
     config = init_config(config_buf)
     config_sections = config.keys()
     if len(config_sections) > 3:
-        raise ValueError('initial_blind_split_handler(): current pipeline supports only technologies 3 FASTQ files per sample')
+        raise ValueError('main_handler(): current pipeline supports only technologies 3 FASTQ files per sample')
 
     # Create queues
     queue_name = construct_process_name(config, lambda_name)
     sqs_interface = SQSInterface(config, queue_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
-        raise ValueError('main_handler(): SQS queues with provided names already exist')
+        raise SQSInterfaceError('main_handler(): SQS queues with provided names already exist')
     create_dead_letter_queue(sqs_interface)
     dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
     create_main_queue(sqs_interface, dead_letter.attributes['QueueArn'])
@@ -47,9 +45,7 @@ def main_handler(event, context):
     # Create lambda
     lambda_interface = LambdaInterface(config, lambda_name)
     if lambda_interface.function_exists():
-        raise lambda_interface.aws_lambda.exceptions.ResourceNotFoundException(f'main_handler(): function with the name'
-                                                                               f'{lambda_interface.lambda_name} already '
-                                                                               f'exists.')
+        raise LambdaInterfaceError(f'main_handler(): function with the name {lambda_interface.lambda_name} already exists.')
     # TODO attach settings
     lambda_interface.aws_lambda.create_function(FunctionName=lambda_interface.lambda_name)
 

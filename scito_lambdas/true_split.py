@@ -6,14 +6,14 @@ from scito_count.LambdaInterface import *
 
 
 # TODO refactor into smaller scopes
-def true_split_record(record: Dict):
+def true_split_record(record: Dict) -> None:
     previous_lambda = 'genomics-blind-split'
 
     # get config
-    record_deconstructed = json.loads(record['body'])
-    config_buf = config_sqs_import(record_deconstructed['config'])
+    parsed_record = json.loads(record['body'])
+    config_buf = config_sqs_import(parsed_record['config'])
     config = init_config(config_buf)
-    s3_settings = S3Settings(config, record_deconstructed['section'])
+    s3_settings = S3Settings(config, parsed_record['section'])
 
     # Check if origin queue is correct
     origin_queue, expected_queue = origin_vs_expected_queue(record, previous_lambda)
@@ -22,7 +22,7 @@ def true_split_record(record: Dict):
                          f'expecting from {expected_queue}, receiving from {origin_queue}')
 
     # find BGZF headers and construct byte ranges of inflatable BGZF parts
-    byte_range = record_deconstructed['byte_range']
+    byte_range = parsed_record['byte_range']
     handle = BlocksIO(s3_settings, byte_range)
     handle.get_object_part()
     block_split = BlockSplit(handle)

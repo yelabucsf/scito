@@ -4,6 +4,9 @@ from typing import Dict
 from scito_count.ProcessSettings import *
 from scito_lambdas.lambda_utils import construct_process_name
 
+class LambdaInterfaceError(Exception):
+    '''Errors corresponding to misuse of LambdaInterface'''
+
 class LambdaInterface(object):
     def __init__(self, config: Dict, prefix: str):
         s3_settings = S3Settings(config, list(config.keys())[0])
