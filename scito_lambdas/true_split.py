@@ -7,7 +7,7 @@ from scito_count.LambdaInterface import *
 
 # TODO refactor into smaller scopes
 def true_split_record(record: Dict) -> None:
-    previous_lambda = 'genomics-blind-split'
+    previous_lambda_name = 'genomics-blind-split'
 
     # get config
     parsed_record = json.loads(record['body'])
@@ -16,7 +16,7 @@ def true_split_record(record: Dict) -> None:
     s3_settings = S3Settings(config, parsed_record['section'])
 
     # Check if origin queue is correct
-    origin_queue, expected_queue = origin_vs_expected_queue(record, previous_lambda)
+    origin_queue, expected_queue = origin_vs_expected_queue(record, previous_lambda_name)
     if origin_queue != expected_queue:
         raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
                          f'expecting from {expected_queue}, receiving from {origin_queue}')
@@ -40,7 +40,7 @@ def true_split_record(record: Dict) -> None:
 
 
 def true_split_handler(event, context):
-    lambda_name = 'genomics-true-split'
+    this_lambda_name = 'genomics-true-split'
     # TODO check if lambda is correct
 
     if len(event['Records']) > 10:

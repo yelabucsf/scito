@@ -9,6 +9,11 @@ class LambdaInterfaceError(Exception):
 
 class LambdaInterface(object):
     def __init__(self, config: Dict, prefix: str):
+        '''
+        Abstraction to interact with a specific lambda based on the config
+        :param config: Dict. Pipeline config imported as a dictionary
+        :param prefix: str. Unique prefix for this process
+        '''
         s3_settings = S3Settings(config, list(config.keys())[0])
         if s3_settings.profile == "":
             session = boto3.Session()
@@ -17,7 +22,7 @@ class LambdaInterface(object):
         self.aws_lambda = session.resource("lambda")
         self.lambda_name = construct_process_name(config, prefix)
 
-    def function_exists(self):
+    def function_exists(self) -> bool:
         try:
             current_function = self.aws_lambda.get_function(self.lambda_name)
         except self.aws_lambda.exceptions.ResourceNotFoundException:
