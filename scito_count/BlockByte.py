@@ -1,6 +1,6 @@
 import struct
 '''
-Class to generate byte strings from 
+Class to generate byte strings from offsets of BGZF ranges
 '''
 
 class BlockByte(object):

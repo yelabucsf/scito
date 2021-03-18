@@ -3,23 +3,17 @@ from scito_count.BlockSplit import *
 from scito_lambdas.lambda_utils import *
 from scito_count.AWSExportIO import *
 from scito_count.LambdaInterface import *
+from scito_count.CompositeTrigger import *
 
 
 # TODO refactor into smaller scopes
 def true_split_record(record: Dict) -> None:
-    previous_lambda_name = 'genomics-blind-split'
 
     # get config
     parsed_record = json.loads(record['body'])
     config_buf = config_sqs_import(parsed_record['config'])
     config = init_config(config_buf)
     s3_settings = S3Settings(config, parsed_record['section'])
-
-    # Check if origin queue is correct
-    origin_queue, expected_queue = origin_vs_expected_queue(record, previous_lambda_name)
-    if origin_queue != expected_queue:
-        raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
-                         f'expecting from {expected_queue}, receiving from {origin_queue}')
 
     # find BGZF headers and construct byte ranges of inflatable BGZF parts
     byte_range = parsed_record['byte_range']
@@ -32,19 +26,52 @@ def true_split_record(record: Dict) -> None:
     block_byte_export.block_range_upload_s3(byte_seq=block_byte.byte_block_gen)
 
 
-    # delete queues if they are empty
-    # TODO build a logic to delete a queue
-    #active_queue = origin_sqs_interface.sqs.get_queue_by_name(QueueName=origin_sqs_interface.queue_name)
-    #active_queue.reload()
-
-
 
 def true_split_handler(event, context):
+    previous_lambda_name = 'genomics-blind-split'
     this_lambda_name = 'genomics-true-split'
+
+    # Check if origin queue is correct
+    probe_record = event['Records'][0]
+    origin_queue, expected_queue = origin_vs_expected_queue(probe_record, previous_lambda_name)
+    if origin_queue != expected_queue:
+        raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
+                         f'expecting from {expected_queue}, receiving from {origin_queue}')
+
     # TODO check if lambda is correct
 
     if len(event['Records']) > 10:
         raise ValueError('true_split_handler(): allowed lambda batch is up to 10 messages')
     [true_split_record(record) for record in event['Records']]
+
+    composite_trigger = CompositeTrigger(config='', prefix='')
+
+    # delete the main queue if it's empty
+    origin_sqs_interface = SQSInterface(config='', prefix='previous_lambda_name')
+    active_queue = origin_sqs_interface.sqs.get_queue_by_name(QueueName=origin_sqs_interface.queue_name)
+    active_queue.reload()
+    if not origin_sqs_interface.messages_pending(dead_letter=False):
+        composite_trigger.add_bytes()
+        active_queue.delete()
+
+    active_queue = origin_sqs_interface.sqs.get_queue_by_name(QueueName=origin_sqs_interface.dead_letter_name)
+    active_queue.reload()
+    if not origin_sqs_interface.messages_pending(dead_letter=True):
+        active_queue.delete()
+    else:
+        msgs = []
+        for message in active_queue.receive_messages():
+            msgs.append(message.body)
+        raise SQSInterfaceError(f'true_split_handler(): Some messages could not be delivered and ended up in a DEAD_LETTER'
+                                f' SQS queue. Please troubleshoot failed messages. Total number of failed messages: '
+                                f'{len(msgs)}. First failed message looks like: \n{msgs[0]}')
+
+
+
+    # check composite trigger
+    if composite_trigger.complete:
+        ## invoke lambda3
+        pass
+
 
 

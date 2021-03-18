@@ -36,8 +36,8 @@ class SQSInterface(object):
 
     def messages_pending(self, dead_letter=False) -> bool:
         if not self.queue_exists(dead_letter):
-            raise AttributeError(f'SQSInterface.messages_pending(): {self.dead_letter_name if dead_letter else self.queue_name} '
-                                 f'does not exist')
+            raise SQSInterfaceError(f'SQSInterface.messages_pending(): {self.dead_letter_name if dead_letter else self.queue_name} '
+                                    f'does not exist')
         active_queue = self._activate_queue(dead_letter)
         attr_to_check = ['ApproximateNumberOfMessages',
                          'ApproximateNumberOfMessagesDelayed',

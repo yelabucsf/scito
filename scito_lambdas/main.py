@@ -3,13 +3,7 @@ from scito_count.blind_byte_range import *
 from scito_count.LambdaInterface import *
 from io import StringIO
 
-def pipeline_config_s3(record: Dict) -> str:
-    s3_bucket = record['s3']['bucket']['name']
-    s3_key = unquote_plus(record['s3']['object']['key'])
-    s3_interface = construct_s3_interface(s3_bucket, s3_key)
-    config_str = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
-    return config_str
-
+### HARDCODED SETTINGS
 # Kinda hardcoded function to get settings for the next lambda from S3
 def settings_for_true_split_lambda(lambda_name: str) -> Dict:
     s3_bucket = ''
@@ -23,6 +17,25 @@ def settings_for_true_split_lambda(lambda_name: str) -> Dict:
     lambda_settings = json.loads(config_str)
     lambda_settings["FunctionName"] = lambda_name
     return lambda_settings
+
+# Kinda hardcoded function to get settings for the resource mapping for the next lambda
+def settings_event_source(event_source_arn: str, lambda_name: str):
+    settings = {
+        "EventSourceArn": event_source_arn,
+        "FunctionName": lambda_name,
+        "Enabled": True,
+        "BatchSize": 10,
+        "MaximumBatchingWindowInSeconds": 20
+    }
+    return settings
+
+
+def pipeline_config_s3(record: Dict) -> str:
+    s3_bucket = record['s3']['bucket']['name']
+    s3_key = unquote_plus(record['s3']['object']['key'])
+    s3_interface = construct_s3_interface(s3_bucket, s3_key)
+    config_str = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
+    return config_str
 
 
 def main_handler(event: Dict, context) -> None:
@@ -70,11 +83,8 @@ def main_handler(event: Dict, context) -> None:
     next_lambda_settings = settings_for_true_split_lambda(lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_function(**next_lambda_settings)
 
-
-    lambda_interface.aws_lambda.create_event_source_mapping(EventSourceArn=main_queue.attributes['QueueArn'],
-                                                            FunctionName=lambda_interface.lambda_name,
-                                                            Enabled=True,
-                                                            BatchSize=10)
+    event_source_settings = settings_event_source(main_queue.attributes['QueueArn'], lambda_interface.lambda_name)
+    lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
 
 
     # sending messages to the queue per config section
