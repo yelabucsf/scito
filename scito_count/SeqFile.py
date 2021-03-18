@@ -9,8 +9,10 @@ class SeqFile(object):
     Class containing all sequencing records of a file + meta data
     :param s3_settings: S3Settings. Configuration for an S3 access. See ProcessSettings.py
     :param read_settings: ReadSettings. Configuration for the read format. See ProcessSettings.py
+    :param byte_range: str. Format 'start-end'. Byte offsets to download from S3
     :return SeqFile object
     '''
+
     __slots__ = "read_records", "s3_interface", "technology", "n_reads", "byte_range"
     def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, byte_range: str):
         self.s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, s3_settings.profile)
@@ -50,12 +52,13 @@ class SeqFile(object):
 
         return import_record_inner
 
+
+
 class FQFile(SeqFile):
-    '''
-    Subclass of SeqFile. Also contains:
-    :attr qc_scale: str. Format of quality score.
-    '''
     def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, byte_range: str, qc_scale="phred"):
+        '''
+        See parent class
+        '''
         super().__init__(s3_settings, read_settings, byte_range)
         self.qc_scale = qc_scale
         if qc_scale not in ["phred", "solexa"]:

@@ -16,7 +16,7 @@ class TestBitRecord(TestCase):
     def test_get_seq_fragment(self):
         seq_1 = self.test_bin_record.get_seq_fragment(read1, 0,0)
         seq_2 = self.test_bin_record.get_seq_fragment(read2, 6, 10)
-        self.assertEqual(seq_1, "AGGACNATATAACACT")
+        self.assertEqual(seq_1, "AGGACNATATAACACTAATAT")
         self.assertEqual(seq_2, "ATATNACACT")
 
 

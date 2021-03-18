@@ -14,7 +14,7 @@ class SeqSync(object):
         # usually file created by BlockCatalog without overlaps (overlap=0). Other SeqFile in the dict will have parts
         # of the earlier blocks and run into next blocks
         self.ground_truth = seq_files[0]
-        self.is_synched = False
+        self.is_synced = False
         ground_truth_record = next(self.ground_truth.read_records)
         self.ground_truth_id = ground_truth_record.read_id.split(" ")[0]
 
@@ -24,7 +24,7 @@ class FQSync(SeqSync):
         @functools.wraps(func_of_technology)
         def sync_wrapper(self, *args, **kwargs):
             func_of_technology(self, *args, **kwargs)
-            self.is_synched = True  # Checkup for class calls
+            self.is_synced = True  # Checkup for class calls
             return self.seq_files
         return sync_wrapper
 

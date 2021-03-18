@@ -1,30 +1,25 @@
 from unittest import TestCase
 from scito_count.SeqSync import *
 from scito_count.BUSTools import *
+from scito_lambdas.lambda_utils import init_config
 
-s3_set2 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                     "ATAC ADT R2")
-read_set2 = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                         "ATAC ADT R2")
-s3_set3 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                     "ATAC ADT R3")
-read_set3 = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                         "ATAC ADT R3")
+conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
+
+s3_set2 = S3Settings(conf, "ATAC ADT R2")
+read_set2 = ReadSettings(conf, "ATAC ADT R2")
+s3_set3 = S3Settings(conf, "ATAC ADT R3")
+read_set3 = ReadSettings(conf, "ATAC ADT R3")
 
 
-upl_test_s3 = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                         "ATAC ADT R2 UPLOAD TEST")
-upl_test_read = ReadSettings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                             "ATAC ADT R2 UPLOAD TEST")
+upl_test_s3 = S3Settings(conf, "ATAC ADT R2 UPLOAD TEST")
+upl_test_read = ReadSettings(conf, "ATAC ADT R2 UPLOAD TEST")
 
 
 class TestNativeBusTools(TestCase):
     def setUp(self) -> None:
-        ground = FQFile(s3_settings=upl_test_s3, read_settings=upl_test_read, qc_scale="phred")
-        async_file = FQFile(s3_settings=s3_set3, read_settings=read_set3, qc_scale="phred")
-        dict_reads = {"read2": ground,
-                      "read3": async_file}
-        self.sync_two_reads = FQSyncTwoReads(dict_reads, 'read2')
+        ground = FQFile(s3_settings=upl_test_s3, read_settings=upl_test_read, byte_range='0-1000', qc_scale="phred")
+        async_file = FQFile(s3_settings=s3_set3, read_settings=read_set3, byte_range='0-1000', qc_scale="phred")
+        self.sync_two_reads = FQSyncTwoReads((ground, async_file))
         self.sync_two_reads.two_read_sync()
         self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
         self.bus_file_adt_atac.bus_file_stream_adt_atac()

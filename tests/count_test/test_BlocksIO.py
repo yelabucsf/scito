@@ -1,9 +1,10 @@
 from unittest import TestCase
 from scito_count.ProcessSettings import *
 from scito_count.BlocksIO import BlocksIO
+from scito_lambdas.lambda_utils import init_config
 
-s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                    "IO TEST")
+conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
+s3_set = S3Settings(conf, "IO TEST")
 
 class TestBlockIO(TestCase):
     def setUp(self) -> None:

@@ -17,13 +17,9 @@ class FQSeqArrangerAdtAtac(SeqArranger):
         self.read_records = self.arrange_sequences()
 
     def arrange_sequences(self):
-        # checking consistency of seq_files dictionary
-        supplied_names = self.seq_sync.seq_files.keys()
-        if not all(names in supplied_names for names in ['read2', 'read3']):
-            raise KeyError("FQSeqArrangerAdtAtac.arrange_sequences(): For seq_files expect dictionary with keys 'read2',"
-                           f"'read3'. Provided dictionary with keys: {self.seq_sync.seq_files.keys()}. Aborting!")
-        read_file2 = self.seq_sync.seq_files['read2']
-        read_file3 = self.seq_sync.seq_files['read3']
+
+        read_file2 = self.seq_sync.seq_files[0]
+        read_file3 = self.seq_sync.seq_files[1]
 
         for read2, read3 in zip(read_file2.read_records, read_file3.read_records):
             if read2.read_id.split(" ")[0] != read3.read_id.split(" ")[0]:

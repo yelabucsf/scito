@@ -2,6 +2,8 @@ import re
 from typing import List, Tuple
 import functools
 
+class ReadRecordError(Exception):
+    '''Errors related to misuse of ReadRecord and subclasses'''
 
 class ReadRecord(object):
     __slots__ = "read_id", "seq"
@@ -49,7 +51,7 @@ class FQRecordAdtAtac(FQRecord):
         :param read_end: Int. End position of the read. Depends on the technology
         '''
         if len(read_block[1]) < read_end:
-            raise ValueError("FQAdtAtacSplit(): encountered read is truncated. Aborting")
+            raise ReadRecordError("FQRecordAdtAtac(): encountered read is truncated. Aborting")
         seq = read_block[1][read_start: read_end]
         quality_score = read_block[3][read_start: read_end]
 

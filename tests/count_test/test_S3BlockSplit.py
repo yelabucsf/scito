@@ -2,9 +2,10 @@ from unittest import TestCase
 
 from scito_count.S3BlockSplit import *
 from scito_count.ProcessSettings import *
+from scito_lambdas.lambda_utils import init_config
 
-s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                    "FULL R2 UPLOAD TEST")
+conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
+s3_set = S3Settings(conf, "FULL R2 UPLOAD TEST")
 
 class TestBlockSplit(TestCase):
     def setUp(self) -> None:
@@ -21,5 +22,6 @@ class TestBlockSplit(TestCase):
         self.assertEqual(next_lol, (3602, 7335))
 
     def test_generate_blocks_full(self):
+        ### This test runs very long >30 min. Don't run!
         lol = list(self.block_split.generate_blocks())
         self.assertEqual(len(lol), 1000)

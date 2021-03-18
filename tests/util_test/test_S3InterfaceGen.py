@@ -2,9 +2,10 @@ from unittest import TestCase
 from scito_utils.S3InterfaceGen import *
 from scito_count.ProcessSettings import *
 
+from scito_lambdas.lambda_utils import init_config
 
-s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                     "ATAC ADT R2")
+init_config = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
+s3_set = S3Settings(init_config, "ATAC ADT R2")
 
 
 class TestS3InterfaceGen(TestCase):

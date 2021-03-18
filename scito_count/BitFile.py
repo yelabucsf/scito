@@ -22,7 +22,7 @@ class BUSFile(BitFile):
     def bus_file_stream(cls, func_of_technology):
         @functools.wraps(func_of_technology)
         def bus_file_stream_wrapper(self, *args, **kwargs):
-            if not self.seq_sync.is_synched:
+            if not self.seq_sync.is_synced:
                 raise AttributeError("BUSFileAdtAtac.bus_file_stream_adt_atac(): reads are not in sync")
             self.bit_records = func_of_technology(self, *args, **kwargs)
         return bus_file_stream_wrapper

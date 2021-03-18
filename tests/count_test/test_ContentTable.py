@@ -2,9 +2,10 @@ from unittest import TestCase
 from scito_count.ContentTable import *
 from scito_count.ProcessSettings import *
 from scito_count.ContentTablesIO import *
+from scito_lambdas.lambda_utils import init_config
 
-s3_set = S3Settings("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini",
-                    "IO TEST FQ")
+conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
+s3_set = S3Settings(conf, "IO TEST FQ")
 
 class TestContentTable(TestCase):
     def test_whole_class(self):
