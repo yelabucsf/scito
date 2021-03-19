@@ -23,8 +23,7 @@ class SQSInterface(object):
         self.queue_name = construct_process_name(config, prefix)
         self.dead_letter_name = '_'.join([self.queue_name, 'DEAD-LETTER'])
 
-        self.sqs_settings = {'DelaySeconds': '5',
-                             'KmsMasterKeyId': 'alias/managed-sns-key',
+        self.sqs_settings = {'KmsMasterKeyId': 'alias/managed-sns-key',
                              'maxReceiveCount': '10'}
 
 

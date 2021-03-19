@@ -29,7 +29,7 @@ def settings_event_source(event_source_arn: str, lambda_name: str):
         "MaximumBatchingWindowInSeconds": 20
     }
     return settings
-
+## END hardcoded
 
 def pipeline_config_s3(record: Dict) -> str:
     s3_bucket = record['s3']['bucket']['name']
@@ -69,10 +69,7 @@ def main_handler(event: Dict, context) -> None:
     sqs_interface = SQSInterface(config, this_lambda_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
         raise SQSInterfaceError('main_handler(): SQS queues with provided names already exist')
-    create_queue(sqs_interface=sqs_interface, use_dead_letter_arn=None)     # Creates dead letter queue
-    dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
-    create_queue(sqs_interface=sqs_interface, use_dead_letter_arn=dead_letter.attributes['QueueArn'])   # Creates main queue
-    main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
+    main_queue = prep_queue(sqs_interface)
 
 
     # Create lambda

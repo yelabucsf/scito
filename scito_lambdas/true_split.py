@@ -38,7 +38,7 @@ def problem_in_dead_letter_queue(sqs_interface):
 def true_split_handler(event, context):
     previous_lambda_name = 'genomics-blind-split'
     this_lambda_name = 'genomics-true-split'
-    next_lambda_name = ''
+    next_lambda_name = '' # TODO add real arn or name
 
     # Check if origin queue is correct
     probe_record = event['Records'][0]

@@ -95,3 +95,11 @@ def create_queue(sqs_interface, use_dead_letter_arn: str=None):
             'maxReceiveCount': sqs_interface.sqs_settings.maxReceiveCount
         }
     sqs_interface.sqs.create_queue(**settings)
+
+
+def prep_queue(sqs_interface):
+    create_queue(sqs_interface=sqs_interface, use_dead_letter_arn=None)     # Creates dead letter queue
+    dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
+    create_queue(sqs_interface=sqs_interface, use_dead_letter_arn=dead_letter.attributes['QueueArn'])   # Creates main queue
+    main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
+    return main_queue
