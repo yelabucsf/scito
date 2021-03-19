@@ -1,3 +1,4 @@
+from scito_count.SQSInterface import SQSInterface
 from scito_lambdas.lambda_utils import *
 from scito_count.blind_byte_range import *
 from scito_count.LambdaInterface import *
@@ -68,9 +69,9 @@ def main_handler(event: Dict, context) -> None:
     sqs_interface = SQSInterface(config, this_lambda_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
         raise SQSInterfaceError('main_handler(): SQS queues with provided names already exist')
-    create_dead_letter_queue(sqs_interface)
+    create_queue(sqs_interface=sqs_interface, use_dead_letter_arn=None)     # Creates dead letter queue
     dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
-    create_main_queue(sqs_interface, dead_letter.attributes['QueueArn'])
+    create_queue(sqs_interface=sqs_interface, use_dead_letter_arn=dead_letter.attributes['QueueArn'])   # Creates main queue
     main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
 
 

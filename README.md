@@ -10,16 +10,7 @@ Package to deploy on serverless Lambda. Potentially containerized.
    Creates a 0 Byte *composite trigger* file with a process name in S3. *Composite trigger* should be **12 bytes** to 
    trigger **Lambda 3**.
 3. **Lambda 2:** concurrent lambda. SQS triggers download of a byte range and creation of the "content table" of inflatable
-   BGZF chunks. Monitors SQS depth.
-   ```bash
-   If no messages:
-      SQS is destroyed
-      checks composite trigger size
-      if size is < 12 bytes:
-         appends 12/number_of_read_files bytes to composite trigger file
-      else:
-         Lambda 3 is invoked
-   ```
+   BGZF chunks. Monitors SQS depth. If no messages, SQS is destroyed and **Lambda 3** is invoked.
 4. **Lambda 3:** Destroys all instances of **Lambda 2**. Pulls content tables describing BGZF blocks of FASTQ files for 
    each read-file for the sample. Combines them and deduplicates.  
    This process creates a single content table for each read FASTQ file. The content ables are going through series of 

@@ -1,9 +1,9 @@
 from scito_count.BlocksIO import *
 from scito_count.BlockSplit import *
+from scito_count.SQSInterface import SQSInterface
 from scito_lambdas.lambda_utils import *
 from scito_count.AWSExportIO import *
 from scito_count.LambdaInterface import *
-from scito_count.CompositeTrigger import *
 
 
 # TODO refactor into smaller scopes
@@ -26,6 +26,18 @@ def true_split_record(record: Dict) -> None:
     block_byte_export.block_range_upload_s3(byte_seq=block_byte.byte_block_gen)
 
 
+def problem_in_dead_letter_queue(sqs_interface):
+    '''
+    Raises an error if invoked
+    '''
+    active_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
+    msgs = []
+    for message in active_queue.receive_messages():
+        msgs.append(message.body)
+    raise SQSInterfaceError(f'true_split_handler(): Some messages could not be delivered and ended up in a DEAD_LETTER'
+                            f' SQS queue. Please troubleshoot failed messages. Total number of failed messages: '
+                            f'{len(msgs)}. First failed message looks like: \n{msgs[0]}')
+
 
 def true_split_handler(event, context):
     previous_lambda_name = 'genomics-blind-split'
@@ -44,34 +56,22 @@ def true_split_handler(event, context):
         raise ValueError('true_split_handler(): allowed lambda batch is up to 10 messages')
     [true_split_record(record) for record in event['Records']]
 
-    composite_trigger = CompositeTrigger(config='', prefix='')
 
     # delete the main queue if it's empty
-    origin_sqs_interface = SQSInterface(config='', prefix='previous_lambda_name')
-    active_queue = origin_sqs_interface.sqs.get_queue_by_name(QueueName=origin_sqs_interface.queue_name)
-    active_queue.reload()
-    if not origin_sqs_interface.messages_pending(dead_letter=False):
-        composite_trigger.add_bytes()
-        active_queue.delete()
-
-    active_queue = origin_sqs_interface.sqs.get_queue_by_name(QueueName=origin_sqs_interface.dead_letter_name)
-    active_queue.reload()
-    if not origin_sqs_interface.messages_pending(dead_letter=True):
-        active_queue.delete()
-    else:
-        msgs = []
-        for message in active_queue.receive_messages():
-            msgs.append(message.body)
-        raise SQSInterfaceError(f'true_split_handler(): Some messages could not be delivered and ended up in a DEAD_LETTER'
-                                f' SQS queue. Please troubleshoot failed messages. Total number of failed messages: '
-                                f'{len(msgs)}. First failed message looks like: \n{msgs[0]}')
+    parsed_record = json.loads(probe_record['body'])
+    config_buf = config_sqs_import(parsed_record['config'])
+    config = init_config(config_buf)
+    origin_sqs_interface = SQSInterface(config=config, prefix='previous_lambda_name')
+    if not origin_sqs_interface.messages_pending(dead_letter=False):    # Is main queue empty
+        if not origin_sqs_interface.messages_pending(dead_letter=True): # Is dead letter queue empty
+            origin_sqs_interface.destroy()
+            # TODO invoke lambda
+        else:
+            problem_in_dead_letter_queue(origin_sqs_interface)
 
 
 
-    # check composite trigger
-    if composite_trigger.complete:
-        ## invoke lambda3
-        pass
+
 
 
 

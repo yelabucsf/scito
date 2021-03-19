@@ -39,11 +39,17 @@ class SQSInterface(object):
             raise SQSInterfaceError(f'SQSInterface.messages_pending(): {self.dead_letter_name if dead_letter else self.queue_name} '
                                     f'does not exist')
         active_queue = self._activate_queue(dead_letter)
+        active_queue.reload()
         attr_to_check = ['ApproximateNumberOfMessages',
                          'ApproximateNumberOfMessagesDelayed',
                          'ApproximateNumberOfMessagesNotVisible']
         return any([x for x in attr_to_check if int(active_queue.attributes[x]) != 0])
 
+    def destroy(self):
+        switch = [True, False]
+        for state in switch:
+            active_queue = self._activate_queue(dead_letter=state)
+            active_queue.delete()
 
     def _activate_queue(self, dead_letter=False):
         queue_scope = self.dead_letter_name if dead_letter else self.queue_name

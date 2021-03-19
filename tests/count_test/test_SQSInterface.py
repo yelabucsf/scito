@@ -30,13 +30,11 @@ class TestSQSInterface(TestCase):
         self.assertFalse(self.sqs_interface.messages_pending(dead_letter=True))
         self.active_sqs.send_message(MessageBody=msg_body)
         time.sleep(30)
-        self.active_sqs.reload()
         self.assertTrue(self.sqs_interface.messages_pending(dead_letter=True))
         msgs = []
         for message in self.active_sqs.receive_messages():
             msgs.append(message.body)
             message.delete()
         time.sleep(60)
-        self.active_sqs.reload()
         self.assertFalse(self.sqs_interface.messages_pending(dead_letter=True))
 

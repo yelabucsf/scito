@@ -88,20 +88,17 @@ def origin_vs_expected_queue(record: Dict, previous_lambda: str) -> Tuple:
 
 
 # IMPURE FUNCTIONS - have side effects
-# TODO refactor this
-def create_dead_letter_queue(sqs_interface) -> None:
-    sqs_interface.sqs.create_queue(QueueName=sqs_interface.dead_letter_name,
-                                   Attributes={'DelaySeconds': sqs_interface.sqs_settings.delay_seconds,
-                                               'KmsMasterKeyId': sqs_interface.sqs_settings.kms_master_key_id})
-
-# TODO refactor this
-def create_main_queue(sqs_interface, dead_letter_arn: str) -> None:
-    redrive_policy = {
-        'deadLetterTargetArn': dead_letter_arn,
-        'maxReceiveCount': sqs_interface.sqs_settings.maxReceiveCount
+def create_queue(sqs_interface, use_dead_letter_arn: str=None):
+    settings = {
+        "QueueName": sqs_interface.dead_letter_name if use_dead_letter_arn == None else sqs_interface.queue_name,
+        "Attributes": {
+            "DelaySeconds": sqs_interface.sqs_settings.delay_seconds,
+            "KmsMasterKeyId": sqs_interface.sqs_settings.kms_master_key_id
+        }
     }
-    sqs_interface.sqs.create_queue(QueueName=sqs_interface.queue_name,
-                                   Attributes={'DelaySeconds': sqs_interface.sqs_settings.delay_seconds,
-                                               'KmsMasterKeyId': sqs_interface.sqs_settings.kms_master_key_id,
-                                               'RedrivePolicy': json.dumps(redrive_policy)})
-
+    if use_dead_letter_arn != None:
+        settings["Attributes"]["RedrivePolicy"] = {
+            'deadLetterTargetArn': use_dead_letter_arn,
+            'maxReceiveCount': sqs_interface.sqs_settings.maxReceiveCount
+        }
+    sqs_interface.sqs.create_queue(**settings)

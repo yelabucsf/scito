@@ -7,7 +7,7 @@ import os
 class S3InterfaceGen(object):
     def __init__(self, s3_settings, file_type, misc_id=''):
         '''
-        Class to generate new S3 interface to store data produces key key of type {original_key}.{misc_id}
+        Class to generate new S3 interface to store data. Produces key of type {original_key}.{misc_id}
         :param s3_settings: S3Settings object
         :param misc_id: Additional identifier like file part
         '''
