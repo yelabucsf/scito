@@ -1,4 +1,4 @@
-from scito_count.SQSInterface import SQSInterface
+from scito_count.SQSInterface import SQSInterface, SQSInterfaceError
 from scito_lambdas.lambda_utils import *
 from scito_count.blind_byte_range import *
 from scito_count.LambdaInterface import *
@@ -11,11 +11,11 @@ def settings_for_true_split_lambda(lambda_name: str) -> Dict:
     s3_key = ''
     s3_interface = construct_s3_interface(s3_bucket, s3_key)
     try:
-        config_str = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
+        settings_from_s3 = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
     except:
         raise ValueError('settings_for_true_split_lambda(): settings for true_split_lambda do not exist. Contact the '
                          'admin of this pipeline')
-    lambda_settings = json.loads(config_str)
+    lambda_settings = json.loads(settings_from_s3)
     lambda_settings["FunctionName"] = lambda_name
     return lambda_settings
 
@@ -59,7 +59,7 @@ def main_handler(event: Dict, context) -> None:
     config_str = pipeline_config_s3(record)
 
     # parse config
-    config_buf = config_sqs_import(config_str)
+    config_buf = config_ini_to_buf(config_str)
     config = init_config(config_buf)
     config_sections = config.keys()
     if len(config_sections) > 3:
@@ -96,7 +96,7 @@ def main_handler(event: Dict, context) -> None:
 
         # construct message
         msg_constant_part = {
-            'config': config_str,
+            'config': json.dumps(config),
             'section': section,
             'byte_range': ''
         }

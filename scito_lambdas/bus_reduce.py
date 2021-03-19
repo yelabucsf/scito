@@ -19,7 +19,7 @@ def bus_reduce_handler(event, context):
 
     # TODO pass the correct event. For now it's an SQS message
     record_deconstructed = json.loads(record['body'])
-    config_buf = config_sqs_import(record_deconstructed['config'])
+    config_buf = config_ini_to_buf(record_deconstructed['config'])
     config = init_config(config_buf)
 
     # ToDo get the tech

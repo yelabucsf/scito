@@ -7,11 +7,12 @@ class SQSInterfaceError(Exception):
     '''Errors corresponding to misuse of SQSInterface'''
 
 
-'''
-class to create SQS queue, read and send messages
-'''
+
 class SQSInterface(object):
     def __init__(self, config: Dict, prefix: str):
+        '''
+        class to create SQS queue, read and send messages
+        '''
         s3_settings = S3Settings(config, list(config.keys())[0])
         if s3_settings.profile == "":
             session = boto3.Session()

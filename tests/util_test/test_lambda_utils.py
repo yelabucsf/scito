@@ -31,7 +31,7 @@ class Test_2(TestCase):
 
 class Test_3(TestCase):
     def test_config_sqs_import(self):
-        config_buf = config_sqs_import('[local test]\nbucket = ucsf-genomics-prod-project-data\n'
+        config_buf = config_ini_to_buf('[local test]\nbucket = ucsf-genomics-prod-project-data\n'
                                        'key = anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
         config_init = init_config(config_buf)
         section = list(config_init.values())[0]

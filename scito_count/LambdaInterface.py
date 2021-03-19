@@ -29,6 +29,11 @@ class LambdaInterface(object):
             current_function = None
         return bool(current_function)
 
-
-
-
+    def invoke_lambda(self, lambda_name: str, payload: str) -> Dict:
+        invoke_settings = {
+            "FunctionName": lambda_name,
+            "InvocationType":"Event",
+            "Payload": payload
+        }
+        response = self.aws_lambda.invoke(**invoke_settings)
+        return response

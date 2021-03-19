@@ -28,7 +28,7 @@ def bus_constructor_record(record: Dict):
 
     # get config
     record_deconstructed = json.loads(record['body'])
-    config_buf = config_sqs_import(record_deconstructed['config'])
+    config_buf = config_ini_to_buf(record_deconstructed['config'])
     config = init_config(config_buf)
 
     # Check if origin queue is correct

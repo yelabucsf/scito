@@ -1,16 +1,9 @@
-from urllib.parse import unquote_plus
 from configparser import  ConfigParser
 from typing import List, Tuple, Dict, Union, Type
 import json
-from io import StringIO
-import re
-import os
-
-from scito_count.ContentTable import *
-from scito_count.BitFile import *
-from scito_count.SQSInterface import *
-from scito_count.BlockCatalog import *
-from scito_count.SeqFile import *
+from scito_count.SQSInterface import SQSInterface, SQSInterfaceError
+from scito_count.AWSExportIO import *
+from scito_count.LambdaInterface import *
 
 def init_config(config_file: Union[str, StringIO]) -> Dict:
     '''
@@ -28,14 +21,14 @@ def init_config(config_file: Union[str, StringIO]) -> Dict:
         raise ValueError(f'init_config(): {config_type} is not a supported input type')
     return dict(config_init._sections)
 
-def config_sqs_import(config_message: str) -> StringIO:
+def config_ini_to_buf(config_message: str) -> StringIO:
     config_buf = StringIO(config_message)
     config_buf.seek(0)
     return config_buf
 
 def config_from_record(record: Dict) -> Dict:
     record_deconstructed = json.loads(record['body'])
-    config_buf = config_sqs_import(record_deconstructed['config'])
+    config_buf = config_ini_to_buf(record_deconstructed['config'])
     config = init_config(config_buf)
     return config
 
