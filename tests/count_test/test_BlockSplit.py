@@ -1,11 +1,11 @@
 from unittest import TestCase
 from scito_count.BlockSplit import *
+from scito_count.BlocksIO import BlocksIO
 from scito_count.ProcessSettings import *
 from scito_lambdas.lambda_utils import init_config
 
 conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
 s3_set = S3Settings(conf, "IO TEST FQ")
-
 
 
 class TestBlockSplit(TestCase):
@@ -37,11 +37,10 @@ class TestBlockSplit(TestCase):
         next_lol = next(block_split.ranges)
         self.assertEqual(next_lol, (7332, 14717))
 
-    def test_generate_blocks_search(self):
+    def test_generate_blocks_search_2(self):
         handle = BlocksIO(s3_set, '14001-21000')
         handle.get_object_part()
         block_split = BlockSplit(handle)
         block_split.generate_blocks()
         next_lol = next(block_split.ranges)
         self.assertEqual(next_lol, (14718, 22153))
-

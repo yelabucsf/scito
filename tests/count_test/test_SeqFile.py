@@ -8,6 +8,7 @@ conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/co
 s3_set = S3Settings(conf, "local test")
 read_set = ReadSettings(conf, "local test")
 
+
 class TestSeqFile(TestCase):
     def setUp(self) -> None:
         self.seq_file = SeqFile(s3_settings=s3_set, read_settings=read_set, byte_range='0-1000')
@@ -17,11 +18,10 @@ class TestSeqFile(TestCase):
         self.assertEqual(self.seq_file.s3_interface.obj_size(), 9945950)
 
 
-
-
 class TestFQFile(TestCase):
     def setUp(self) -> None:
         self.fq_file = FQFile(s3_settings=s3_set, read_settings=read_set, byte_range='0-1000', qc_scale="phred")
+
     print(s3_set.__dict__, read_set.__dict__)
 
     def test_import_config(self):
@@ -34,4 +34,3 @@ class TestFQFile(TestCase):
         self.assertTrue(issubclass(type(self.fq_file), SeqFile))
         self.assertFalse(issubclass(type(self.fq_file), List))
         print("!!!!!{}".format(lol.seq))
-

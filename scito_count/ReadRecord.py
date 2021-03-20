@@ -1,9 +1,11 @@
 import re
-from typing import List, Tuple
+from typing import List
 import functools
+
 
 class ReadRecordError(Exception):
     '''Errors related to misuse of ReadRecord and subclasses'''
+
 
 class ReadRecord(object):
     __slots__ = "read_id", "seq"
@@ -15,8 +17,9 @@ class ReadRecord(object):
     def read_block_to_text(cls, func_of_read_type):
         @functools.wraps(func_of_read_type)
         def read_block_to_text_wrapper(self, *args, **kwargs):
-            export_block: str = "\n".join(func_of_read_type(self, *args, **kwargs))+"\n"
+            export_block: str = "\n".join(func_of_read_type(self, *args, **kwargs)) + "\n"
             return export_block
+
         return read_block_to_text_wrapper
 
 
@@ -33,13 +36,13 @@ class FQRecord(ReadRecord):
                 raise ValueError("FQRecord(): passed read is NOT in FASTQ format")
             if not re.match('^[ATGCN]+$', self.seq):
                 raise ValueError("FQRecord(): passed read is NOT a DNA sequence")
+
         return parse_read_block_wrapper
 
     @ReadRecord.read_block_to_text
     def fq_block_to_text(self):
         block: List[str] = [self.read_id, self.seq, "+", self.quality_score]
         return block
-
 
 
 class FQRecordAdtAtac(FQRecord):

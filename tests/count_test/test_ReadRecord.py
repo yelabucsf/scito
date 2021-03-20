@@ -15,6 +15,3 @@ class TestFQAdtAtac(TestCase):
         lol = self.FQAdtAtac.fq_block_to_text()
         print(lol)
         self.assertEqual(lol, "@identifier\nAGGACNATNTAACNCT\n+\nD:KGAPOJGPADOSJA\n")
-
-
-

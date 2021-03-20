@@ -1,18 +1,14 @@
 from scito_count.BlockSearch import *
-from scito_count.BlocksIO import *
-from io import BytesIO
 import struct
-
-'''
-Class to create a catalog of BGZF blocks in a single file.
-Returns a generator of tuples of (block start, block end)
-'''
 
 
 class BlockSplit(object):
     __slots__ = "ranges", "handle", 'block_start', 'block_end',
+
     def __init__(self, handle):
         '''
+        Class to create a catalog of BGZF blocks in a single file.
+    Returns a generator of tuples of (block start, block end)
         :param handle: BlocksIO
         '''
         self.handle = handle.data_stream
@@ -59,7 +55,7 @@ class BlockSplit(object):
         if block_size is None:
             raise ValueError("BlockSplit._get_bgzf_block_size(): Missing BC, this isn't a BGZF file!")
         curr_pos = self.handle.tell()
-        next_block = curr_pos - 18 + block_size # 18 bytes is the BGZF full header
+        next_block = curr_pos - 18 + block_size  # 18 bytes is the BGZF full header
         self.handle.seek(next_block)
         return block_size
 
@@ -77,8 +73,4 @@ class BlockSplit(object):
                 block_size = self._get_bgzf_block_size()
             except StopIteration:
                 break
-            yield start_offset + self.block_start,\
-                  start_offset + self.block_start + block_size-1
-
-
-
+            yield start_offset + self.block_start, start_offset + self.block_start + block_size - 1

@@ -1,6 +1,7 @@
 import struct
 import functools
 
+
 class BitHeader(object):
     def __init__(self):
         pass
@@ -20,7 +21,9 @@ class BUSHeader(BitHeader):
                                self.version,
                                func_of_technology(self, *args, **kwargs)])
             return header
+
         return parent_output_header_wrapper
+
 
 class BUSHeaderAdtAtac(BUSHeader):
     def __init__(self):
@@ -33,4 +36,3 @@ class BUSHeaderAdtAtac(BUSHeader):
     @BUSHeader.parent_output_header
     def output_header(self):
         return b''.join([self.bc_len, self.umi_len, self.tlen, self.text])
-

@@ -1,5 +1,4 @@
 from unittest import TestCase
-from scito_count.SeqSync import *
 from scito_count.BUSTools import *
 from scito_lambdas.lambda_utils import init_config
 

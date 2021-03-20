@@ -7,6 +7,7 @@ from scito_lambdas.lambda_utils import init_config
 conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
 s3_set = S3Settings(conf, "IO TEST FQ")
 
+
 class TestContentTable(TestCase):
     def test_whole_class(self):
         self.content_tab_gen = ContentTablesIO(s3_set)

@@ -3,7 +3,6 @@ from scito_count.ReadArranger import *
 from scito_count.SeqFile import *
 
 
-
 class TestFQArrangerAdtAtac(TestCase):
     def setUp(self) -> None:
         read_block1 = ["@identifier", "AGGACNATNTAACNCTANTNTCTANCTANTNC", "+", "D:KGAPOJGPADOSJADF:LOGJAFOPJ:LOJDC"]
@@ -17,4 +16,3 @@ class TestFQArrangerAdtAtac(TestCase):
         print(lol.seq, lol.read_id, lol.quality_score)
         self.assertEqual(lol.seq, "AGGACNATNTAACNCTNTAAC")
         self.assertEqual(lol.quality_score, "D:KGAPOJGPADOSJAGPADO")
-

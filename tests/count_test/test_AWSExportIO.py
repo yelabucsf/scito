@@ -1,5 +1,6 @@
 from unittest import TestCase
 from scito_count.AWSExportIO import *
+from scito_count.BUSTools import BUSTools
 from scito_count.BitHeader import *
 from scito_count.BlocksIO import BlocksIO
 from scito_count.BlockSplit import *
@@ -8,7 +9,6 @@ from scito_count.BlockByte import *
 from scito_lambdas.lambda_utils import init_config
 import struct
 
-
 conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
 
 s3_set2 = S3Settings(conf, "ATAC ADT R2")
@@ -16,10 +16,8 @@ read_set2 = ReadSettings(conf, "ATAC ADT R2")
 s3_set3 = S3Settings(conf, "ATAC ADT R3")
 read_set3 = ReadSettings(conf, "ATAC ADT R3")
 
-
 upl_test_s3 = S3Settings(conf, "ATAC ADT R2 UPLOAD TEST")
 upl_test_read = ReadSettings(conf, "ATAC ADT R2 UPLOAD TEST")
-
 
 test_s3_set = S3Settings(conf, "BUSTOOLS TEST")
 
@@ -48,7 +46,6 @@ class TestAWSExportIO(TestCase):
         test_h = lol.get_bytes_s3(0, 44).read()
         self.assertEqual(h, test_h)
 
-
     def test_block_byte_export(self):
         handle = BlocksIO(io_s3_set, '0-101000')
         handle.get_object_part()
@@ -60,4 +57,4 @@ class TestAWSExportIO(TestCase):
 
         kk = S3Interface(io_s3_set.bucket, 'anton/scito/mock/fastq/TEST_FASTQ.BLOCK_BYTE.0-101000', io_s3_set.profile)
         test_kk = kk.get_bytes_s3(0, 15).read()
-        self.assertEqual(struct.unpack('<QQ', test_kk), (0,7331))
+        self.assertEqual(struct.unpack('<QQ', test_kk), (0, 7331))

@@ -1,5 +1,6 @@
-from scito_count.SeqFile import *
 import functools
+from typing import Tuple
+
 
 class SeqSync(object):
     '''
@@ -7,6 +8,7 @@ class SeqSync(object):
     :param seq_files:   Dict[str: SeqFile]. Dictionary of seq files with keys read1, read2 ... readN
     :return:            SeqSync object with SeqSync.self.seq_files = synced dictionary + other attrs
     '''
+
     def __init__(self, seq_files: Tuple):
         self.seq_files = seq_files
 
@@ -18,6 +20,7 @@ class SeqSync(object):
         ground_truth_record = next(self.ground_truth.read_records)
         self.ground_truth_id = ground_truth_record.read_id.split(" ")[0]
 
+
 class FQSync(SeqSync):
     @classmethod
     def sync(cls, func_of_technology):
@@ -26,6 +29,7 @@ class FQSync(SeqSync):
             func_of_technology(self, *args, **kwargs)
             self.is_synced = True  # Checkup for class calls
             return self.seq_files
+
         return sync_wrapper
 
 
@@ -33,6 +37,7 @@ class FQSyncTwoReads(FQSync):
     '''
     This class for tech with 2 reads only.
     '''
+
     # TODO For now it loses the first synced read which is no big deal. Refactor to keep it???
     @FQSync.sync
     def two_read_sync(self):
@@ -47,6 +52,5 @@ class FQSyncTwoReads(FQSync):
             counter += 1
             if counter > 1000:
                 raise ValueError("FQSyncTwoReads.two_read_sync(): Could not synchronize reads after 1000 attempts."
-                                 "Make sure supplied reads are synchronizable at all.") # TODO catch this exception for to change ground truth read
-
-
+                                 "Make sure supplied reads are synchronizable at all.")
+                # TODO catch this exception to change ground truth read

@@ -8,12 +8,13 @@ from scito_lambdas.lambda_utils import init_config
 conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
 s3_set = S3Settings(conf, "IO TEST FQ")
 
+
 class TestContentTablesIO(TestCase):
     def setUp(self) -> None:
         self.content_tables_io = ContentTablesIO(s3_set)
 
     def test__private_generate_content_tables(self):
-        lol = self.content_tables_io._private_generate_content_tables()
+        lol = self.content_tables_io._generate_content_tables()
         next_lol = next(lol)
         self.assertEqual(next_lol.obj_size(), 224)
 
@@ -22,5 +23,3 @@ class TestContentTablesIO(TestCase):
         lol = self.content_tables_io.content_table.read(16)
         kk = struct.unpack('<QQ', lol)
         self.assertEqual(7331, kk[1])
-
-

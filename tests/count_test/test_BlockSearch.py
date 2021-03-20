@@ -6,6 +6,7 @@ file_path_1 = 'mock_data/TEST_FASTQ_blind_split/xaa'
 file_path_2 = 'mock_data/TEST_FASTQ_blind_split/xab'
 file_path_3 = 'mock_data/TEST_FASTQ_blind_split/xac'
 
+
 class TestBlockSearch(TestCase):
 
     def test_header_search_start(self):

@@ -1,11 +1,11 @@
 import boto3
-import os
-from typing import Dict
 from scito_count.ProcessSettings import *
 from scito_lambdas.lambda_utils import construct_process_name
 
+
 class LambdaInterfaceError(Exception):
     '''Errors corresponding to misuse of LambdaInterface'''
+
 
 class LambdaInterface(object):
     def __init__(self, config: Dict, prefix: str):
@@ -32,7 +32,7 @@ class LambdaInterface(object):
     def invoke_lambda(self, lambda_name: str, payload: str) -> Dict:
         invoke_settings = {
             "FunctionName": lambda_name,
-            "InvocationType":"Event",
+            "InvocationType": "Event",
             "Payload": payload
         }
         response = self.aws_lambda.invoke(**invoke_settings)

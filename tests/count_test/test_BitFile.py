@@ -13,7 +13,6 @@ read_set2 = ReadSettings(conf, "ATAC ADT R2")
 s3_set3 = S3Settings(conf, "ATAC ADT R3")
 read_set3 = ReadSettings(conf, "ATAC ADT R3")
 
-
 upl_test_s3 = S3Settings(conf, "ATAC ADT R2 UPLOAD TEST")
 upl_test_read = ReadSettings(conf, "ATAC ADT R2 UPLOAD TEST")
 
@@ -25,8 +24,6 @@ class TestBUSFileAdtAtac(TestCase):
         self.sync_two_reads = FQSyncTwoReads((ground, async_file))
         self.sync_two_reads.two_read_sync()
         self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
-
-
 
     def test_bus_file_stream_adt_atac(self):
         self.bus_file_adt_atac.bus_file_stream_adt_atac()

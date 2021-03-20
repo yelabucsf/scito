@@ -5,7 +5,6 @@ from scito_lambdas.lambda_utils import *
 
 # TODO refactor into smaller scopes
 def true_split_record(record: Dict) -> None:
-
     # get config
     parsed_record = json.loads(record['body'])
     config = json.loads(parsed_record['config'])
@@ -22,23 +21,10 @@ def true_split_record(record: Dict) -> None:
     block_byte_export.block_range_upload_s3(byte_seq=block_byte.byte_block_gen)
 
 
-def problem_in_dead_letter_queue(sqs_interface):
-    '''
-    Raises an error if invoked
-    '''
-    active_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
-    msgs = []
-    for message in active_queue.receive_messages():
-        msgs.append(message.body)
-    raise SQSInterfaceError(f'true_split_handler(): Some messages could not be delivered and ended up in a DEAD_LETTER'
-                            f' SQS queue. Please troubleshoot failed messages. Total number of failed messages: '
-                            f'{len(msgs)}. First failed message looks like: \n{msgs[0]}')
-
-
 def true_split_handler(event, context):
     previous_lambda_name = 'genomics-blind-split'
     this_lambda_name = 'genomics-true-split'
-    next_lambda_name = '' # TODO add real arn or name
+    next_lambda_name = ''  # TODO add real arn or name
 
     # Check if origin queue is correct
     probe_record = event['Records'][0]
@@ -53,22 +39,15 @@ def true_split_handler(event, context):
         raise ValueError('true_split_handler(): allowed lambda batch is up to 10 messages')
     [true_split_record(record) for record in event['Records']]
 
-
     # delete the main queue if it's empty
     parsed_record = json.loads(probe_record['body'])
     config = json.loads(parsed_record['config'])
     origin_sqs_interface = SQSInterface(config=config, prefix='previous_lambda_name')
-    if not origin_sqs_interface.messages_pending(dead_letter=False):    # Is main queue empty
-        if not origin_sqs_interface.messages_pending(dead_letter=True): # Is dead letter queue empty
+    if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
+        if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
             origin_sqs_interface.destroy()
-            next_lambda_interface = LambdaInterface(config=config, prefix='')
+            next_lambda_interface = LambdaInterface(config=config, prefix='')  # TODO fix prefix
             payload = {'config': parsed_record['config']}
             next_lambda_interface.invoke_lambda(lambda_name='next_lambda_name', payload=json.dumps(payload))
         else:
             problem_in_dead_letter_queue(origin_sqs_interface)
-
-
-
-
-
-

@@ -18,7 +18,8 @@ setup(name='scito',
             'scikit-learn',
             'scipy',
             'statsmodels',
-            'Click'
+            'Click',
+            'boto3'
       ],
       entry_points='''
       [console_scripts]

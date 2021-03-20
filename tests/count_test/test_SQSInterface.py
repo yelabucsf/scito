@@ -1,10 +1,8 @@
 from unittest import TestCase
-from scito_count.SQSInterface import *
-from scito_count.ProcessSettings import *
+
+from scito_count.SQSInterface import SQSInterface
 from scito_lambdas.lambda_utils import *
 import time
-
-
 
 
 class TestSQSInterface(TestCase):
@@ -13,12 +11,10 @@ class TestSQSInterface(TestCase):
             lol = StringIO(cfg.read())
         config = init_config(lol)
         self.sqs_interface = SQSInterface(config, 'unit-test')
-        try:
-            self.sqs_interface.sqs.create_queue(QueueName=self.sqs_interface.dead_letter_name,
-                                                Attributes={'DelaySeconds': self.sqs_interface.sqs_settings['DelaySeconds'],
-                                                            'KmsMasterKeyId': self.sqs_interface.sqs_settings['KmsMasterKeyId']})
-        except:
-            pass
+        self.sqs_interface.sqs.create_queue(QueueName=self.sqs_interface.dead_letter_name,
+                                            Attributes={
+                                                'KmsMasterKeyId': self.sqs_interface.sqs_settings[
+                                                    'KmsMasterKeyId']})
         self.active_sqs = self.sqs_interface.sqs.get_queue_by_name(QueueName=self.sqs_interface.dead_letter_name)
 
     def test_queue_exists(self):
@@ -35,6 +31,5 @@ class TestSQSInterface(TestCase):
         for message in self.active_sqs.receive_messages():
             msgs.append(message.body)
             message.delete()
-        time.sleep(60)
+        time.sleep(30)
         self.assertFalse(self.sqs_interface.messages_pending(dead_letter=True))
-

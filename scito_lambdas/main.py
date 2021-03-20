@@ -1,10 +1,11 @@
-from scito_count.SQSInterface import SQSInterface, SQSInterfaceError
+from urllib.parse import unquote_plus
+
 from scito_lambdas.lambda_utils import *
 from scito_count.blind_byte_range import *
 from scito_count.LambdaInterface import *
-from io import StringIO
 
-### HARDCODED SETTINGS
+
+# HARDCODED SETTINGS
 # Kinda hardcoded function to get settings for the next lambda from S3
 def settings_for_true_split_lambda(lambda_name: str) -> Dict:
     s3_bucket = ''
@@ -19,6 +20,7 @@ def settings_for_true_split_lambda(lambda_name: str) -> Dict:
     lambda_settings["FunctionName"] = lambda_name
     return lambda_settings
 
+
 # Kinda hardcoded function to get settings for the resource mapping for the next lambda
 def settings_event_source(event_source_arn: str, lambda_name: str):
     settings = {
@@ -29,7 +31,9 @@ def settings_event_source(event_source_arn: str, lambda_name: str):
         "MaximumBatchingWindowInSeconds": 20
     }
     return settings
-## END hardcoded
+
+
+# END hardcoded
 
 def pipeline_config_s3(record: Dict) -> str:
     s3_bucket = record['s3']['bucket']['name']
@@ -63,7 +67,8 @@ def main_handler(event: Dict, context) -> None:
     config = init_config(config_buf)
     config_sections = config.keys()
     if len(config_sections) > 3:
-        raise ValueError('main_handler(): current pipeline supports only technologies with up to 3 FASTQ files per sample')
+        raise ValueError(
+            'main_handler(): current pipeline supports only technologies with up to 3 FASTQ files per sample')
 
     # Create queues
     sqs_interface = SQSInterface(config, this_lambda_name)
@@ -71,11 +76,11 @@ def main_handler(event: Dict, context) -> None:
         raise SQSInterfaceError('main_handler(): SQS queues with provided names already exist')
     main_queue = prep_queue(sqs_interface)
 
-
     # Create lambda
     lambda_interface = LambdaInterface(config, next_lambda_name)
     if lambda_interface.function_exists():
-        raise LambdaInterfaceError(f'main_handler(): function with the name {lambda_interface.lambda_name} already exists.')
+        raise LambdaInterfaceError(
+            f'main_handler(): function with the name {lambda_interface.lambda_name} already exists.')
 
     # ingest lambda settings
     next_lambda_settings = settings_for_true_split_lambda(lambda_interface.lambda_name)
@@ -84,18 +89,15 @@ def main_handler(event: Dict, context) -> None:
     event_source_settings = settings_event_source(main_queue.attributes['QueueArn'], lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
 
-
     # sending messages to the queue per config section
     for section in config_sections:
-
         s3_settings = S3Settings(config, section)
         blind_ranges = blind_byte_range(s3_settings)
 
         # construct message
         msg_constant_part = {
-            'config': json.dumps(config),
             'section': section,
+            'config': json.dumps(config),
             'byte_range': ''
         }
         [main_queue.send_message(MessageBody=finalize_message(msg_constant_part, x)) for x in blind_ranges]
-

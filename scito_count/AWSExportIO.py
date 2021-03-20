@@ -1,8 +1,3 @@
-from scito_count.SeqArranger import *
-from scito_count.ProcessSettings import *
-from scito_count.BitFile import *
-from scito_count.S3Interface import S3Interface
-from scito_count.BUSTools import *
 from scito_utils.S3InterfaceGen import *
 from io import BytesIO
 import os
@@ -11,8 +6,10 @@ import os
 Class to upload binary data to s3
 '''
 
+
 class AWSExportIO(object):
     __slots__ = 'file_type', 's3_interface'
+
     def __init__(self, s3_settings, file_type, misc_id=''):
         '''
         :param s3_settings: S3Settings object
@@ -37,15 +34,16 @@ class AWSExportIO(object):
                 self.s3_interface.s3_obj.upload_fileobj(
                     para_file,
                     {'ContentType': self.file_type, 'ContentEncoding': encoding,
-                     'ServerSideEncryption': 'aws:kms', 'SSEKMSKeyId': 'alias/managed-s3-key'}) # todo get KMS keys from the API
+                     'ServerSideEncryption': 'aws:kms',
+                     'SSEKMSKeyId': 'alias/managed-s3-key'})  # todo get KMS keys from the API
                 if not para_file.closed:
                     para_file.close()
 
             return s3_upload_wrapper
+
         return s3_upload_inner
 
-
-    @classmethod # TODO test this when EFS is allowed
+    @classmethod  # TODO test this when EFS is allowed
     def efs_upload(cls, func_of_format):
         @functools.wraps(func_of_format)
         def efs_upload_wrapper(self, byte_seq, outdir, *args, **kwargs):
@@ -66,7 +64,6 @@ class AWSExportIO(object):
         return efs_upload_wrapper
 
 
-
 class BUSToolsExport(AWSExportIO):
     def __init__(self, s3_settings, file_type='SORTED_BUS', misc_id=''):
         super().__init__(s3_settings, file_type, misc_id)
@@ -76,7 +73,6 @@ class BUSToolsExport(AWSExportIO):
     @AWSExportIO.s3_upload(encoding='bus')
     def processed_bus_upload_s3(self, byte_seq, para_file):
         para_file.write(byte_seq)
-
 
     @AWSExportIO.efs_upload
     def processed_bus_upload_efs(self, byte_seq, outdir, para_file):

@@ -1,6 +1,6 @@
 from unittest import TestCase
-import struct
 from scito_count.BitHeader import *
+
 
 class TestAdtAtacBusHeader(TestCase):
     def setUp(self) -> None:

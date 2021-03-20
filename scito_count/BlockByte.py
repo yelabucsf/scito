@@ -1,11 +1,10 @@
 import struct
-'''
-Class to generate byte strings from offsets of BGZF ranges
-'''
+
 
 class BlockByte(object):
     def __init__(self, block_split):
         '''
+        Class to generate byte strings from offsets of BGZF ranges
         :param block_split: BlockSplit type
         '''
 

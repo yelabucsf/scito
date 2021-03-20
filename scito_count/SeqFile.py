@@ -4,6 +4,7 @@ from scito_count.S3Interface import S3Interface
 from scito_count.ProcessSettings import *
 from typing import List
 
+
 class SeqFile(object):
     '''
     Class containing all sequencing records of a file + meta data
@@ -14,6 +15,7 @@ class SeqFile(object):
     '''
 
     __slots__ = "read_records", "s3_interface", "technology", "n_reads", "byte_range"
+
     def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, byte_range: str):
         self.s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, s3_settings.profile)
         if s3_settings.object_key.split(".")[-1] not in ["gz", "gzip"]:
@@ -34,7 +36,8 @@ class SeqFile(object):
         def import_record_inner(func):
             @functools.wraps(func)
             def text_parser(self, *args, **kwargs):
-                with gzip.GzipFile(fileobj=self.s3_interface.s3_obj.get(Range=f"bytes={self.byte_range}")["Body"], mode="r") as gzipfile:
+                with gzip.GzipFile(fileobj=self.s3_interface.s3_obj.get(Range=f"bytes={self.byte_range}")["Body"],
+                                   mode="r") as gzipfile:
                     data: List[str] = []
                     counter = 0
                     for line in gzipfile:
@@ -53,7 +56,6 @@ class SeqFile(object):
         return import_record_inner
 
 
-
 class FQFile(SeqFile):
     def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, byte_range: str, qc_scale="phred"):
         '''
@@ -67,5 +69,5 @@ class FQFile(SeqFile):
 
     @SeqFile.import_record(4)  # FASTQ file - 4 lines per block
     def import_record_fastq(self, data):
-        return FQRecordAdtAtac(read_block=data, read_start=int(self.technology.start), read_end=int(self.technology.end))
-
+        return FQRecordAdtAtac(read_block=data, read_start=int(self.technology.start),
+                               read_end=int(self.technology.end))

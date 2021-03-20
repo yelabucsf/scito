@@ -1,9 +1,7 @@
 from scito_lambdas.lambda_utils import *
-from scito_count.BlockCatalog import *
-from scito_count.SeqSync import *
 from scito_count.SeqArranger import *
-from scito_count.BitFile import *
 from scito_count.BUSTools import *
+
 
 def settings_for_sections(record: Dict) -> Dict:
     '''
@@ -22,22 +20,10 @@ def settings_for_sections(record: Dict) -> Dict:
     return settings
 
 
-
 def bus_constructor_record(record: Dict):
     previous_lambda_name = 'genomics-catalog-build'
 
-    # get config
-    parsed_record = json.loads(record['body'])
-    config = json.loads(parsed_record['config'])
-
-    # Check if origin queue is correct
-    origin_queue, expected_queue = origin_vs_expected_queue(record, previous_lambda_name)
-    if origin_queue != expected_queue:
-        raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
-                         f'expecting from {expected_queue}, receiving from {origin_queue}')
-
     settings = settings_for_sections(record)
-
 
     # TODO abstract. Make a factory
     # For now reads should be in order read2, read3
@@ -67,16 +53,37 @@ def bus_constructor_record(record: Dict):
     native_bus_tools.run_pipe([native_bus_tools.bus_sort()])
 
     # export
-    s3_set2 = '' # TODO populate this
-    outdir = '' # TODO populate this
+    s3_set2 = ''  # TODO populate this
+    outdir = ''  # TODO populate this
     bt_export = BUSToolsExport(s3_settings=s3_set2)
     bt_export.processed_bus_upload_efs(byte_seq=native_bus_tools.processed_bus_file, outdir=outdir)
 
 
 def bus_constructor_handler(event, context):
     this_lambda_name = 'genomics-bus-constructor'
+    previous_lambda_name = 'genomics-catalog-build'
 
-    #TODO check if lambda is correct
+    # Check if origin queue is correct
+    probe_record = event['Records'][0]
+    origin_queue, expected_queue = origin_vs_expected_queue(probe_record, previous_lambda_name)
+    if origin_queue != expected_queue:
+        raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
+                         f'expecting from {expected_queue}, receiving from {origin_queue}')
+
+    # TODO check if lambda is correct
     if len(event['Records']) > 2:
         raise ValueError('bus_constructor_handler(): allowed lambda batch is up to 2 messages')
     [bus_constructor_record(record) for record in event['Records']]
+
+    # delete the main queue if it's empty
+    parsed_record = json.loads(probe_record['body'])
+    config = json.loads(parsed_record['config'])
+    origin_sqs_interface = SQSInterface(config=config, prefix='previous_lambda_name')
+    if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
+        if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
+            origin_sqs_interface.destroy()
+            next_lambda_interface = LambdaInterface(config=config, prefix='')  # TODO fix prefix
+            payload = {'config': parsed_record['config']}
+            next_lambda_interface.invoke_lambda(lambda_name='next_lambda_name', payload=json.dumps(payload))
+        else:
+            problem_in_dead_letter_queue(origin_sqs_interface)
