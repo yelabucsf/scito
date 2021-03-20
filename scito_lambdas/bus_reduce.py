@@ -8,7 +8,7 @@ import subprocess as sp
 
 
 def bus_reduce_handler(event, context):
-    lambda_name = 'genomics-bus-reduce'
+    this_lambda_name = 'genomics-bus-reduce'
 
     # TODO check if lambda is correct
 

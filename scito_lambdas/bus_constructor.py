@@ -24,15 +24,14 @@ def settings_for_sections(record: Dict) -> Dict:
 
 
 def bus_constructor_record(record: Dict):
-    previous_lambda = 'genomics-catalog-build'
+    previous_lambda_name = 'genomics-catalog-build'
 
     # get config
-    record_deconstructed = json.loads(record['body'])
-    config_buf = config_ini_to_buf(record_deconstructed['config'])
-    config = init_config(config_buf)
+    parsed_record = json.loads(record['body'])
+    config = json.loads(parsed_record['config'])
 
     # Check if origin queue is correct
-    origin_queue, expected_queue = origin_vs_expected_queue(record, previous_lambda)
+    origin_queue, expected_queue = origin_vs_expected_queue(record, previous_lambda_name)
     if origin_queue != expected_queue:
         raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
                          f'expecting from {expected_queue}, receiving from {origin_queue}')
@@ -55,7 +54,7 @@ def bus_constructor_record(record: Dict):
     # create bus
     read3 = tuple(FQFile(settings[section]['s3_settings'],
                          settings[section]['read_settings'],
-                         settings[section]['byte_range']) for section in settings)
+                         settings[section]['byte_range']) for section in settings)[-1]
     new_reads = (fixed_read2, read3)
     sync_two_reads = FQSyncTwoReads(new_reads)
     sync_two_reads.two_read_sync()
@@ -67,12 +66,15 @@ def bus_constructor_record(record: Dict):
     native_bus_tools = BUSTools(bus_header=header, bus_records=bus_file_adt_atac.bit_records)
     native_bus_tools.run_pipe([native_bus_tools.bus_sort()])
 
-
-    # TODO output to EFS
+    # export
+    s3_set2 = '' # TODO populate this
+    outdir = '' # TODO populate this
+    bt_export = BUSToolsExport(s3_settings=s3_set2)
+    bt_export.processed_bus_upload_efs(byte_seq=native_bus_tools.processed_bus_file, outdir=outdir)
 
 
 def bus_constructor_handler(event, context):
-    lambda_name = 'genomics-bus-constructor'
+    this_lambda_name = 'genomics-bus-constructor'
 
     #TODO check if lambda is correct
     if len(event['Records']) > 2:

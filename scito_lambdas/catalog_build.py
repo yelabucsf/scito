@@ -24,7 +24,7 @@ def settings_event_source(event_source_arn: str, lambda_name: str):
         "EventSourceArn": event_source_arn,
         "FunctionName": lambda_name,
         "Enabled": True,
-        "BatchSize": 10,
+        "BatchSize": 2,
         "MaximumBatchingWindowInSeconds": 20
     }
     return settings
@@ -58,7 +58,7 @@ def catalog_parser(sync_ranges, config: Dict) -> str:
 
 
 def catalog_build_handler(event, context):
-    lambda_name = 'genomics-catalog-build'
+    this_lambda_name = 'genomics-catalog-build'
     next_lambda_name = 'genomics-bus-constructor'
 
     # config to buffer
@@ -73,7 +73,7 @@ def catalog_build_handler(event, context):
     catalogs = np.array([catalog_wrapper(config, x) for x in config.keys()]).T
 
     # Create queues
-    queue_name = construct_process_name(config, lambda_name)
+    queue_name = construct_process_name(config, this_lambda_name)
     sqs_interface = SQSInterface(config, queue_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
         raise ValueError('main_handler(): SQS queues with provided names already exist')

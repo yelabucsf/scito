@@ -79,7 +79,7 @@ class BUSToolsExport(AWSExportIO):
 
 
     @AWSExportIO.efs_upload
-    def processed_bus_upload_efs(self, byte_seq, para_file):
+    def processed_bus_upload_efs(self, byte_seq, outdir, para_file):
         para_file.write(byte_seq)
 
 
