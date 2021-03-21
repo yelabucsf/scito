@@ -1,6 +1,7 @@
-from scito_lambdas.lambda_utils import *
-from scito_count.SeqArranger import *
+from scito_count.SeqFile import FQFile
 from scito_count.BUSTools import *
+from scito_count.SQSInterface import *
+from scito_count.LambdaInterface import LambdaInterface
 
 
 def settings_for_sections(record: Dict) -> Dict:
@@ -21,7 +22,6 @@ def settings_for_sections(record: Dict) -> Dict:
 
 
 def bus_constructor_record(record: Dict):
-    previous_lambda_name = 'genomics-catalog-build'
 
     settings = settings_for_sections(record)
 
@@ -62,6 +62,7 @@ def bus_constructor_record(record: Dict):
 def bus_constructor_handler(event, context):
     this_lambda_name = 'genomics-bus-constructor'
     previous_lambda_name = 'genomics-catalog-build'
+    next_lambda_name = ''
 
     # Check if origin queue is correct
     probe_record = event['Records'][0]
@@ -70,7 +71,6 @@ def bus_constructor_handler(event, context):
         raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
                          f'expecting from {expected_queue}, receiving from {origin_queue}')
 
-    # TODO check if lambda is correct
     if len(event['Records']) > 2:
         raise ValueError('bus_constructor_handler(): allowed lambda batch is up to 2 messages')
     [bus_constructor_record(record) for record in event['Records']]
@@ -82,8 +82,8 @@ def bus_constructor_handler(event, context):
     if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
         if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
             origin_sqs_interface.destroy()
-            next_lambda_interface = LambdaInterface(config=config, prefix='')  # TODO fix prefix
+            next_lambda_interface = LambdaInterface(config=config, prefix='')
             payload = {'config': parsed_record['config']}
-            next_lambda_interface.invoke_lambda(lambda_name='next_lambda_name', payload=json.dumps(payload))
+            next_lambda_interface.invoke_lambda(lambda_name=next_lambda_name, payload=json.dumps(payload))
         else:
             problem_in_dead_letter_queue(origin_sqs_interface)

@@ -1,9 +1,11 @@
 from scito_count.BlocksIO import *
 from scito_count.BlockSplit import *
+from scito_count.LambdaInterface import *
+from scito_count.SQSInterface import *
+from scito_count.BlockByte import *
 from scito_lambdas.lambda_utils import *
 
 
-# TODO refactor into smaller scopes
 def true_split_record(record: Dict) -> None:
     # get config
     parsed_record = json.loads(record['body'])
@@ -33,8 +35,6 @@ def true_split_handler(event, context):
         raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
                          f'expecting from {expected_queue}, receiving from {origin_queue}')
 
-    # TODO check if lambda is correct
-
     if len(event['Records']) > 10:
         raise ValueError('true_split_handler(): allowed lambda batch is up to 10 messages')
     [true_split_record(record) for record in event['Records']]
@@ -46,8 +46,8 @@ def true_split_handler(event, context):
     if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
         if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
             origin_sqs_interface.destroy()
-            next_lambda_interface = LambdaInterface(config=config, prefix='')  # TODO fix prefix
+            next_lambda_interface = LambdaInterface(config=config, prefix='')
             payload = {'config': parsed_record['config']}
-            next_lambda_interface.invoke_lambda(lambda_name='next_lambda_name', payload=json.dumps(payload))
+            next_lambda_interface.invoke_lambda(lambda_name=next_lambda_name, payload=json.dumps(payload))
         else:
             problem_in_dead_letter_queue(origin_sqs_interface)

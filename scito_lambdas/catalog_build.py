@@ -1,3 +1,5 @@
+from scito_count.ContentTablesIO import ContentTablesIO
+from scito_count.SQSInterface import SQSInterface
 from scito_lambdas.lambda_utils import *
 from scito_count.BlockCatalog import *
 from scito_count.LambdaInterface import *
@@ -7,8 +9,8 @@ from scito_count.ContentTable import *
 # HARDCODED SETTINGS
 # Kinda hardcoded function to get settings for the next lambda from S3
 def settings_for_bus_constructor_lambda(lambda_name: str) -> Dict:
-    s3_bucket = ''
-    s3_key = ''
+    s3_bucket = ''  # TODO place settings to bucket
+    s3_key = ''     # TODO place settings to bucket
     s3_interface = construct_s3_interface(s3_bucket, s3_key)
     try:
         settings_from_s3 = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
@@ -93,7 +95,6 @@ def catalog_build_handler(event, context):
     # ingest lambda settings
     next_lambda_settings = settings_for_bus_constructor_lambda(lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_function(**next_lambda_settings)
-
     event_source_settings = settings_event_source(main_queue.attributes['QueueArn'], lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
 

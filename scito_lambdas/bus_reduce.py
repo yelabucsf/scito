@@ -15,9 +15,7 @@ def bus_reduce_handler(event, context):
     parsed_record = json.loads(record['body'])
     config = json.loads(parsed_record['config'])
 
-    # TODO check if lambda is correct
-
-    # ToDo get the tech
+    # TODO get the tech
     header = bit_header_factory(tech)
     # TODO write the header to a file
     outfile = 'some_name'
@@ -28,7 +26,7 @@ def bus_reduce_handler(event, context):
         for name_of_file in list_of_names:
             sp.Popen(['tail', '-c', f'+{len(header) + 1}', name_of_file], stdout=f)
 
-        # delete parsed file
+    # TODO delete parsed file
 
     gene_map = ...
     ec_map = ...
@@ -37,3 +35,5 @@ def bus_reduce_handler(event, context):
 
     sp.Popen([f'bustools sort -T ./ -p - | bustools count -g {gene_map} -e {ec_map} -t {tx_names} '
               f'-o {out_prefix} --genecounts'], shell=True)
+
+    #TODO outouts to the S3

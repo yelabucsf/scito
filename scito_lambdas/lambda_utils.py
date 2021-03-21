@@ -68,7 +68,9 @@ def que_name_from_arn(arn: str):
 def construct_process_name(config: Dict, prefix: str):
     '''
     constructs unique service name based on the processed FASTQ file name for Lambda and SQS - FOR ALL sections of
-    the config :param config: str. FUll config.ini file in the form of Dict :param prefix: str. String representing
+    the config
+    :param config: str. FUll config.ini file in the form of Dict
+    :param prefix: str. String representing
     current step (name of the lambda function) :return: str. Newly generated unique service name
     '''
     s3_key = list(config.values())[0]['key']
