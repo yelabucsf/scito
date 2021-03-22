@@ -2,6 +2,7 @@ from typing import Type
 
 from scito_count.BitFile import *
 from scito_count.SeqFile import *
+from scito_count.BitHeader import *
 
 
 def seq_file_factory(technology: str) -> Type[SeqFile]:
@@ -27,5 +28,5 @@ def bit_header_factory(technology: str) -> Type[BitHeader]:
 
 
 
-def seq_sync_factory(technology: Tuple) -> Type[SeqSync]:
+def seq_sync_factory(technology: str) -> Type[SeqSync]:
     pass

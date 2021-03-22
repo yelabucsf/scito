@@ -2,7 +2,19 @@ import functools
 import operator
 import numpy as np
 from scito_count.ContentTable import ContentTable
-from typing import List
+from typing import List, Dict
+
+
+def define_overlap(config: Dict, section: str) -> int:
+    technologies = {
+        'scito ATAC': {
+            'READ 2': 1,
+            'READ 3': 0
+        }
+    }
+    technology = config[section]['technology']
+    overlap = technologies[technology][section]
+    return overlap
 
 
 class BlockCatalog(object):

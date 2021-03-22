@@ -20,3 +20,10 @@ class TestBlockCatalog(TestCase):
         list_lol = self.fq_adt_atac_catalog.ranges
         self.assertEqual(list_lol[0][1], 29576)
         self.assertEqual(len(list_lol), 4)
+
+    def test_create_catalog_overlap(self):
+        lol = ContentTable(self.content_tab_gen)
+        self.fq_adt_atac_catalog.create_catalog(content_table=lol.content_table_arr, overlap=1)
+        list_lol = self.fq_adt_atac_catalog.ranges
+        self.assertEqual(list_lol[0][1], 36974)
+        self.assertEqual(len(list_lol), 4)

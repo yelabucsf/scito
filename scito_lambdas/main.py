@@ -9,8 +9,8 @@ from scito_count.LambdaInterface import *
 # HARDCODED SETTINGS
 # Kinda hardcoded function to get settings for the next lambda from S3
 def settings_for_true_split_lambda(lambda_name: str) -> Dict:
-    s3_bucket = ''  # TODO place settings to bucket
-    s3_key = ''     # TODO place settings to bucket
+    s3_bucket = 'ucsf-genomics-prod-project-data'
+    s3_key = 'anton/scito/scito_count/true_split_settings.json'
     s3_interface = construct_s3_interface(s3_bucket, s3_key)
     try:
         settings_from_s3 = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')

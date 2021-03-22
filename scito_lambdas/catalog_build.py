@@ -9,8 +9,8 @@ from scito_count.ContentTable import *
 # HARDCODED SETTINGS
 # Kinda hardcoded function to get settings for the next lambda from S3
 def settings_for_bus_constructor_lambda(lambda_name: str) -> Dict:
-    s3_bucket = ''  # TODO place settings to bucket
-    s3_key = ''     # TODO place settings to bucket
+    s3_bucket = 'ucsf-genomics-prod-project-data'
+    s3_key = 'anton/scito/scito_count/bus_constructor_settings.json'
     s3_interface = construct_s3_interface(s3_bucket, s3_key)
     try:
         settings_from_s3 = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
@@ -45,7 +45,7 @@ def catalog_wrapper(config: Dict, section: str):
     content_table = ContentTable(content_tables_io)
     block_catalog = BlockCatalog(n_parts=8000)  # magic number targeting 2**13 lambda processes
 
-    # TODO logic for overlap
+    overlap = define_overlap(config, section)
     block_catalog.create_catalog(content_table=content_table.content_table_arr, overlap=overlap)
     return block_catalog
 

@@ -22,7 +22,6 @@ def settings_for_sections(record: Dict) -> Dict:
 
 
 def bus_constructor_record(record: Dict):
-
     settings = settings_for_sections(record)
 
     # TODO abstract. Make a factory
