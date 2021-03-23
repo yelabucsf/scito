@@ -25,8 +25,8 @@ def bit_header_factory(technology: str) -> Type[BitHeader]:
     header = header_init.output_header()
     return header
 
-
-
-
 def seq_sync_factory(technology: str) -> Type[SeqSync]:
-    pass
+    technologies = {
+        'scito ATAC': FQSyncTwoReads
+    }
+    return technologies[technology]

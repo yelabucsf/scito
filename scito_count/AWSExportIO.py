@@ -51,8 +51,10 @@ class AWSExportIO(object):
             :param byte_seq: generator of byte strings or full byte string
             :param outdir: defined by lambda when creating local mount point
             '''
-            new_filename = os.path.basename(self.s3_interface.s3_obj.key)
-            out_file = os.path.join(outdir, new_filename)
+            out_file = os.path.join(outdir, self.s3_interface.s3_obj.key)
+            dirname = os.path.dirname(out_file)
+            if not os.path.isdir(dirname):
+                os.mkdir(dirname)
             para_file = BytesIO()
             func_of_format(self, byte_seq, outdir, para_file, *args, **kwargs)
             para_file.seek(0)

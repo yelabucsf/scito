@@ -20,7 +20,12 @@ class TestSeqFile(TestCase):
 
 class TestFQFile(TestCase):
     def setUp(self) -> None:
-        self.fq_file = FQFile(s3_settings=s3_set, read_settings=read_set, byte_range='0-1000', qc_scale="phred")
+        settings = {
+            's3_settings': s3_set,
+            'read_settings': read_set,
+            'byte_range':'0-1000'
+        }
+        self.fq_file = FQFile(**settings, qc_scale="phred")
 
     print(s3_set.__dict__, read_set.__dict__)
 

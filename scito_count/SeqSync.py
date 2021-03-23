@@ -1,6 +1,23 @@
 import functools
-from typing import Tuple
+from typing import Tuple, Dict
 
+def select_files_to_sync(config: Dict) -> Dict:
+    '''
+    Creates tuple of sections of config file to be used to synchronize chunks of read files
+    :param config: Dict. Config specified by the user
+    :return: Tuple. Sections of a config that have to be synchronized. One of sections is a ground truth
+    '''
+    technologies = {
+        'scito ATAC': {
+            'ground': "READ 2",
+            'async': 'READ 3'
+        }
+    }
+    current_technology = [config[x]['technology'] for x in config]
+    if len(set(current_technology)) > 1:
+        raise ValueError(f'select_files_to_sync(): Detected multiple technologies in the config file.'
+                         f'Specified technologies are {set(current_technology)}. Specify only one type of technology')
+    return technologies[current_technology[0]]
 
 class SeqSync(object):
     '''
@@ -13,8 +30,8 @@ class SeqSync(object):
         self.seq_files = seq_files
 
         # Ground truth is a SeqFile object (first element of seq_files) which is considered to be the ground truth:
-        # usually file created by BlockCatalog without overlaps (overlap=0). Other SeqFile in the dict will have parts
-        # of the earlier blocks and run into next blocks
+        # usually file created by BlockCatalog without overlaps (overlap=0). Ground truth is ALWAYS a FASTQ file with
+        # cell barcodes. Other SeqFile in the dict will have parts of the earlier blocks and run into next blocks
         self.ground_truth = seq_files[0]
         self.is_synced = False
         ground_truth_record = next(self.ground_truth.read_records)

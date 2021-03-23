@@ -2,6 +2,7 @@ from scito_count.SeqFile import FQFile
 from scito_count.BUSTools import *
 from scito_count.SQSInterface import *
 from scito_count.LambdaInterface import LambdaInterface
+from scito_lambdas.lambda_settings import settings_for_bus_constructor_lambda
 
 
 def settings_for_sections(record: Dict) -> Dict:
@@ -10,9 +11,9 @@ def settings_for_sections(record: Dict) -> Dict:
     :param record: Dict
     :return: Dict{'section': Dict{s3, read, range}}
     '''
-    record_deconstructed = json.loads(record['body'])
-    config = config_from_record(record)
-    ranges = json.loads(record_deconstructed['byte_range'])
+    parsed_record = json.loads(record['body'])
+    config = json.loads(parsed_record['config'])
+    ranges = json.loads(parsed_record['byte_range'])
     settings = {}
     for section in config.keys():
         settings[section] = {'s3_settings': S3Settings(config, section),
@@ -24,24 +25,26 @@ def settings_for_sections(record: Dict) -> Dict:
 def bus_constructor_record(record: Dict):
     settings = settings_for_sections(record)
 
+    parsed_record = json.loads(record['body'])
+    config = json.loads(parsed_record['config'])
+    how_to_sync = select_files_to_sync(config)
+
     # TODO abstract. Make a factory
-    # For now reads should be in order read2, read3
+    # Arrange reads (stitch pool barcode to cell barcode)
     # read sync
-    reads = tuple(FQFile(settings[section]['s3_settings'],
-                         settings[section]['read_settings'],
-                         settings[section]['byte_range']) for section in settings)
-    sync_two_reads = FQSyncTwoReads(reads)
+    ground_read = FQFile(**settings[how_to_sync['ground']])
+    async_read = FQFile(**settings[how_to_sync['async']])
+    sync_two_reads = FQSyncTwoReads((ground_read, async_read))
     sync_two_reads.two_read_sync()
 
     # read arrange
-    fixed_read2 = FQSeqArrangerAdtAtac(sync_two_reads)
+    fixed_read = FQSeqArrangerAdtAtac(sync_two_reads)
 
+
+    # read sync
     # create bus
-    read3 = tuple(FQFile(settings[section]['s3_settings'],
-                         settings[section]['read_settings'],
-                         settings[section]['byte_range']) for section in settings)[-1]
-    new_reads = (fixed_read2, read3)
-    sync_two_reads = FQSyncTwoReads(new_reads)
+    async_read = FQFile(**settings[how_to_sync['async']])   # instantiate again because it's a generator
+    sync_two_reads = FQSyncTwoReads((fixed_read, async_read))
     sync_two_reads.two_read_sync()
 
     bus_file_adt_atac = BUSFileAdtAtac(sync_two_reads)
@@ -52,16 +55,16 @@ def bus_constructor_record(record: Dict):
     native_bus_tools.run_pipe([native_bus_tools.bus_sort()])
 
     # export
-    s3_set2 = ''  # TODO populate this
-    outdir = ''  # TODO populate this
-    bt_export = BUSToolsExport(s3_settings=s3_set2)
+    export_settings = settings[how_to_sync['ground']]['s3_settings']
+    outdir = settings_for_bus_constructor_lambda('')['FileSystemConfigs']['LocalMountPath']
+    bt_export = BUSToolsExport(s3_settings=export_settings)
     bt_export.processed_bus_upload_efs(byte_seq=native_bus_tools.processed_bus_file, outdir=outdir)
 
 
 def bus_constructor_handler(event, context):
     this_lambda_name = 'genomics-bus-constructor'
     previous_lambda_name = 'genomics-catalog-build'
-    next_lambda_name = ''
+    next_lambda_name = ''   # TODO add real arn or name
 
     # Check if origin queue is correct
     probe_record = event['Records'][0]
@@ -77,7 +80,7 @@ def bus_constructor_handler(event, context):
     # delete the main queue if it's empty
     parsed_record = json.loads(probe_record['body'])
     config = json.loads(parsed_record['config'])
-    origin_sqs_interface = SQSInterface(config=config, prefix='previous_lambda_name')
+    origin_sqs_interface = SQSInterface(config=config, prefix=previous_lambda_name)
     if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
         if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
             origin_sqs_interface.destroy()

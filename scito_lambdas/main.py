@@ -1,39 +1,11 @@
 from urllib.parse import unquote_plus
 
-from scito_count.SQSInterface import SQSInterface, SQSInterfaceError
 from scito_lambdas.lambda_utils import *
+from scito_lambdas.lambda_settings import settings_for_true_split_lambda, settings_event_source_true_split_lambda
+from scito_count.SQSInterface import SQSInterface, SQSInterfaceError
 from scito_count.blind_byte_range import *
 from scito_count.LambdaInterface import *
 
-
-# HARDCODED SETTINGS
-# Kinda hardcoded function to get settings for the next lambda from S3
-def settings_for_true_split_lambda(lambda_name: str) -> Dict:
-    s3_bucket = 'ucsf-genomics-prod-project-data'
-    s3_key = 'anton/scito/scito_count/true_split_settings.json'
-    s3_interface = construct_s3_interface(s3_bucket, s3_key)
-    try:
-        settings_from_s3 = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
-    except:
-        raise ValueError('settings_for_true_split_lambda(): settings for true_split_lambda do not exist. Contact the '
-                         'admin of this pipeline')
-    lambda_settings = json.loads(settings_from_s3)
-    lambda_settings["FunctionName"] = lambda_name
-    return lambda_settings
-
-
-# Kinda hardcoded function to get settings for the resource mapping for the next lambda
-def settings_event_source(event_source_arn: str, lambda_name: str):
-    settings = {
-        "EventSourceArn": event_source_arn,
-        "FunctionName": lambda_name,
-        "Enabled": True,
-        "BatchSize": 10,
-        "MaximumBatchingWindowInSeconds": 20
-    }
-    return settings
-
-# END hardcoded
 
 def pipeline_config_s3(record: Dict) -> str:
     s3_bucket = record['s3']['bucket']['name']
@@ -86,7 +58,8 @@ def main_handler(event: Dict, context) -> None:
     next_lambda_settings = settings_for_true_split_lambda(lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_function(**next_lambda_settings)
 
-    event_source_settings = settings_event_source(main_queue.attributes['QueueArn'], lambda_interface.lambda_name)
+    event_source_settings = settings_event_source_true_split_lambda(main_queue.attributes['QueueArn'],
+                                                                    lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
 
     # sending messages to the queue per config section

@@ -8,8 +8,8 @@ from typing import List, Dict
 def define_overlap(config: Dict, section: str) -> int:
     technologies = {
         'scito ATAC': {
-            'READ 2': 1,
-            'READ 3': 0
+            'READ 2': 0,
+            'READ 3': 1
         }
     }
     technology = config[section]['technology']

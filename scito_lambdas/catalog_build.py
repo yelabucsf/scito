@@ -1,41 +1,10 @@
+from scito_lambdas.lambda_settings import settings_for_bus_constructor_lambda, settings_event_source_bus_constructor_lambda
+from scito_lambdas.lambda_utils import *
 from scito_count.ContentTablesIO import ContentTablesIO
 from scito_count.SQSInterface import SQSInterface
-from scito_lambdas.lambda_utils import *
 from scito_count.BlockCatalog import *
 from scito_count.LambdaInterface import *
 from scito_count.ContentTable import *
-
-
-# HARDCODED SETTINGS
-# Kinda hardcoded function to get settings for the next lambda from S3
-def settings_for_bus_constructor_lambda(lambda_name: str) -> Dict:
-    s3_bucket = 'ucsf-genomics-prod-project-data'
-    s3_key = 'anton/scito/scito_count/bus_constructor_settings.json'
-    s3_interface = construct_s3_interface(s3_bucket, s3_key)
-    try:
-        settings_from_s3 = s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
-    except:
-        raise ValueError(
-            'settings_for_bus_constructor_lambda(): settings for true_split_lambda do not exist. Contact the '
-            'admin of this pipeline')
-    lambda_settings = json.loads(settings_from_s3)
-    lambda_settings["FunctionName"] = lambda_name
-    return lambda_settings
-
-
-# Kinda hardcoded function to get settings for the resource mapping for the next lambda
-def settings_event_source(event_source_arn: str, lambda_name: str):
-    settings = {
-        "EventSourceArn": event_source_arn,
-        "FunctionName": lambda_name,
-        "Enabled": True,
-        "BatchSize": 2,
-        "MaximumBatchingWindowInSeconds": 20
-    }
-    return settings
-
-
-# END hardcoded
 
 
 def catalog_wrapper(config: Dict, section: str):
@@ -95,7 +64,7 @@ def catalog_build_handler(event, context):
     # ingest lambda settings
     next_lambda_settings = settings_for_bus_constructor_lambda(lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_function(**next_lambda_settings)
-    event_source_settings = settings_event_source(main_queue.attributes['QueueArn'], lambda_interface.lambda_name)
+    event_source_settings = settings_event_source_bus_constructor_lambda(main_queue.attributes['QueueArn'], lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
 
     # construct message

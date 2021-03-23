@@ -42,7 +42,7 @@ def true_split_handler(event, context):
     # delete the main queue if it's empty
     parsed_record = json.loads(probe_record['body'])
     config = json.loads(parsed_record['config'])
-    origin_sqs_interface = SQSInterface(config=config, prefix='previous_lambda_name')
+    origin_sqs_interface = SQSInterface(config=config, prefix=previous_lambda_name)
     if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
         if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
             origin_sqs_interface.destroy()
