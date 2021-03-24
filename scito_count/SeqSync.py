@@ -1,5 +1,7 @@
 import functools
 from typing import Tuple, Dict
+from scito_lambdas.lambda_utils import extract_technology_config
+
 
 def select_files_to_sync(config: Dict) -> Dict:
     '''
@@ -13,11 +15,9 @@ def select_files_to_sync(config: Dict) -> Dict:
             'async': 'READ 3'
         }
     }
-    current_technology = [config[x]['technology'] for x in config]
-    if len(set(current_technology)) > 1:
-        raise ValueError(f'select_files_to_sync(): Detected multiple technologies in the config file.'
-                         f'Specified technologies are {set(current_technology)}. Specify only one type of technology')
-    return technologies[current_technology[0]]
+    technology = extract_technology_config(config)
+    return technologies[technology]
+
 
 class SeqSync(object):
     '''

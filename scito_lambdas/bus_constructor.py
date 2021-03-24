@@ -1,7 +1,6 @@
 from scito_count.SeqFile import FQFile
 from scito_count.BUSTools import *
 from scito_count.SQSInterface import *
-from scito_count.LambdaInterface import LambdaInterface
 from scito_lambdas.lambda_settings import settings_for_bus_constructor_lambda
 
 
@@ -40,10 +39,9 @@ def bus_constructor_record(record: Dict):
     # read arrange
     fixed_read = FQSeqArrangerAdtAtac(sync_two_reads)
 
-
     # read sync
     # create bus
-    async_read = FQFile(**settings[how_to_sync['async']])   # instantiate again because it's a generator
+    async_read = FQFile(**settings[how_to_sync['async']])  # instantiate again because it's a generator
     sync_two_reads = FQSyncTwoReads((fixed_read, async_read))
     sync_two_reads.two_read_sync()
 
@@ -64,7 +62,7 @@ def bus_constructor_record(record: Dict):
 def bus_constructor_handler(event, context):
     this_lambda_name = 'genomics-bus-constructor'
     previous_lambda_name = 'genomics-catalog-build'
-    next_lambda_name = ''   # TODO add real arn or name
+    next_lambda_name = ''  # TODO add real arn or name
 
     # Check if origin queue is correct
     probe_record = event['Records'][0]
@@ -77,15 +75,5 @@ def bus_constructor_handler(event, context):
         raise ValueError('bus_constructor_handler(): allowed lambda batch is up to 2 messages')
     [bus_constructor_record(record) for record in event['Records']]
 
-    # delete the main queue if it's empty
-    parsed_record = json.loads(probe_record['body'])
-    config = json.loads(parsed_record['config'])
-    origin_sqs_interface = SQSInterface(config=config, prefix=previous_lambda_name)
-    if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
-        if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
-            origin_sqs_interface.destroy()
-            next_lambda_interface = LambdaInterface(config=config, prefix='')
-            payload = {'config': parsed_record['config']}
-            next_lambda_interface.invoke_lambda(lambda_name=next_lambda_name, payload=json.dumps(payload))
-        else:
-            problem_in_dead_letter_queue(origin_sqs_interface)
+    # prepare reduce part
+    prepare_reduce_part(record=probe_record, service_prefix=previous_lambda_name, next_lambda_name=next_lambda_name)

@@ -1,8 +1,6 @@
-from scito_count.SeqArranger import *
-from scito_count.ProcessSettings import *
-from scito_count.BitFile import *
 from scito_count.S3Interface import S3Interface
 import os
+
 
 class S3InterfaceGen(object):
     def __init__(self, s3_settings, file_type, misc_id=''):

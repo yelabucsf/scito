@@ -1,8 +1,12 @@
 from configparser import ConfigParser
-from typing import Union
+from typing import Union, Dict
 import json
 from scito_count.AWSExportIO import *
 from io import StringIO
+
+from scito_count.LambdaInterface import LambdaInterface
+from scito_count.SQSInterface import SQSInterface, problem_in_dead_letter_queue
+
 
 def init_config(config_file: Union[str, StringIO]) -> Dict:
     '''
@@ -80,6 +84,15 @@ def construct_process_name(config: Dict, prefix: str):
     return process_name
 
 
+def extract_technology_config(config: Dict) -> str:
+    current_technology = [config[x]['technology'] for x in config]
+    if len(set(current_technology)) > 1:
+        raise ValueError(f'select_files_to_sync(): Detected multiple technologies in the config file.'
+                         f'Specified technologies are {set(current_technology)}. Specify only one type of technology')
+    else:
+        return current_technology[0]
+
+
 # IMPURE FUNCTIONS - have side effects
 def create_queue(sqs_interface, use_dead_letter_arn: str = None):
     settings = {
@@ -104,3 +117,26 @@ def prep_queue(sqs_interface):
                  use_dead_letter_arn=dead_letter.attributes['QueueArn'])  # Creates main queue
     main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
     return main_queue
+
+
+def prepare_reduce_part(record: Dict, service_prefix: str, next_lambda_name: str) -> None:
+    '''
+    Impure function. Checks if there are messages pending. If the queue is empty it destroys it and invokes next lambda.
+    If dead letter queue has messages - the error is thrown
+    :param record: Dict. A record from a trigger event
+    :param service_prefix: str. Previous lambda name to check a correct queue
+    :param next_lambda_name: str. Name of the next lambda to invoke
+    :return: None
+    '''
+    # delete the main queue if it's empty
+    parsed_record = json.loads(record['body'])
+    config = json.loads(parsed_record['config'])
+    origin_sqs_interface = SQSInterface(config=config, prefix=service_prefix)
+    if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
+        if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
+            origin_sqs_interface.destroy()
+            next_lambda_interface = LambdaInterface(config=config, prefix='')
+            payload = {'config': parsed_record['config']}
+            next_lambda_interface.invoke_lambda(lambda_name=next_lambda_name, payload=json.dumps(payload))
+        else:
+            problem_in_dead_letter_queue(origin_sqs_interface)

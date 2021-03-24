@@ -1,5 +1,6 @@
 from scito_utils.S3InterfaceGen import *
 from io import BytesIO
+import functools
 import os
 
 '''

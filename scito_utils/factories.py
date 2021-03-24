@@ -17,7 +17,7 @@ def bit_file_factory(technology: str) -> Type[BitFile]:
     }
     return technologies[technology]
 
-def bit_header_factory(technology: str) -> Type[BitHeader]:
+def bit_header_factory(technology: str) -> str:
     technologies = {
         'scito ATAC': BUSHeaderAdtAtac
     }
