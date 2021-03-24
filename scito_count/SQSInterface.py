@@ -4,7 +4,8 @@ import boto3
 
 
 def origin_vs_expected_queue(record: Dict, previous_lambda: str) -> Tuple:
-    config = config_from_record(record)
+    parsed_record = json.loads(record['body'])
+    config = json.loads(parsed_record['config'])
     origin_sqs_interface = SQSInterface(config, previous_lambda)
     origin_queue = que_name_from_arn(record['eventSourceARN'])
     expected_queue = origin_sqs_interface.queue_name

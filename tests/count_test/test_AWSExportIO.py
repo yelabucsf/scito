@@ -6,6 +6,9 @@ from scito_count.BlocksIO import BlocksIO
 from scito_count.BlockSplit import *
 from scito_count.BlockByte import *
 from scito_count.SeqFile import FQFile
+from scito_count.ProcessSettings import *
+from scito_count.SeqSync import *
+from scito_count.BitFile import *
 
 from scito_lambdas.lambda_utils import init_config
 import struct

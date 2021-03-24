@@ -3,6 +3,7 @@ from unittest import TestCase
 from scito_count.BlockCatalog import BlockCatalog
 from scito_count.ContentTable import ContentTable
 from scito_count.ContentTablesIO import ContentTablesIO
+from scito_count.ProcessSettings import *
 from scito_lambdas.lambda_utils import *
 
 

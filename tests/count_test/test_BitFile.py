@@ -2,6 +2,8 @@ from unittest import TestCase
 from scito_count.BitFile import *
 from scito_count.SeqSync import *
 from scito_count.BitRecord import *
+from scito_count.ProcessSettings import *
+from scito_count.SeqFile import *
 
 from scito_lambdas.lambda_utils import init_config
 

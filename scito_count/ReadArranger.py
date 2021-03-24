@@ -1,4 +1,4 @@
-from scito_count.SeqSync import *
+from scito_count.ReadRecord import *
 from typing import Tuple
 
 

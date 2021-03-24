@@ -2,6 +2,7 @@ from scito_count.SeqFile import FQFile
 from scito_count.BUSTools import *
 from scito_count.SQSInterface import *
 from scito_lambdas.lambda_settings import settings_for_bus_constructor_lambda
+from scito_lambdas.architecture_utils import *
 
 
 def settings_for_sections(record: Dict) -> Dict:

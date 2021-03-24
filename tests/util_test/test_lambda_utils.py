@@ -1,6 +1,5 @@
 from unittest import TestCase
 from scito_lambdas.lambda_utils import *
-
 from io import StringIO
 
 class Test_1(TestCase):
@@ -37,5 +36,7 @@ class Test_3(TestCase):
         section = list(config_init.values())[0]
         self.assertEqual(section['key'], 'anton/scito/mock/fastq/downsamp/small_R2.fastq.gz')
 
-
-
+    def test_parse_range(self):
+        parsed_range = parse_range([0, 12345])
+        self.assertTrue(isinstance(parsed_range,str))
+        self.assertEqual(parsed_range, '0-12345')

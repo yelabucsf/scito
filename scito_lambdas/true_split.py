@@ -3,6 +3,7 @@ from scito_count.BlockSplit import *
 from scito_count.SQSInterface import *
 from scito_count.BlockByte import *
 from scito_lambdas.lambda_utils import *
+from scito_lambdas.architecture_utils import *
 
 
 def true_split_record(record: Dict) -> None:

@@ -1,6 +1,7 @@
 from unittest import TestCase
 from scito_count.SeqArranger import *
 from scito_count.SeqSync import *
+from scito_count.SeqFile import *
 from scito_lambdas.lambda_utils import init_config
 
 conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")

@@ -1,4 +1,5 @@
 from unittest import TestCase
+from scito_count.ProcessSettings import *
 from scito_lambdas.lambda_utils import *
 
 
