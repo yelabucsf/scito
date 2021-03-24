@@ -2,6 +2,9 @@ from scito_lambdas.lambda_utils import *
 from scito_count.ProcessSettings import *
 import boto3
 
+def que_name_from_arn(arn: str):
+    deconstructed_arn = arn.split(':')
+    return deconstructed_arn[-1]
 
 def origin_vs_expected_queue(record: Dict, previous_lambda: str) -> Tuple:
     parsed_record = json.loads(record['body'])

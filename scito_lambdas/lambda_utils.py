@@ -42,7 +42,6 @@ def config_ini_to_buf(config_message: str) -> StringIO:
     return config_buf
 
 
-# NOT TESTED
 def parse_range(byte_range: Union[Tuple, List, np.ndarray]) -> str:
     if len(byte_range) != 2:
         raise ValueError(
@@ -50,18 +49,7 @@ def parse_range(byte_range: Union[Tuple, List, np.ndarray]) -> str:
     return f'{byte_range[0]}-{byte_range[1]}'
 
 
-def finalize_message(msg: Dict, blind_range: Tuple) -> str:
-    msg['byte_range'] = parse_range(blind_range)
-    finalized_msg = json.dumps(msg)
-    return finalized_msg
-
-
-def que_name_from_arn(arn: str):
-    deconstructed_arn = arn.split(':')
-    return deconstructed_arn[-1]
-
-
-def construct_process_name(config: Dict, prefix: str):
+def construct_process_name(config: Dict, prefix: str) -> str:
     '''
     constructs unique service name based on the processed FASTQ file name for Lambda and SQS - FOR ALL sections of
     the config
@@ -85,27 +73,3 @@ def extract_technology_config(config: Dict) -> str:
         return current_technology[0]
 
 
-# IMPURE FUNCTIONS - have side effects
-def create_queue(sqs_interface, use_dead_letter_arn: str = None):
-    settings = {
-        "QueueName": sqs_interface.dead_letter_name if use_dead_letter_arn is None else sqs_interface.queue_name,
-        "Attributes": {
-            "DelaySeconds": sqs_interface.sqs_settings.delay_seconds,
-            "KmsMasterKeyId": sqs_interface.sqs_settings.kms_master_key_id
-        }
-    }
-    if use_dead_letter_arn is not None:
-        settings["Attributes"]["RedrivePolicy"] = {
-            'deadLetterTargetArn': use_dead_letter_arn,
-            'maxReceiveCount': sqs_interface.sqs_settings.maxReceiveCount
-        }
-    sqs_interface.sqs.create_queue(**settings)
-
-
-def prep_queue(sqs_interface):
-    create_queue(sqs_interface=sqs_interface, use_dead_letter_arn=None)  # Creates dead letter queue
-    dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
-    create_queue(sqs_interface=sqs_interface,
-                 use_dead_letter_arn=dead_letter.attributes['QueueArn'])  # Creates main queue
-    main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
-    return main_queue

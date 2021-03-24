@@ -4,6 +4,32 @@ import json
 from scito_count.LambdaInterface import LambdaInterface
 from scito_count.SQSInterface import SQSInterface, problem_in_dead_letter_queue
 
+# NOT TESTED
+# IMPURE FUNCTIONS - have side effects
+def create_queues(sqs_interface, use_dead_letter_arn: str = None):
+    settings = {
+        "QueueName": sqs_interface.dead_letter_name if use_dead_letter_arn is None else sqs_interface.queue_name,
+        "Attributes": {
+            "DelaySeconds": sqs_interface.sqs_settings.delay_seconds,
+            "KmsMasterKeyId": sqs_interface.sqs_settings.kms_master_key_id
+        }
+    }
+    if use_dead_letter_arn is not None:
+        settings["Attributes"]["RedrivePolicy"] = {
+            'deadLetterTargetArn': use_dead_letter_arn,
+            'maxReceiveCount': sqs_interface.sqs_settings.maxReceiveCount
+        }
+    sqs_interface.sqs.create_queue(**settings)
+
+
+def prep_queues(sqs_interface):
+    create_queues(sqs_interface=sqs_interface, use_dead_letter_arn=None)  # Creates dead letter queue
+    dead_letter = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.dead_letter_name)
+    create_queues(sqs_interface=sqs_interface,
+                  use_dead_letter_arn=dead_letter.attributes['QueueArn'])  # Creates main queue
+    main_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
+    return main_queue
+
 
 def prepare_reduce_part(record: Dict, service_prefix: str, next_lambda_name: str) -> None:
     '''

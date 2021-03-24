@@ -1,10 +1,17 @@
 from urllib.parse import unquote_plus
 
 from scito_lambdas.lambda_utils import *
+from scito_lambdas.architecture_utils import *
 from scito_lambdas.lambda_settings import settings_for_true_split_lambda, settings_event_source_true_split_lambda
 from scito_count.SQSInterface import SQSInterface, SQSInterfaceError
 from scito_count.blind_byte_range import *
 from scito_count.LambdaInterface import *
+
+
+def finalize_message(msg: Dict, blind_range: Tuple) -> str:
+    msg['byte_range'] = parse_range(blind_range)
+    finalized_msg = json.dumps(msg)
+    return finalized_msg
 
 
 def pipeline_config_s3(record: Dict) -> str:
@@ -46,7 +53,7 @@ def main_handler(event: Dict, context) -> None:
     sqs_interface = SQSInterface(config, this_lambda_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
         raise SQSInterfaceError('main_handler(): SQS queues with provided names already exist')
-    main_queue = prep_queue(sqs_interface)
+    main_queue = prep_queues(sqs_interface)
 
     # Create lambda
     lambda_interface = LambdaInterface(config, next_lambda_name)

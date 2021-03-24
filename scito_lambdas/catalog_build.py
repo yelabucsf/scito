@@ -53,7 +53,7 @@ def catalog_build_handler(event, context):
     sqs_interface = SQSInterface(config, queue_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
         raise ValueError('main_handler(): SQS queues with provided names already exist')
-    main_queue = prep_queue(sqs_interface)
+    main_queue = prep_queues(sqs_interface)
 
     # Create lambda
     lambda_interface = LambdaInterface(config, next_lambda_name)

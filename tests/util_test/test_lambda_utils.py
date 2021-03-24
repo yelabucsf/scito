@@ -2,6 +2,8 @@ from unittest import TestCase
 from scito_lambdas.lambda_utils import *
 from io import StringIO
 
+conf = init_config("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini")
+
 class Test_1(TestCase):
     def test_init_config_fromIO(self):
         with open("/Users/antonogorodnikov/Documents/Work/Python/scito/tests/config_test.ini") as cfg:
@@ -40,3 +42,14 @@ class Test_3(TestCase):
         parsed_range = parse_range([0, 12345])
         self.assertTrue(isinstance(parsed_range,str))
         self.assertEqual(parsed_range, '0-12345')
+
+    def test_construct_process_name(self):
+        process_name = construct_process_name(config=conf, prefix='unit-test')
+        self.assertTrue(isinstance(process_name, str))
+        self.assertEqual(process_name, 'unit-test_downsamp_seed100_ADT_own_S19_L003_R2_001')
+
+    def test_extract_technology_config(self):
+        technology = extract_technology_config(config=conf)
+        self.assertTrue(isinstance(technology, str))
+        self.assertEqual(technology, 'scito ATAC')
+

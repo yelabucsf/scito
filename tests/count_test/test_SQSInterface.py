@@ -11,8 +11,8 @@ class TestSQSInterface(TestCase):
             lol = StringIO(cfg.read())
         config = init_config(lol)
         self.sqs_interface = SQSInterface(config, 'unit-test')
-        self.sqs_interface.sqs.create_queue(QueueName=self.sqs_interface.dead_letter_name,
-                                            Attributes={
+        self.sqs_interface.sqs.create_queues(QueueName=self.sqs_interface.dead_letter_name,
+                                             Attributes={
                                                 'KmsMasterKeyId': self.sqs_interface.sqs_settings[
                                                     'KmsMasterKeyId']})
         self.active_sqs = self.sqs_interface.sqs.get_queue_by_name(QueueName=self.sqs_interface.dead_letter_name)
