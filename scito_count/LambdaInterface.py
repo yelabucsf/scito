@@ -8,32 +8,30 @@ class LambdaInterfaceError(Exception):
 
 
 class LambdaInterface(object):
-    def __init__(self, config: Dict, prefix: str):
+    def __init__(self, config: Dict, prefix: str, **kwargs):
         '''
         Abstraction to interact with a specific lambda based on the config
         :param config: Dict. Pipeline config imported as a dictionary
         :param prefix: str. Unique prefix for this process
+        :param **kwargs: Dict. Kwargs for boto3.Session()
         '''
-        s3_settings = S3Settings(config, list(config.keys())[0])
-        if s3_settings.profile == "":
-            session = boto3.Session()
-        else:
-            session = boto3.Session(profile_name=s3_settings.profile)
-        self.aws_lambda = session.resource("lambda")
+        session = boto3.Session(**kwargs)
+        self.aws_lambda = session.client('lambda')
         self.lambda_name = construct_process_name(config, prefix)
 
     def function_exists(self) -> bool:
         try:
-            current_function = self.aws_lambda.get_function(self.lambda_name)
+            current_function = self.aws_lambda.get_function(FunctionName=self.lambda_name)
         except self.aws_lambda.exceptions.ResourceNotFoundException:
             current_function = None
         return bool(current_function)
 
-    def invoke_lambda(self, lambda_name: str, payload: str) -> Dict:
+    def invoke_lambda(self, lambda_name: str, payload: str, **kwargs) -> Dict:
         invoke_settings = {
             "FunctionName": lambda_name,
             "InvocationType": "Event",
             "Payload": payload
         }
+        invoke_settings.update(**kwargs)
         response = self.aws_lambda.invoke(**invoke_settings)
         return response

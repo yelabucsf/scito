@@ -19,7 +19,8 @@ setup(name='scito',
             'scipy',
             'statsmodels',
             'Click',
-            'boto3'
+            'boto3',
+            'vcrpy'
       ],
       entry_points='''
       [console_scripts]

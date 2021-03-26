@@ -2,12 +2,9 @@ import boto3
 
 
 class S3Interface(object):
-    def __init__(self, bucket: str, object_key: str, profile: str = ""):
-        if profile == "":
-            session = boto3.Session()
-        else:
-            session = boto3.Session(profile_name=profile)
-        s3 = session.resource("s3")
+    def __init__(self, bucket: str, object_key: str, **kwargs):
+        session = boto3.Session(**kwargs)
+        s3 = session.resource('s3')
         self.s3_obj = s3.Object(bucket, object_key)
         self.bucket = s3.Bucket(bucket)
 

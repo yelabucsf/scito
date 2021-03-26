@@ -22,33 +22,20 @@ def pipeline_config_s3(record: Dict) -> str:
     return config_str
 
 
-def main_handler(event: Dict, context) -> None:
-    '''
-    Function is triggered by an S3 upload event. The downstream lambdas are created or invoked programmatically
-    :param event: Dict. S3 records
-    :param context:
-    :return: None
-    '''
-
-    # id of lambdas in concern
-    this_lambda_name = 'genomics-blind-split'
-    next_lambda_name = 'genomics-true-split'
-
-    # config to buffer
+def config_for_main(event: Dict) -> Dict:
     if len(event['Records']) > 1:
         raise ValueError('main_handler(): trigger for this function should contain only a single record')
     record = event['Records'][0]
-
     config_str = pipeline_config_s3(record)
-
-    # parse config
     config_buf = config_ini_to_buf(config_str)
     config = init_config(config_buf)
-    config_sections = config.keys()
-    if len(config_sections) > 3:
+    if len(config.keys()) > 3:
         raise ValueError(
             'main_handler(): current pipeline supports only technologies with up to 3 FASTQ files per sample')
+    return config
 
+
+def architecture_for_main(config: Dict, this_lambda_name: str, next_lambda_name: str):
     # Create queues
     sqs_interface = SQSInterface(config, this_lambda_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
@@ -64,13 +51,33 @@ def main_handler(event: Dict, context) -> None:
     # ingest lambda settings
     next_lambda_settings = settings_for_true_split_lambda(lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_function(**next_lambda_settings)
-
     event_source_settings = settings_event_source_true_split_lambda(main_queue.attributes['QueueArn'],
                                                                     lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
 
+    return main_queue
+
+
+def main_handler(event: Dict, context) -> None:
+    '''
+    Function is triggered by an S3 upload event. The downstream lambdas are created or invoked programmatically
+    :param event: Dict. S3 records
+    :param context:
+    :return: None
+    '''
+
+    # id of lambdas in concern
+    this_lambda_name = 'genomics-blind-split'
+    next_lambda_name = 'genomics-true-split'
+
+    # this config
+    config = config_for_main(event)
+
+    # this main SQS queue
+    main_queue = architecture_for_main(config=config, this_lambda_name=this_lambda_name, next_lambda_name=next_lambda_name)
+
     # sending messages to the queue per config section
-    for section in config_sections:
+    for section in config.keys():
         s3_settings = S3Settings(config, section)
         blind_ranges = blind_byte_range(s3_settings)
 

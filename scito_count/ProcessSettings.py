@@ -9,8 +9,8 @@ class ProcessSettings(object):
 class S3Settings(ProcessSettings):
     def __init__(self, config: Dict, config_section: str):
         super().__init__(config, config_section)
-        relevant_attr = ['bucket', 'key', 'profile']
-        self.bucket, self.object_key, self.profile = [self._section_settings[x] for x in relevant_attr]
+        relevant_attr = ['bucket', 'key']
+        self.bucket, self.object_key = [self._section_settings[x] for x in relevant_attr]
 
 
 class ReadSettings(ProcessSettings):

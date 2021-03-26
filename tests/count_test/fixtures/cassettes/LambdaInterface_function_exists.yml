@@ -1,0 +1,26 @@
+interactions:
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://lambda.us-west-2.amazonaws.com/2015-03-31/functions/unittests_
+  response:
+    body:
+      string: '{"Type":"User","Message":"Function not found: arn:aws:lambda:us-west-2:801051463828:function:unittests_"}'
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '105'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 26 Mar 2021 05:20:06 GMT
+      x-amzn-ErrorType:
+      - ResourceNotFoundException
+      x-amzn-RequestId:
+      - 59f7bbb5-8f68-42fd-be85-957e15f1848d
+    status:
+      code: 404
+      message: Not Found
+version: 1

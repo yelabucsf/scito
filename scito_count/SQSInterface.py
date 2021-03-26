@@ -33,16 +33,11 @@ class SQSInterfaceError(Exception):
 
 
 class SQSInterface(object):
-    def __init__(self, config: Dict, prefix: str):
+    def __init__(self, config: Dict, prefix: str, **kwargs):
         '''
         class to create SQS queue, read and send messages
         '''
-        s3_settings = S3Settings(config, list(config.keys())[0])
-        if s3_settings.profile == "":
-            session = boto3.Session()
-        else:
-            session = boto3.Session(profile_name=s3_settings.profile)
-
+        session = boto3.Session(**kwargs)
         self.sqs = session.resource("sqs")
         self.queue_name = construct_process_name(config, prefix)
         self.dead_letter_name = '_'.join([self.queue_name, 'DEAD-LETTER'])

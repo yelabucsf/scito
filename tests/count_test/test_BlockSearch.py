@@ -1,10 +1,10 @@
 from unittest import TestCase
 from scito_count.BlockSearch import *
 
-file_path = "mock_data/TEST_FASTQ.fastq.gz"
-file_path_1 = 'mock_data/TEST_FASTQ_blind_split/xaa'
-file_path_2 = 'mock_data/TEST_FASTQ_blind_split/xab'
-file_path_3 = 'mock_data/TEST_FASTQ_blind_split/xac'
+file_path = "fixtures/TEST_FASTQ.fastq.gz"
+file_path_1 = 'fixtures/TEST_FASTQ_blind_split/xaa'
+file_path_2 = 'fixtures/TEST_FASTQ_blind_split/xab'
+file_path_3 = 'fixtures/TEST_FASTQ_blind_split/xac'
 
 
 class TestBlockSearch(TestCase):
