@@ -1,12 +1,20 @@
 interactions:
 - request:
     body: null
-    headers: {}
+    headers:
+      Authorization:
+      - OBSCURED
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
     method: GET
     uri: https://lambda.us-west-2.amazonaws.com/2015-03-31/functions/unittests_
   response:
     body:
-      string: '{"Type":"User","Message":"Function not found: arn:aws:lambda:us-west-2:801051463828:function:unittests_"}'
+      string: '{"Type":"User","Message":"Function not found: OBSCURED'
     headers:
       Connection:
       - keep-alive
@@ -15,11 +23,9 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 26 Mar 2021 05:20:06 GMT
-      x-amzn-ErrorType:
-      - ResourceNotFoundException
-      x-amzn-RequestId:
-      - 59f7bbb5-8f68-42fd-be85-957e15f1848d
+      - Mon, 29 Mar 2021 16:42:19 GMT
+      x-amzn-ErrorType: OBSCURED
+      x-amzn-RequestId: OBSCURED
     status:
       code: 404
       message: Not Found

@@ -20,7 +20,7 @@ setup(name='scito',
             'statsmodels',
             'Click',
             'boto3',
-            'vcrpy'
+            'ufixtures @ git+https://github.com/Gvaihir/ufixtures#egg=ufixtures'
       ],
       entry_points='''
       [console_scripts]
