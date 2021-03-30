@@ -23,7 +23,7 @@ def true_split_record(record: Dict) -> None:
     block_byte_export.block_range_upload_s3(byte_seq=block_byte.byte_block_gen)
 
 
-def true_split_handler(event, context):
+def true_split_handler(event):
     this_lambda_name = 'genomics-true-split'
     next_lambda_name = ''  # TODO add real arn or name
 

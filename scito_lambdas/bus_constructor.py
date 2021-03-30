@@ -61,7 +61,7 @@ def bus_constructor_record(record: Dict):
     bt_export.processed_bus_upload_efs(byte_seq=native_bus_tools.processed_bus_file, outdir=outdir)
 
 
-def bus_constructor_handler(event, context):
+def bus_constructor_handler(event):
     this_lambda_name = 'genomics-bus-constructor'
     next_lambda_name = ''  # TODO add real arn or name
 

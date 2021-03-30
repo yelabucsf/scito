@@ -6,7 +6,7 @@ import json
 import subprocess as sp
 
 
-def bus_reduce_handler(event, context):
+def bus_reduce_handler(event):
     this_lambda_name = 'genomics-bus-reduce'
 
     if len(event['Records']) > 1:

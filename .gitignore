@@ -12,3 +12,4 @@
 /aws_roles/genomics-scito-lambda-5.json
 /lambda_settings/true_split_settings.json
 /lambda_settings/bus_constructor_settings.json
+/lambda_settings/true_split_settings_TEST.json

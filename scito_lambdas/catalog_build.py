@@ -1,4 +1,4 @@
-from scito_lambdas.lambda_settings import settings_for_bus_constructor_lambda, settings_event_source_bus_constructor_lambda
+from scito_lambdas.lambda_settings import settings_for_next_lambda, settings_event_source_bus_constructor_lambda
 from scito_lambdas.lambda_utils import *
 from scito_lambdas.architecture_utils import *
 from scito_count.ContentTablesIO import ContentTablesIO
@@ -34,7 +34,7 @@ def catalog_parser(sync_ranges, config: Dict) -> str:
     return json.dumps(dict(zip(config.keys(), str_ranges)))
 
 
-def catalog_build_handler(event, context):
+def catalog_build_handler(event):
     this_lambda_name = 'genomics-catalog-build'
     next_lambda_name = 'genomics-bus-constructor'
 
@@ -63,7 +63,7 @@ def catalog_build_handler(event, context):
             f'main_handler(): function with the name {lambda_interface.lambda_name} already exists.')
 
     # ingest lambda settings
-    next_lambda_settings = settings_for_bus_constructor_lambda(lambda_interface.lambda_name)
+    next_lambda_settings = settings_for_next_lambda(lambda_interface.lambda_name, lambda_setting_s3_key)
     lambda_interface.aws_lambda.create_function(**next_lambda_settings)
     event_source_settings = settings_event_source_bus_constructor_lambda(main_queue.attributes['QueueArn'], lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
