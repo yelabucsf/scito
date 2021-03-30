@@ -6,10 +6,10 @@ def que_name_from_arn(arn: str):
     deconstructed_arn = arn.split(':')
     return deconstructed_arn[-1]
 
-def origin_vs_expected_queue(record: Dict, previous_lambda: str) -> Tuple:
+def origin_vs_expected_queue(record: Dict, this_lambda_name: str) -> Tuple:
     parsed_record = json.loads(record['body'])
     config = json.loads(parsed_record['config'])
-    origin_sqs_interface = SQSInterface(config, previous_lambda)
+    origin_sqs_interface = SQSInterface(config, this_lambda_name)
     origin_queue = que_name_from_arn(record['eventSourceARN'])
     expected_queue = origin_sqs_interface.queue_name
     return origin_queue, expected_queue

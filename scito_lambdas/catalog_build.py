@@ -1,5 +1,6 @@
 from scito_lambdas.lambda_settings import settings_for_bus_constructor_lambda, settings_event_source_bus_constructor_lambda
 from scito_lambdas.lambda_utils import *
+from scito_lambdas.architecture_utils import *
 from scito_count.ContentTablesIO import ContentTablesIO
 from scito_count.SQSInterface import SQSInterface
 from scito_count.BlockCatalog import *

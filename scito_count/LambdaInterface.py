@@ -35,3 +35,6 @@ class LambdaInterface(object):
         invoke_settings.update(**kwargs)
         response = self.aws_lambda.invoke(**invoke_settings)
         return response
+
+    def destroy(self):
+        self.aws_lambda.delete_function(self.lambda_name)

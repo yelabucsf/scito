@@ -23,6 +23,7 @@ def pipeline_config_s3(record: Dict) -> str:
 
 
 def config_for_main(event: Dict) -> Dict:
+
     if len(event['Records']) > 1:
         raise ValueError('main_handler(): trigger for this function should contain only a single record')
     record = event['Records'][0]
@@ -35,9 +36,9 @@ def config_for_main(event: Dict) -> Dict:
     return config
 
 
-def architecture_for_main(config: Dict, this_lambda_name: str, next_lambda_name: str):
+def architecture_for_main(config: Dict, next_lambda_name: str):
     # Create queues
-    sqs_interface = SQSInterface(config, this_lambda_name)
+    sqs_interface = SQSInterface(config, next_lambda_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
         raise SQSInterfaceError('main_handler(): SQS queues with provided names already exist')
     main_queue = prep_queues(sqs_interface)
@@ -47,8 +48,6 @@ def architecture_for_main(config: Dict, this_lambda_name: str, next_lambda_name:
     if lambda_interface.function_exists():
         raise LambdaInterfaceError(
             f'main_handler(): function with the name {lambda_interface.lambda_name} already exists.')
-
-    # ingest lambda settings
     next_lambda_settings = settings_for_true_split_lambda(lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_function(**next_lambda_settings)
     event_source_settings = settings_event_source_true_split_lambda(main_queue.attributes['QueueArn'],
@@ -67,14 +66,13 @@ def main_handler(event: Dict, context) -> None:
     '''
 
     # id of lambdas in concern
-    this_lambda_name = 'genomics-blind-split'
     next_lambda_name = 'genomics-true-split'
 
     # this config
     config = config_for_main(event)
 
     # this main SQS queue
-    main_queue = architecture_for_main(config=config, this_lambda_name=this_lambda_name, next_lambda_name=next_lambda_name)
+    main_queue = architecture_for_main(config=config, next_lambda_name=next_lambda_name)
 
     # sending messages to the queue per config section
     for section in config.keys():

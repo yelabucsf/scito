@@ -24,13 +24,12 @@ def true_split_record(record: Dict) -> None:
 
 
 def true_split_handler(event, context):
-    previous_lambda_name = 'genomics-blind-split'
     this_lambda_name = 'genomics-true-split'
     next_lambda_name = ''  # TODO add real arn or name
 
     # Check if origin queue is correct
     probe_record = event['Records'][0]
-    origin_queue, expected_queue = origin_vs_expected_queue(probe_record, previous_lambda_name)
+    origin_queue, expected_queue = origin_vs_expected_queue(probe_record, this_lambda_name)
     if origin_queue != expected_queue:
         raise ValueError('true_split_record(): receiving messages from unknown SQS queue: '
                          f'expecting from {expected_queue}, receiving from {origin_queue}')
@@ -40,4 +39,4 @@ def true_split_handler(event, context):
     [true_split_record(record) for record in event['Records']]
 
     # prepare reduce part
-    prepare_reduce_part(record=probe_record, service_prefix=previous_lambda_name, next_lambda_name=next_lambda_name)
+    prepare_reduce_part(record=probe_record, next_lambda_name=next_lambda_name)

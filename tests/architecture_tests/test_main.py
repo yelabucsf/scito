@@ -1,6 +1,7 @@
 from unittest import TestCase
 from scito_lambdas.main import *
-import vcr
+from ufixtures.UfixVcr import *
+
 
 curr_dir = os.path.dirname(os.path.realpath(__file__))
 conf = init_config(os.path.join(curr_dir, 'fixtures/test_config.ini'))
@@ -19,12 +20,9 @@ record = {
 
 class Test(TestCase):
     def setUp(self) -> None:
-        self.my_vcr = vcr.VCR(
-            serializer='yaml',
-            cassette_library_dir=os.path.join(curr_dir, 'fixtures/cassettes'),
-            record_mode='once',
-            filter_headers=['X-Amz-Security-Token', 'x-amz-id-2', 'Authorization', 'User-Agent']
-        )
+        self.ufixtures = UfixVcr(os.path.join(curr_dir, 'fixtures/cassettes'))
+        self.vcr = self.ufixtures.sanitize(attributes=['(?i)X-Amz', 'Author', 'User'],
+                                           targets=['arn:aws:.*'])
 
     def test_finalize_message(self):
         conf = init_config(os.path.join(curr_dir, 'fixtures/test_config.ini'))
@@ -43,10 +41,15 @@ class Test(TestCase):
 
 
     def test_pipeline_config_s3(self):
-        with self.my_vcr.use_cassette('main_pipeline_config_s3.yml'):
+        with self.vcr.use_cassette('main_pipeline_config_s3.yml'):
             conf_string = pipeline_config_s3(record)
         self.assertTrue(isinstance(conf_string, str))
         self.assertEqual(conf_string[:9], '[DEFAULT]')
 
+# TODO
     def test_architecture_for_main(self):
+        pass
+
+
+    def test_main_handler(self):
         pass

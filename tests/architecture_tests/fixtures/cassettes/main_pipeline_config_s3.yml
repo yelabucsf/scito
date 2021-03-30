@@ -1,0 +1,300 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      User-Agent:
+      - OBSCURED
+      X-Amz-Content-SHA256:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: HEAD
+    uri: https://ucsf-genomics-prod-project-data.s3.us-west-2.amazonaws.com/anton/scito/mock/fastq/config_test.ini
+  response:
+    body:
+      string: ''
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '2705'
+      Content-Type:
+      - binary/octet-stream
+      Date:
+      - Mon, 29 Mar 2021 18:15:45 GMT
+      ETag:
+      - '"683a0aec891cdf31994f73cc5fd937ed"'
+      Last-Modified:
+      - Fri, 26 Mar 2021 17:33:23 GMT
+      Server:
+      - AmazonS3
+      x-amz-id-2: OBSCURED
+      x-amz-request-id: OBSCURED
+      x-amz-server-side-encryption: OBSCURED
+      x-amz-server-side-encryption-aws-kms-key-id: OBSCURED
+      x-amz-version-id: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      User-Agent:
+      - OBSCURED
+      X-Amz-Content-SHA256:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: GET
+    uri: https://ucsf-genomics-prod-project-data.s3.us-west-2.amazonaws.com/anton/scito/mock/fastq/config_test.ini
+  response:
+    body:
+      string: '[DEFAULT]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/seed100_ADT_own_S19_L003_R2_001.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 10
+
+
+        [local test]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/seed100_ADT_own_S19_L003_R2_001.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 10
+
+
+        [lambda test]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/seed100_ADT_own_S19_L003_R2_001.fastq.gz
+
+        technology = scito ATAC
+
+
+
+        [ATAC ADT R2]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/small_R2.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 16
+
+
+
+        [ATAC ADT R3]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/small_R3.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 18
+
+
+
+        [ATAC ADT R2 UPLOAD TEST]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/FQ_READY_small_R2.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 21
+
+
+
+        [FULL R2 UPLOAD TEST]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/ADT_own_S19_L003_R2_001.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 21
+
+
+
+        [MED R2 UPLOAD TEST]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/med_R2.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 21
+
+
+
+        [TO SYNC]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/TEST_FASTQ.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 10
+
+
+
+        [GROUND]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/TEST_FASTQ_asynced.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 10
+
+
+
+        [IO TEST]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/BUS_small_R3.fastq.gz
+
+        technology = scito ATAC
+
+        read start =
+
+        read end =
+
+
+
+        [IO TEST FQ]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/TEST_FASTQ.fastq.gz
+
+        technology = scito ATAC
+
+        read start =
+
+        read end =
+
+
+        [BUSTOOLS TEST]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/small_R2.SORTED_BUS
+
+        technology = scito ATAC
+
+        read start = scito ATAC
+
+        read end =
+
+
+
+        [IO TEST FQ PART]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/TEST_FASTQ.BLOCK_BYTE.0-101000
+
+        technology = scito ATAC
+
+        read start =
+
+        read end =
+
+
+
+
+        [READ 2]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/BUS_small_R2.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 10
+
+
+
+        [READ 3]
+
+        bucket = ucsf-genomics-prod-project-data
+
+        key = anton/scito/mock/fastq/downsamp/BUS_small_R3.fastq.gz
+
+        technology = scito ATAC
+
+        read start = 0
+
+        read end = 25
+
+        '
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '2705'
+      Content-Type:
+      - binary/octet-stream
+      Date:
+      - Mon, 29 Mar 2021 18:15:45 GMT
+      ETag:
+      - '"683a0aec891cdf31994f73cc5fd937ed"'
+      Last-Modified:
+      - Fri, 26 Mar 2021 17:33:23 GMT
+      Server:
+      - AmazonS3
+      x-amz-id-2: OBSCURED
+      x-amz-request-id: OBSCURED
+      x-amz-server-side-encryption: OBSCURED
+      x-amz-server-side-encryption-aws-kms-key-id: OBSCURED
+      x-amz-version-id: OBSCURED
+    status:
+      code: 200
+      message: OK
+version: 1

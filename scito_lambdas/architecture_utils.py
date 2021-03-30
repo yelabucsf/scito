@@ -31,19 +31,18 @@ def prep_queues(sqs_interface):
     return main_queue
 
 
-def prepare_reduce_part(record: Dict, service_prefix: str, next_lambda_name: str) -> None:
+def prepare_reduce_part(record: Dict, next_lambda_name: str) -> None:
     '''
     Impure function. Checks if there are messages pending. If the queue is empty it destroys it and invokes next lambda.
     If dead letter queue has messages - the error is thrown
     :param record: Dict. A record from a trigger event
-    :param service_prefix: str. Previous lambda name to check a correct queue
     :param next_lambda_name: str. Name of the next lambda to invoke
     :return: None
     '''
     # delete the main queue if it's empty
     parsed_record = json.loads(record['body'])
     config = json.loads(parsed_record['config'])
-    origin_sqs_interface = SQSInterface(config=config, prefix=service_prefix)
+    origin_sqs_interface = SQSInterface(config=config, prefix=next_lambda_name)
     if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
         if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
             origin_sqs_interface.destroy()
