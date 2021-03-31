@@ -13,15 +13,13 @@ class S3InterfaceGen(object):
         self.file_type = file_type
         self.misc_id = misc_id
 
-    def new_key(self):
+    def new_key(self, **kwargs):
         basename = os.path.basename(self.s3_settings.object_key).split(".")[0]
         if self.misc_id == '':
             new_basename = '.'.join([basename, self.file_type.upper()])
         else:
             new_basename = '.'.join([basename, self.file_type.upper(), self.misc_id])
         new_s3_key = os.path.join(os.path.dirname(self.s3_settings.object_key), new_basename)
-        s3_interface: S3Interface = S3Interface(self.s3_settings.bucket,
-                                                new_s3_key,
-                                                self.s3_settings.profile)
+        s3_interface: S3Interface = S3Interface(self.s3_settings.bucket, new_s3_key, **kwargs)
 
         return s3_interface

@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from scito_count.SQSInterface import SQSInterface
 from scito_lambdas.lambda_utils import *
+from scito_lambdas.architecture_utils import create_queues
 import time
 
 
@@ -11,10 +12,7 @@ class TestSQSInterface(TestCase):
             lol = StringIO(cfg.read())
         config = init_config(lol)
         self.sqs_interface = SQSInterface(config, 'unit-test')
-        self.sqs_interface.sqs.create_queues(QueueName=self.sqs_interface.dead_letter_name,
-                                             Attributes={
-                                                'KmsMasterKeyId': self.sqs_interface.sqs_settings[
-                                                    'KmsMasterKeyId']})
+        create_queues(self.sqs_interface)
         self.active_sqs = self.sqs_interface.sqs.get_queue_by_name(QueueName=self.sqs_interface.dead_letter_name)
 
     def test_queue_exists(self):

@@ -10,8 +10,7 @@ def create_queues(sqs_interface, use_dead_letter_arn: str = None):
     settings = {
         "QueueName": sqs_interface.dead_letter_name if use_dead_letter_arn is None else sqs_interface.queue_name,
         "Attributes": {
-            "DelaySeconds": sqs_interface.sqs_settings.delay_seconds,
-            "KmsMasterKeyId": sqs_interface.sqs_settings.kms_master_key_id
+            "KmsMasterKeyId": sqs_interface.sqs_settings['KmsMasterKeyId']
         }
     }
     if use_dead_letter_arn is not None:

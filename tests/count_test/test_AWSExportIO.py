@@ -44,7 +44,7 @@ class TestAWSExportIO(TestCase):
     def test_bus_tools_export(self):
         bt_export = BUSToolsExport(s3_settings=s3_set2)
         bt_export.processed_bus_upload_s3(byte_seq=self.native_bus_tools.processed_bus_file)
-        lol = S3Interface(test_s3_set.bucket, test_s3_set.object_key, test_s3_set.profile)
+        lol = S3Interface(test_s3_set.bucket, test_s3_set.object_key, profile_name="gvaihir")
         header = BUSHeaderAdtAtac()
         h = header.output_header()
         test_h = lol.get_bytes_s3(0, 44).read()
@@ -59,6 +59,6 @@ class TestAWSExportIO(TestCase):
         bb_export = BlockByteExport(s3_settings=io_s3_set, misc_id='0-101000')
         bb_export.block_range_upload_s3(byte_seq=lol.byte_block_gen)
 
-        kk = S3Interface(io_s3_set.bucket, 'anton/scito/mock/fastq/TEST_FASTQ.BLOCK_BYTE.0-101000', io_s3_set.profile)
+        kk = S3Interface(io_s3_set.bucket, 'anton/scito/mock/fastq/TEST_FASTQ.BLOCK_BYTE.0-101000', profile_name="gvaihir")
         test_kk = kk.get_bytes_s3(0, 15).read()
         self.assertEqual(struct.unpack('<QQ', test_kk), (0, 7331))

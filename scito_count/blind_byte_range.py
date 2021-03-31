@@ -8,8 +8,8 @@ Target - get blind chunks down to 1 Gb and load them into memory.
 '''
 
 
-def blind_byte_range(s3_settings: S3Settings):
-    s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, s3_settings.profile)
+def blind_byte_range(s3_settings: S3Settings, **kwargs):
+    s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, **kwargs)
     obj_size = s3_interface.obj_size()
     window_size = int(1e9)  # KEEP CONSTANT - 1 Gb chunk sizes
     overlap = 18  # 18 bytes is the BGZF full header

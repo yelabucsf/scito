@@ -24,12 +24,10 @@ class ContentTablesIO(object):
     def _generate_content_tables(self):
         prefix = self.s3_settings.object_key.split('.')[0]
         s3_interface: S3Interface = S3Interface(self.s3_settings.bucket,
-                                                self.s3_settings.object_key,
-                                                self.s3_settings.profile)
+                                                self.s3_settings.object_key)
         for s3_obj in s3_interface.filter_objects(prefix):
             temp_interface = S3Interface(self.s3_settings.bucket,
-                                         s3_obj.key,
-                                         self.s3_settings.profile)
+                                         s3_obj.key)
 
             if temp_interface.s3_obj.content_type != 'BLOCK_BYTE':
                 continue

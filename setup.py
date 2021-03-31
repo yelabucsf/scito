@@ -12,13 +12,6 @@ setup(name='scito',
       packages=find_packages(),
       install_requires=[
             'numpy',
-            'seaborn',
-            'matplotlib',
-            'pandas',
-            'scikit-learn',
-            'scipy',
-            'statsmodels',
-            'Click',
             'boto3',
             'ufixtures @ git+https://github.com/Gvaihir/ufixtures#egg=ufixtures'
       ],

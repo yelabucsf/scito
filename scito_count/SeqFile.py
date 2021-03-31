@@ -16,8 +16,8 @@ class SeqFile(object):
 
     __slots__ = "read_records", "s3_interface", "technology", "n_reads", "byte_range"
 
-    def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, byte_range: str):
-        self.s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, s3_settings.profile)
+    def __init__(self, s3_settings: S3Settings, read_settings: ReadSettings, byte_range: str, **kwargs):
+        self.s3_interface: S3Interface = S3Interface(s3_settings.bucket, s3_settings.object_key, **kwargs)
         if s3_settings.object_key.split(".")[-1] not in ["gz", "gzip"]:
             raise ValueError("SeqFile(): object is not a gzip file")
         self.technology: ReadSettings = read_settings

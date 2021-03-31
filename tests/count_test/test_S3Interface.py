@@ -6,8 +6,7 @@ class TestS3Interface(TestCase):
     def setUp(self) -> None:
         self.s3_interface = S3Interface(bucket="ucsf-genomics-prod-project-data",
                                         object_key="anton/scito/mock/fastq/downsamp/seed100_ADT_own_S19_L003_R2_001"
-                                                   ".fastq.gz",
-                                        profile="gvaihir")
+                                                   ".fastq.gz")
 
     def test_obj_size(self):
         print(self.s3_interface.obj_size())
@@ -20,6 +19,5 @@ class TestS3Interface(TestCase):
 
     def test_async_ob_size(self):
         s3_interface = S3Interface(bucket="ucsf-genomics-prod-project-data",
-                                   object_key="anton/scito/mock/fastq/TEST_FASTQ.fastq.gz",
-                                   profile="gvaihir")
+                                   object_key="anton/scito/mock/fastq/TEST_FASTQ.fastq.gz")
         self.assertEqual(s3_interface.obj_size(), 104080)
