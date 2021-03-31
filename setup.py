@@ -15,10 +15,5 @@ setup(name='scito',
             'boto3',
             'ufixtures @ git+https://github.com/Gvaihir/ufixtures#egg=ufixtures'
       ],
-      entry_points='''
-      [console_scripts]
-      scito=scito.cli:cli		
-      ''',
-      ext_modules=[Extension('cmath11', ['src/test.c'])],
       include_package_data=True,
       zip_safe=False)
