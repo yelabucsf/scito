@@ -37,17 +37,23 @@ def catalog_parser(sync_ranges, config: Dict) -> str:
 def catalog_build_handler(event):
     this_lambda_name = 'genomics-catalog-build'
     next_lambda_name = 'genomics-bus-constructor'
+    previous_lambda_name = 'genomics-true-split'
+
 
     # config to buffer
     if len(event['Records']) > 1:
         raise ValueError('catalog_build_handler(): trigger for this function should contain only a single record')
     record = event['Records'][0]
 
-    # TODO destroy previous lambda
+
 
     # get config
     parsed_record = json.loads(record['body'])
     config = json.loads(parsed_record['config'])
+
+    # Destroy previous lambda
+    lambda_interface = LambdaInterface(config=config, prefix=previous_lambda_name)
+    lambda_interface.destroy()
 
     catalogs = np.array([catalog_wrapper(config, x) for x in config.keys()]).T
 

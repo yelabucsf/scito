@@ -1,4 +1,5 @@
 from scito_lambdas.lambda_settings import settings_for_next_lambda
+from scito_count.LambdaInterface import LambdaInterface
 from scito_utils.factories import *
 from scito_utils.S3InterfaceGen import *
 
@@ -8,6 +9,7 @@ import subprocess as sp
 
 def bus_reduce_handler(event):
     this_lambda_name = 'genomics-bus-reduce'
+    previous_lambda_name = 'genomics-bus-constructor'
 
     if len(event['Records']) > 1:
         raise ValueError('bus_reduce_handler(): trigger for this function should contain only a single record')
@@ -18,9 +20,15 @@ def bus_reduce_handler(event):
     config = json.loads(parsed_record['config'])
     technology = extract_technology_config(config)
 
+    # Destroy previous lambda
+    lambda_interface = LambdaInterface(config=config, prefix=previous_lambda_name)
+    lambda_interface.destroy()
+
     # get header for the BUS file to be constructed
     header = bit_header_factory(technology)
-    outdir = settings_for_bus_constructor_lambda('')['FileSystemConfigs']['LocalMountPath']
+    outdir = settings_for_next_lambda(lambda_name='',
+                                      settings_s3_key='anton/scito/scito_count/lambda_settings/bus_constructor_settings.json',
+                                      dead_letter_arn='')['FileSystemConfigs']['LocalMountPath']
 
     # using select_files_to_sync function just to get the section of a ground truth file,
     # to keep naming consistent
@@ -54,6 +62,8 @@ def bus_reduce_handler(event):
     bus_file_interface.s3_obj.upload_file(outfile)
     counts_interface = S3Interface(bucket=bucket, object_key=os.path.join(dirname, 'counts'))
     counts_interface.s3_obj.upload_file(out_prefix)
+
+    # TODO push logs
 
 
 

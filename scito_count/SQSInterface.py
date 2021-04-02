@@ -67,8 +67,11 @@ class SQSInterface(object):
     def destroy(self):
         switch = [True, False]
         for state in switch:
-            active_queue = self._activate_queue(dead_letter=state)
-            active_queue.delete()
+            if self.queue_exists(dead_letter=state):
+                active_queue = self._activate_queue(dead_letter=state)
+                active_queue.delete()
+            else:
+                continue
 
     def _activate_queue(self, dead_letter=False):
         queue_scope = self.dead_letter_name if dead_letter else self.queue_name

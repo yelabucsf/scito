@@ -83,6 +83,14 @@ def build_lambda(config: Dict, lambda_name: str, lambda_settings: str, event_sou
                                               lambda_interface.lambda_name)
     lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
 
-    
+
+def cleanup_protocol(config: Dict):
+    lambda_names = ['genomics-true-split', 'genomics-bus-constructor']
+    for lambda_name in lambda_names:
+        lambda_interface = LambdaInterface(config, lambda_name)
+        lambda_interface.destroy()
+        sqs_interface = SQSInterface(config, lambda_name)
+        sqs_interface.destroy()
+
 
 
