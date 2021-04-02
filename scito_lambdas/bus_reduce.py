@@ -1,4 +1,4 @@
-from scito_lambdas.lambda_settings import settings_for_bus_constructor_lambda
+from scito_lambdas.lambda_settings import settings_for_next_lambda
 from scito_utils.factories import *
 from scito_utils.S3InterfaceGen import *
 

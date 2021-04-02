@@ -43,6 +43,8 @@ def catalog_build_handler(event):
         raise ValueError('catalog_build_handler(): trigger for this function should contain only a single record')
     record = event['Records'][0]
 
+    # TODO destroy previous lambda
+
     # get config
     parsed_record = json.loads(record['body'])
     config = json.loads(parsed_record['config'])

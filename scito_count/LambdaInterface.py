@@ -37,4 +37,4 @@ class LambdaInterface(object):
         return response
 
     def destroy(self):
-        self.aws_lambda.delete_function(self.lambda_name)
+        self.aws_lambda.delete_function(FunctionName=self.lambda_name)

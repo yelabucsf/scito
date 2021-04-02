@@ -38,17 +38,20 @@ def config_for_main(event: Dict) -> Dict:
 
 def architecture_for_main(config: Dict, next_lambda_name: str, next_lambda_settings: str):
     # Create queues
-    sqs_interface = SQSInterface(config, next_lambda_name)
+    sqs_interface = SQSInterface(config=config, prefix=next_lambda_name)
     if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
         raise SQSInterfaceError('main_handler(): SQS queues with provided names already exist')
     main_queue = prep_queues(sqs_interface)
 
     # Create lambda
     lambda_interface = LambdaInterface(config, next_lambda_name)
+    dead_letter_arn=json.loads(main_queue.attributes['RedrivePolicy'])['deadLetterTargetArn']
     if lambda_interface.function_exists():
         raise LambdaInterfaceError(
             f'main_handler(): function with the name {lambda_interface.lambda_name} already exists.')
-    lambda_settings = settings_for_next_lambda(lambda_interface.lambda_name, next_lambda_settings)
+    lambda_settings = settings_for_next_lambda(lambda_name=lambda_interface.lambda_name,
+                                               settings_s3_key=next_lambda_settings,
+                                               dead_letter_arn=dead_letter_arn)
     lambda_interface.aws_lambda.create_function(**lambda_settings)
     event_source_settings = settings_event_source_true_split_lambda(main_queue.attributes['QueueArn'],
                                                                     lambda_interface.lambda_name)
@@ -66,7 +69,7 @@ def main_handler(event: Dict) -> None:
 
     # id of lambdas in concern
     next_lambda_name = 'genomics-true-split'
-    next_lambda_settings = 'anton/scito/scito_count/true_split_settings.json'
+    next_lambda_settings = 'anton/scito/scito_count/lambda_settings/true_split_settings.json'
 
     # this config
     config = config_for_main(event)
