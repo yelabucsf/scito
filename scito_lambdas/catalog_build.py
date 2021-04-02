@@ -51,24 +51,10 @@ def catalog_build_handler(event):
 
     catalogs = np.array([catalog_wrapper(config, x) for x in config.keys()]).T
 
-    # Create queues
-    queue_name = construct_process_name(config, this_lambda_name)
-    sqs_interface = SQSInterface(config, queue_name)
-    if sqs_interface.queue_exists(dead_letter=True) | sqs_interface.queue_exists(dead_letter=False):
-        raise ValueError('main_handler(): SQS queues with provided names already exist')
-    main_queue = prep_queues(sqs_interface)
+    # activate SQS queue
+    sqs_interface = SQSInterface(config, next_lambda_name)
+    this_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
 
-    # Create lambda
-    lambda_interface = LambdaInterface(config, next_lambda_name)
-    if lambda_interface.function_exists():
-        raise LambdaInterfaceError(
-            f'main_handler(): function with the name {lambda_interface.lambda_name} already exists.')
-
-    # ingest lambda settings
-    next_lambda_settings = settings_for_next_lambda(lambda_interface.lambda_name, lambda_setting_s3_key)
-    lambda_interface.aws_lambda.create_function(**next_lambda_settings)
-    event_source_settings = settings_event_source_bus_constructor_lambda(main_queue.attributes['QueueArn'], lambda_interface.lambda_name)
-    lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
 
     # construct message
     msg_constant_part = {
@@ -80,4 +66,4 @@ def catalog_build_handler(event):
         range_msg = catalog_parser(entry, config)
         msg_body = msg_constant_part.copy()
         msg_body['byte_range'] = range_msg
-        main_queue.send_message(MessageBody=msg_body)
+        this_queue.send_message(MessageBody=msg_body)

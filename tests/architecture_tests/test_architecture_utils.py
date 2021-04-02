@@ -18,7 +18,7 @@ class Test(TestCase):
 
     def test_prep_queues(self):
         with self.vcr.use_cassette('architecture_utils_prep_queues.yml'):
-            main_queue = prep_queues(self.sqs_interface)
+            main_queue = prep_queues(conf, 'unit_test')
             main_sqs_exists = self.sqs_interface.queue_exists(dead_letter=False)
             dead_letter_sqs_exists = self.sqs_interface.queue_exists(dead_letter=True)
             # no need to destroy a queue, it's only in fixtures and does not exist in AWS

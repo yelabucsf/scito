@@ -2,7 +2,7 @@ from scito_count.SeqFile import FQFile
 from scito_count.BUSTools import *
 from scito_count.SeqArranger import FQSeqArrangerAdtAtac
 from scito_count.SQSInterface import *
-from scito_lambdas.lambda_settings import settings_for_bus_constructor_lambda
+from scito_lambdas.lambda_settings import settings_for_next_lambda
 from scito_lambdas.architecture_utils import *
 
 
@@ -23,7 +23,7 @@ def settings_for_sections(record: Dict) -> Dict:
     return settings
 
 
-def bus_constructor_record(record: Dict):
+def bus_constructor_record(record: Dict, outdir: str):
     settings = settings_for_sections(record)
 
     parsed_record = json.loads(record['body'])
@@ -56,7 +56,6 @@ def bus_constructor_record(record: Dict):
 
     # export
     export_settings = settings[how_to_sync['ground']]['s3_settings']
-    outdir = settings_for_bus_constructor_lambda('')['FileSystemConfigs']['LocalMountPath']
     bt_export = BUSToolsExport(s3_settings=export_settings)
     bt_export.processed_bus_upload_efs(byte_seq=native_bus_tools.processed_bus_file, outdir=outdir)
 
@@ -64,6 +63,10 @@ def bus_constructor_record(record: Dict):
 def bus_constructor_handler(event):
     this_lambda_name = 'genomics-bus-constructor'
     next_lambda_name = ''  # TODO add real arn or name
+
+    outdir = settings_for_next_lambda(lambda_name='',
+                                      settings_s3_key='anton/scito/scito_count/lambda_settings/bus_constructor_settings.json',
+                                      dead_letter_arn='')['FileSystemConfigs']['LocalMountPath']
 
     # Check if origin queue is correct
     probe_record = event['Records'][0]
