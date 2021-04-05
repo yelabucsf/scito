@@ -1,0 +1,43 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      User-Agent:
+      - OBSCURED
+      X-Amz-Content-SHA256:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: GET
+    uri: https://ucsf-genomics-prod-project-data.s3.us-west-2.amazonaws.com/anton/scito/mock/features.tsv
+  response:
+    body:
+      string: "GCTAT\tCD45\nGCCTC\tCD235ab\nTAGGC\tCD61\nTGATG\tCD33\nCGTCT\tCD3\nAATGC\tCD19\nCCGAC\tCD117\nGTCAT\tCD11b\nGGTCT\tCD4\nGGTTA\tCD8a\nAAATC\tCD11c\nACTCC\tCD14\nAACGC\tCD127\nAGGGT\tFcER1\nGTCGA\tCD123\nCGGTA\tgdTCR\nGGGCG\tCD45RA\nGTAGA\tTIM3\nGGGAT\tPD-L1\nTCTGG\tCD27\nTTAAT\tCD45RO\nTTGCG\tCCR7\nTCGCC\tCD25\nACGCG\tTCR\nAAGAC\tCD38\nACTAG\tHLA-DR\nGCCAG\tPD-1\nGTACG\tCD56\nGAGCT\tCD16\nACGAA\tCD80\nGGACA\tCD252\nGCATC\tCD137L\nCTTCG\tCD40\nCTCTC\tCD34\nATGAT\tCD138\nTCGCC\tb2-microglobulin\nGCGTG\tHLA-ABC\nTGCCT\tCD49f\nCCGAC\tCD194\nGCTGA\tCD20\nCGCTT\tCD335\nAAGGA\tCD294\nAATGC\tCD195\nGATGA\tCD196\nTACGC\tCD185\nTGAAC\tCD69\nTTCCG\tCD62L\nGTTGA\tKLRG1\nATAAA\tCD107a\nTACCC\tCD134\nCTTTA\tCD1c\nGCCGT\tCD169\nAATGG\tCD370\nTAGTA\tCD137\nCTCCA\tCD124\nATTCG\tCD193\nTAGCA\tCD257\nACTTA\tMac-2\nCCGCA\tNLRP2\nTGGCG\tEGFR\n"
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '713'
+      Content-Type:
+      - text/tab-separated-values
+      Date:
+      - Mon, 05 Apr 2021 17:51:38 GMT
+      ETag:
+      - '"b0f0e06d644b97ef9186c26b08bf6ec7"'
+      Last-Modified:
+      - Sat, 03 Apr 2021 01:55:19 GMT
+      Server:
+      - AmazonS3
+      x-amz-id-2: OBSCURED
+      x-amz-request-id: OBSCURED
+      x-amz-server-side-encryption: OBSCURED
+      x-amz-server-side-encryption-aws-kms-key-id: OBSCURED
+      x-amz-version-id: OBSCURED
+    status:
+      code: 200
+      message: OK
+version: 1

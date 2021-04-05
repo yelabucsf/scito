@@ -17,6 +17,8 @@ class ECBuild(object):
         self.map_names = ['ec_map.tsv', 'tx_map.tsv', 'gene_map.tsv']
 
     def prepare_maps(self, outdir: str) -> None:
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
         map_generators = self._construct_maps()
         for prep_process in zip(self.map_names, map_generators):
             outfile = os.path.join(outdir, prep_process[0])
@@ -43,12 +45,18 @@ class ECBuild(object):
             transcript_to_gene_entry = f'{after_split[1]}\t{after_split[1]}\n'
             yield ec_map_entry, transcript_entry, transcript_to_gene_entry
 
+
+
     @staticmethod
     def _is_dna(dna_str: str) -> bool:
-        return bool(re.search("[ATGCN]{%s}" % len(dna_str), dna_str))
+        if dna_str is '':
+            answer = False
+        else:
+            answer = bool(re.search("[ATGCN]{%s}" % len(dna_str), dna_str.upper()))
+        return answer
 
     @staticmethod
     def _write_map(map_generator, outfile: str) -> None:
-        with open(outfile, 'wb') as file_stream:
+        with open(outfile, 'w') as file_stream:
             for map_entry in map_generator:
                 file_stream.write(map_entry)
