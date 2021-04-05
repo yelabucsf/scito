@@ -1,7 +1,7 @@
 from scito_lambdas.lambda_settings import settings_for_next_lambda
 from scito_count.LambdaInterface import LambdaInterface
 from scito_utils.factories import *
-from scito_utils.S3InterfaceGen import *
+from scito_count.ECBuild import *
 
 import json
 import subprocess as sp
@@ -48,12 +48,16 @@ def bus_reduce_handler(event):
 
     # TODO delete parsed file
 
-    gene_map = ...
-    ec_map = ...
-    tx_names = ...
-    out_prefix = ...
+    # maps
+    maps = ECBuild(config)
+    maps.prepare_maps(outdir)
 
-    sp.Popen([f'bustools sort -T ./ -p - | bustools count -g {gene_map} -e {ec_map} -t {tx_names} '
+    gene_map = os.path.join(outdir, 'gene_map.tsv')
+    ec_map = os.path.join(outdir, 'ec_map.tsv')
+    tx_map = os.path.join(outdir, 'tx_map.tsv')
+    out_prefix = basename
+
+    sp.Popen([f'bustools sort -T ./ -p - | bustools count -g {gene_map} -e {ec_map} -t {tx_map} '
               f'-o {out_prefix} --genecounts'], shell=True)
 
     # push outputs to s3
