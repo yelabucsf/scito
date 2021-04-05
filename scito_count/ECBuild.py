@@ -1,6 +1,6 @@
 import re
 import os
-from typing import Dict, Tuple
+from typing import Dict, Generator, Tuple
 from scito_count.BitRecord import BitRecord
 from scito_count.S3Interface import S3Interface
 
@@ -24,15 +24,21 @@ class ECBuild(object):
             outfile = os.path.join(outdir, prep_process[0])
             self._write_map(prep_process[1], outfile)
 
-    def _serve_features(self) -> str:
+    def _serve_features(self) -> Generator:
         features_from_s3 = self.s3_interface.s3_obj.get()["Body"].read().decode('utf-8')
         for feature in features_from_s3.split('\n'):
-            if feature is []:
+            if feature is '':
                 StopIteration()
             else:
                 yield feature
 
     def _construct_maps(self, sep: str = '\t') -> Tuple:
+        maps = self._construct_ec2_map(sep), \
+               self._construct_transcripts_map(sep), \
+               self._construct_transcripts2genes_map(sep)
+        return maps
+
+    def _construct_ec2_map(self, sep: str):
         bit_record = BitRecord()
         features = self._serve_features()
         for feature_id, feature in enumerate(features):
@@ -40,10 +46,21 @@ class ECBuild(object):
             if not self._is_dna(after_split[0]):
                 raise ECBuildError(f'ECBuild.build_ec_map(): {after_split[0]} is not a DNA string')
             equivalence_class = bit_record.dna_to_twobit(after_split[0])
-            ec_map_entry = f'{equivalence_class}\t{feature_id}\n'
-            transcript_entry = f'{after_split[1]}\n'
-            transcript_to_gene_entry = f'{after_split[1]}\t{after_split[1]}\n'
-            yield ec_map_entry, transcript_entry, transcript_to_gene_entry
+            yield f'{equivalence_class}\t{feature_id}\n'
+
+
+    def _construct_transcripts_map(self, sep: str):
+        features = self._serve_features()
+        for feature in features:
+            after_split = feature.split(sep)
+            yield f'{after_split[1]}\n'
+
+
+    def _construct_transcripts2genes_map(self, sep: str):
+        features = self._serve_features()
+        for feature in features:
+            after_split = feature.split(sep)
+            yield f'{after_split[1]}\t{after_split[1]}\n'
 
 
 
