@@ -3,7 +3,7 @@ from typing import Type
 from scito_count.BitFile import *
 from scito_count.SeqFile import *
 from scito_count.BitHeader import *
-
+from scito_count.SeqArranger import *
 
 def seq_file_factory(technology: str) -> Type[SeqFile]:
     technologies = {
@@ -28,5 +28,11 @@ def bit_header_factory(technology: str) -> str:
 def seq_sync_factory(technology: str) -> Type[SeqSync]:
     technologies = {
         'scito ATAC': FQSyncTwoReads
+    }
+    return technologies[technology]
+
+def seq_arranger_factory(technology: str) -> Type[SeqArranger]:
+    technologies = {
+        'scito ATAC': FQSeqArrangerAdtAtac
     }
     return technologies[technology]

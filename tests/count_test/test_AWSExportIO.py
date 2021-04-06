@@ -35,7 +35,7 @@ class TestAWSExportIO(TestCase):
         self.sync_two_reads = FQSyncTwoReads((ground, async_file))
         self.sync_two_reads.two_read_sync()
         self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
-        self.bus_file_adt_atac.bus_file_stream_adt_atac()
+        self.bus_file_adt_atac.bus_file_stream()
         adt_atac_bus_header = BUSHeaderAdtAtac()
         self.header = adt_atac_bus_header.output_header()
         self.native_bus_tools = BUSTools(bus_header=self.header, bus_records=self.bus_file_adt_atac.bit_records)

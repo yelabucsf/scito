@@ -28,7 +28,7 @@ class TestBUSFileAdtAtac(TestCase):
         self.bus_file_adt_atac = BUSFileAdtAtac(self.sync_two_reads)
 
     def test_bus_file_stream_adt_atac(self):
-        self.bus_file_adt_atac.bus_file_stream_adt_atac()
+        self.bus_file_adt_atac.bus_file_stream()
         bit_rec = BitRecord()
         bc = bit_rec.dna_to_twobit('TCGTCGGCAGCGTCAGCTGGA')
         umi = bit_rec.dna_to_twobit('CCTTTAAG')

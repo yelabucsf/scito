@@ -1,9 +1,8 @@
-from scito_count.SeqFile import FQFile
 from scito_count.BUSTools import *
 from scito_count.SeqArranger import FQSeqArrangerAdtAtac
 from scito_count.SQSInterface import *
-from scito_lambdas.lambda_settings import settings_for_next_lambda
 from scito_lambdas.architecture_utils import *
+from scito_utils.factories import *
 
 
 def settings_for_sections(record: Dict) -> Dict:
@@ -30,28 +29,27 @@ def bus_constructor_record(record: Dict, outdir: str):
     config = json.loads(parsed_record['config'])
     how_to_sync = select_files_to_sync(config)
 
-    # TODO abstract. Make a factory
     # Arrange reads (stitch pool barcode to cell barcode)
     # read sync
-    ground_read = FQFile(**settings[how_to_sync['ground']])
-    async_read = FQFile(**settings[how_to_sync['async']])
-    sync_two_reads = FQSyncTwoReads((ground_read, async_read))
+    technology = extract_technology_config(config)
+    ground_read = seq_file_factory(technology)(**settings[how_to_sync['ground']])
+    async_read = seq_file_factory(technology)(**settings[how_to_sync['async']])
+    sync_two_reads = seq_sync_factory(technology)((ground_read, async_read))
     sync_two_reads.two_read_sync()
 
     # read arrange
-    fixed_read = FQSeqArrangerAdtAtac(sync_two_reads)
+    fixed_read = seq_arranger_factory(technology)(sync_two_reads)
 
     # read sync
     # create bus
-    async_read = FQFile(**settings[how_to_sync['async']])  # instantiate again because it's a generator
-    sync_two_reads = FQSyncTwoReads((fixed_read, async_read))
+    async_read = seq_file_factory(technology)(**settings[how_to_sync['async']])  # instantiate again because it's a generator
+    sync_two_reads = seq_sync_factory(technology)((fixed_read, async_read))
     sync_two_reads.two_read_sync()
 
-    bus_file_adt_atac = BUSFileAdtAtac(sync_two_reads)
-    bus_file_adt_atac.bus_file_stream_adt_atac()
-    adt_atac_bus_header = BUSHeaderAdtAtac()
-    header = adt_atac_bus_header.output_header()
-    native_bus_tools = BUSTools(bus_header=header, bus_records=bus_file_adt_atac.bit_records)
+    bus_file = bit_file_factory(technology)(sync_two_reads)
+    bus_file.bus_file_stream()
+    header = bit_header_factory(technology)()
+    native_bus_tools = BUSTools(bus_header=header, bus_records=bus_file.bit_records)
     native_bus_tools.run_pipe([native_bus_tools.bus_sort()])
 
     # export
