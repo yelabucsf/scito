@@ -1,0 +1,128 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - !!binary |
+        MjAyMTA1MjVUMjAzODA3Wg==
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: GET
+    uri: https://lambda.us-west-2.amazonaws.com/2015-03-31/functions/genomics-Unit-test_fastq_TEST_FASTQ
+  response:
+    body:
+      string: '{"Configuration":{"Description":"Settings for true_split lambda function","TracingConfig":{"Mode":"Active"},"VpcConfig":{"VpcId":OBSCURED:[OBSCURED:null}'
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '3238'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 25 May 2021 20:38:08 GMT
+      x-amzn-RequestId:
+      - 5b644b59-71d8-470a-acd9-97d34577d988
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - !!binary |
+        MjAyMTA1MjVUMjAzODA4Wg==
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: GET
+    uri: https://lambda.us-west-2.amazonaws.com/2015-03-31/functions/genomics-Unit-test_fastq_TEST_FASTQ
+  response:
+    body:
+      string: '{"Configuration":{"Description":"Settings for true_split lambda function","TracingConfig":{"Mode":"Active"},"VpcConfig":{"VpcId":OBSCURED:[OBSCURED:null}'
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '3232'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 25 May 2021 20:38:08 GMT
+      x-amzn-RequestId:
+      - 3c15a4bd-e4fa-43a0-8357-77929785d7c0
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '0'
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - !!binary |
+        MjAyMTA1MjVUMjAzODA4Wg==
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: DELETE
+    uri: https://lambda.us-west-2.amazonaws.com/2015-03-31/functions/genomics-Unit-test_fastq_TEST_FASTQ
+  response:
+    body:
+      string: ''
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 25 May 2021 20:38:08 GMT
+      x-amzn-RequestId:
+      - 023e34df-d308-4490-8803-c4218c06fc80
+    status:
+      code: 204
+      message: No Content
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - !!binary |
+        MjAyMTA1MjVUMjAzODA4Wg==
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: GET
+    uri: https://lambda.us-west-2.amazonaws.com/2015-03-31/functions/genomics-Unit-test_fastq_TEST_FASTQ
+  response:
+    body:
+      string: '{"Type":"User","Message":"Function not found: arn:aws:lambda:us-west-2OBSCUREDfunction:genomics-Unit-test_fastq_TEST_FASTQ"}'
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '130'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 25 May 2021 20:38:08 GMT
+      x-amzn-ErrorType:
+      - ResourceNotFoundException
+      x-amzn-RequestId:
+      - 908783d2-8f97-4647-8e5a-9c457a47e94d
+    status:
+      code: 404
+      message: Not Found
+version: 1

@@ -37,4 +37,13 @@ class TestSQSInterface(TestCase):
                 message.delete()
             self.assertFalse(self.sqs_interface.messages_pending(dead_letter=True))
 
+    def test_destroy(self):
+        settings = {'profile_name': 'gvaihir'}
+        self.sqs_interface = SQSInterface(conf, 'unit_test', **settings)
+        with self.vcr.use_cassette('SQSInterface_destroy.yml'):
+            self.assertTrue(self.sqs_interface.queue_exists())
+            self.sqs_interface.destroy()
+            #time.sleep(15)
+            self.assertFalse(self.sqs_interface.queue_exists())
+
 

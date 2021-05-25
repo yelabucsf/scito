@@ -13,9 +13,12 @@ class Test(TestCase):
     def setUp(self) -> None:
         self.sqs_interface = SQSInterface(conf, 'unit_test')
         self.ufixtures = UfixVcr(os.path.join(curr_dir, 'fixtures/cassettes'))
-        self.vcr = self.ufixtures.sanitize(attributes=['(?i)X-Amz', 'Author', 'User'],
-                                           targets=['arn:aws:sqs:us-west-2:\d+', 'us-west-2.queue.amazonaws.com/\d+',
-                                                    '3A\d+', '2F\d+'])
+        self.vcr = self.ufixtures.sanitize(attributes=['(?i)token', 'Author', 'User'],
+                                           targets=[
+                                               'arn:aws:sqs:us-west-2:\d+', 'us-west-2.queue.amazonaws.com/\d+',
+                                               '3A\d+', '2F\d+', ':\d+:', '\"sg-.*\"', '\"subnet-.*\"',
+                                               '\"vpc-.*\"'
+                                           ])
 
     def test_prep_queues(self):
         with self.vcr.use_cassette('architecture_utils_prep_queues.yml'):
@@ -26,18 +29,15 @@ class Test(TestCase):
         self.assertTrue(main_sqs_exists)
         self.assertTrue(dead_letter_sqs_exists)
 
-
+# No fixtures
     def test_build_lambda(self):
         lambda_conf = 'anton/scito/scito_count/lambda_settings/true_split_settings_TEST.json'
         lambda_interface = LambdaInterface(conf, 'genomics-Unit-test')
         self.assertFalse(lambda_interface.function_exists())
-        #with self.vcr.use_cassette('architecture_utils_build_lambda.yml'):
         main_queue = prep_queues(conf, 'unit_test')
         func_response, event_map_response = build_lambda(config=conf,
                                                          lambda_name='genomics-Unit-test',
                                                          lambda_settings=lambda_conf,
                                                          event_source_func=settings_event_source_true_split_lambda,
                                                          sqs_queue=main_queue)
-
-        time.sleep(15)
         self.assertTrue(lambda_interface.function_exists())
