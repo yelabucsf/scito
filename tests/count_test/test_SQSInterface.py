@@ -16,7 +16,7 @@ class TestSQSInterface(TestCase):
         self.sqs_interface = SQSInterface(conf, 'unit-test', **settings)
         self.ufixtures = UfixVcr(os.path.join(curr_dir, 'fixtures/cassettes'))
         self.vcr = self.ufixtures.sanitize(attributes=['(?i)X-Amz', 'Author', 'User'],
-                                           targets=['arn:aws:.*', 'com/\d+/unit', '2F\d+%2F'])
+                                           targets=['us-west-2:\d+:unit', 'com/\d+/unit', '2F\d+%2F'])
     def test_queue_exists(self):
         with self.vcr.use_cassette('SQSInterface_queue_exists.yml'):
             create_queues(self.sqs_interface)
@@ -30,13 +30,11 @@ class TestSQSInterface(TestCase):
             self.assertFalse(self.sqs_interface.messages_pending(dead_letter=True))
             active_sqs = self.sqs_interface.sqs.get_queue_by_name(QueueName=self.sqs_interface.dead_letter_name)
             active_sqs.send_message(MessageBody=msg_body)
-            time.sleep(30)
             self.assertTrue(self.sqs_interface.messages_pending(dead_letter=True))
             msgs = []
             for message in active_sqs.receive_messages():
                 msgs.append(message.body)
                 message.delete()
-            time.sleep(40)
             self.assertFalse(self.sqs_interface.messages_pending(dead_letter=True))
 
 

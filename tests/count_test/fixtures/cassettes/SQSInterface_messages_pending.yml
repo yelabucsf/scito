@@ -19,14 +19,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><CreateQueueResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><CreateQueueResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></CreateQueueResult><ResponseMetadata><RequestId>37dde7e9-79c5-5634-897a-bece39a165db</RequestId></ResponseMetadata></CreateQueueResponse>
+      string: <?xml version="1.0"?><CreateQueueResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><CreateQueueResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></CreateQueueResult><ResponseMetadata><RequestId>0e1b5489-db79-59cf-a622-0dae9df6ec24</RequestId></ResponseMetadata></CreateQueueResponse>
     headers:
       Content-Length:
       - '360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:12:52 GMT
+      - Tue, 25 May 2021 18:39:11 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -51,14 +51,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>e29269ee-31e7-5969-ba04-30c971832a86</RequestId></ResponseMetadata></GetQueueUrlResponse>
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>5a3a06b7-4dd0-5887-9451-5f900b5f4d6c</RequestId></ResponseMetadata></GetQueueUrlResponse>
     headers:
       Content-Length:
       - '360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:12:52 GMT
+      - Tue, 25 May 2021 18:39:11 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -83,14 +83,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>e4a8607f-032e-5b6f-82a2-3958434ac880</RequestId></ResponseMetadata></GetQueueUrlResponse>
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>cce5bfe5-db02-5a17-b106-e6c29d8deffc</RequestId></ResponseMetadata></GetQueueUrlResponse>
     headers:
       Content-Length:
       - '360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:12:52 GMT
+      - Tue, 25 May 2021 18:39:11 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -115,14 +115,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>OBSCURED
+      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>arn:aws:sqs:OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</Value></Attribute><Attribute><Name>ApproximateNumberOfMessages</Name><Value>0</Value></Attribute><Attribute><Name>ApproximateNumberOfMessagesNotVisible</Name><Value>0</Value></Attribute><Attribute><Name>ApproximateNumberOfMessagesDelayed</Name><Value>0</Value></Attribute><Attribute><Name>CreatedTimestamp</Name><Value>1621967951</Value></Attribute><Attribute><Name>LastModifiedTimestamp</Name><Value>1621967951</Value></Attribute><Attribute><Name>VisibilityTimeout</Name><Value>30</Value></Attribute><Attribute><Name>MaximumMessageSize</Name><Value>262144</Value></Attribute><Attribute><Name>MessageRetentionPeriod</Name><Value>345600</Value></Attribute><Attribute><Name>DelaySeconds</Name><Value>0</Value></Attribute><Attribute><Name>ReceiveMessageWaitTimeSeconds</Name><Value>0</Value></Attribute><Attribute><Name>KmsMasterKeyId</Name><Value>alias/managed-sns-key</Value></Attribute><Attribute><Name>KmsDataKeyReusePeriodSeconds</Name><Value>300</Value></Attribute></GetQueueAttributesResult><ResponseMetadata><RequestId>cff09463-97d2-5108-a001-cd44d15d84e3</RequestId></ResponseMetadata></GetQueueAttributesResponse>
     headers:
       Content-Length:
       - '1360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:12:52 GMT
+      - Tue, 25 May 2021 18:39:11 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -147,14 +147,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>0ee8728c-8f7a-5788-b658-2babcf1e3467</RequestId></ResponseMetadata></GetQueueUrlResponse>
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>5ba39fc9-0078-5318-94f3-c6ee46f7d6f3</RequestId></ResponseMetadata></GetQueueUrlResponse>
     headers:
       Content-Length:
       - '360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:12:52 GMT
+      - Tue, 25 May 2021 18:39:11 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -179,14 +179,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><SendMessageResult><MessageId>4d251476-3565-4871-8a15-d74df9989998</MessageId><MD5OfMessageBody>b10a8db164e0754105b7a99be72e3fe5</MD5OfMessageBody></SendMessageResult><ResponseMetadata><RequestId>215384b7-d833-5ee7-995f-dd909857dd08</RequestId></ResponseMetadata></SendMessageResponse>
+      string: <?xml version="1.0"?><SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><SendMessageResult><MessageId>8e483927-8b77-4f04-9807-651e3a67ea26</MessageId><MD5OfMessageBody>b10a8db164e0754105b7a99be72e3fe5</MD5OfMessageBody></SendMessageResult><ResponseMetadata><RequestId>1cfef889-c4ea-5ee4-b022-a1ae82650b0f</RequestId></ResponseMetadata></SendMessageResponse>
     headers:
       Content-Length:
       - '378'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:12:52 GMT
+      - Tue, 25 May 2021 18:39:11 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -211,14 +211,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>336ac934-5816-5ee8-9137-901318944d07</RequestId></ResponseMetadata></GetQueueUrlResponse>
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>d6d860e3-7735-50d2-b2a8-39c431823539</RequestId></ResponseMetadata></GetQueueUrlResponse>
     headers:
       Content-Length:
       - '360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:13:23 GMT
+      - Tue, 25 May 2021 18:39:51 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -243,14 +243,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>2aed0218-9298-52f6-924b-5b3fd21bd119</RequestId></ResponseMetadata></GetQueueUrlResponse>
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>ce93e61e-c4d1-55fb-9fba-bf398266b010</RequestId></ResponseMetadata></GetQueueUrlResponse>
     headers:
       Content-Length:
       - '360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:13:23 GMT
+      - Tue, 25 May 2021 18:39:51 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -275,14 +275,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>OBSCURED
+      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>arn:aws:sqs:OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</Value></Attribute><Attribute><Name>ApproximateNumberOfMessages</Name><Value>1</Value></Attribute><Attribute><Name>ApproximateNumberOfMessagesNotVisible</Name><Value>0</Value></Attribute><Attribute><Name>ApproximateNumberOfMessagesDelayed</Name><Value>0</Value></Attribute><Attribute><Name>CreatedTimestamp</Name><Value>1621967951</Value></Attribute><Attribute><Name>LastModifiedTimestamp</Name><Value>1621967951</Value></Attribute><Attribute><Name>VisibilityTimeout</Name><Value>30</Value></Attribute><Attribute><Name>MaximumMessageSize</Name><Value>262144</Value></Attribute><Attribute><Name>MessageRetentionPeriod</Name><Value>345600</Value></Attribute><Attribute><Name>DelaySeconds</Name><Value>0</Value></Attribute><Attribute><Name>ReceiveMessageWaitTimeSeconds</Name><Value>0</Value></Attribute><Attribute><Name>KmsMasterKeyId</Name><Value>alias/managed-sns-key</Value></Attribute><Attribute><Name>KmsDataKeyReusePeriodSeconds</Name><Value>300</Value></Attribute></GetQueueAttributesResult><ResponseMetadata><RequestId>f18dccef-9540-5eb2-b709-95c8d3f78b59</RequestId></ResponseMetadata></GetQueueAttributesResponse>
     headers:
       Content-Length:
       - '1360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:13:23 GMT
+      - Tue, 25 May 2021 18:39:51 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -307,26 +307,26 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ReceiveMessageResult><Message><MessageId>4d251476-3565-4871-8a15-d74df9989998</MessageId><ReceiptHandle>AQEB7wzyToag+7wO4h/KxVnPq/2JRc9PLiHBIhpMBTyy2jNpErKVe6giv/fSaL+VEkrQbBt0GOIyuYw/7jeHZG4dgIqxrPTcD28759mYUeEHbxHe8v+URTZbhgoPt7fy+xgjGcwiTDFOa8rw7yJ9wwTv8VmX6Q5r+1pqaqw3OOtyzJ6IFktKcF+cwhpiI2Qp1QRAlzIwlBAJd+mcKq1YvQlAZLS+cBYObKwqTxbHHyjmPBP2x6IORiPIKDieLKhHW0ykkO5hyRd46i30ChmXmozn4sRMIraqdb5EVJBFwVhefRmyKzMVH4ugoCPrxAYg0XeK+cVdGbVszmPEsv0/Yu1YdKiqiQUS1yJ+WhefPcMkH/6F51RHuzO9Y/mcUiqJyYaAU5tRtFLyWvHHs/edpHZDbpjK4s9SL/XTDsXm8EOxXhaCmzINFyS8MFoucwP5ZGZ5</ReceiptHandle><MD5OfBody>b10a8db164e0754105b7a99be72e3fe5</MD5OfBody><Body>Hello
-        World</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>f1893be6-2419-535a-9494-62c1649a70b5</RequestId></ResponseMetadata></ReceiveMessageResponse>
+      string: <?xml version="1.0"?><ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ReceiveMessageResult><Message><MessageId>8e483927-8b77-4f04-9807-651e3a67ea26</MessageId><ReceiptHandle>AQEBaxZH3PgnGQaulOWLi+RZokFLayD4Kj1/nbipm8bFCeLsUjKR9fkZl13RnFqeo/FNosheCjBZ6sSqJVNT6UJIwRrduWUwxZ4XOSXYFbfmyAR36ZZH+Psn1VQoqS7J93E/GGva8ewy5UX2foPeQZX/BFSCHhR0DBMn08oIhRLeZ9StXh7KvI3ReHYOAT5h39GSvS2feyXXTaHILcM9w0/1+M0SVeCBmQtOhdCSjs9b5pLxIwApQ0YtZ5KBUxAi32txN/ka/IgSFLHdz83hxf7/WZ55GkOx0EhKlCdHdA8/qk8fZfr3uqWrWwiDUYE7ncjpfar+YCDcceFlqlisATWwSFGWcxdEvhufniHbmFE28ck6h0HTje78sR/phCiqx+YJej3pcsQUNtT7MhpadU7BJA2IX4ncPxRI8F2Nead7KKs=</ReceiptHandle><MD5OfBody>b10a8db164e0754105b7a99be72e3fe5</MD5OfBody><Body>Hello
+        World</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>0c65b2a9-59e0-5ae9-925a-eb8e1f57df02</RequestId></ResponseMetadata></ReceiveMessageResponse>
     headers:
       Content-Length:
-      - '902'
+      - '882'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:13:23 GMT
+      - Tue, 25 May 2021 18:39:51 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
       message: OK
 - request:
-    body: Action=DeleteMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fus-west-2.queue.amazonaws.com%OBSCUREDunit-test_fastq_TEST_FASTQ_DEAD-LETTER&ReceiptHandle=AQEB7wzyToag%2B7wO4h%2FKxVnPq%2F2JRc9PLiHBIhpMBTyy2jNpErKVe6giv%2FfSaL%2BVEkrQbBt0GOIyuYw%2F7jeHZG4dgIqxrPTcD28759mYUeEHbxHe8v%2BURTZbhgoPt7fy%2BxgjGcwiTDFOa8rw7yJ9wwTv8VmX6Q5r%2B1pqaqw3OOtyzJ6IFktKcF%2BcwhpiI2Qp1QRAlzIwlBAJd%2BmcKq1YvQlAZLS%2BcBYObKwqTxbHHyjmPBP2x6IORiPIKDieLKhHW0ykkO5hyRd46i30ChmXmozn4sRMIraqdb5EVJBFwVhefRmyKzMVH4ugoCPrxAYg0XeK%2BcVdGbVszmPEsv0%2FYu1YdKiqiQUS1yJ%2BWhefPcMkH%2F6F51RHuzO9Y%2FmcUiqJyYaAU5tRtFLyWvHHs%2FedpHZDbpjK4s9SL%2FXTDsXm8EOxXhaCmzINFyS8MFoucwP5ZGZ5
+    body: Action=DeleteMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fus-west-2.queue.amazonaws.com%OBSCUREDunit-test_fastq_TEST_FASTQ_DEAD-LETTER&ReceiptHandle=AQEBaxZH3PgnGQaulOWLi%2BRZokFLayD4Kj1%2Fnbipm8bFCeLsUjKR9fkZl13RnFqeo%2FFNosheCjBZ6sSqJVNT6UJIwRrduWUwxZ4XOSXYFbfmyAR36ZZH%2BPsn1VQoqS7J93E%2FGGva8ewy5UX2foPeQZX%2FBFSCHhR0DBMn08oIhRLeZ9StXh7KvI3ReHYOAT5h39GSvS2feyXXTaHILcM9w0%2F1%2BM0SVeCBmQtOhdCSjs9b5pLxIwApQ0YtZ5KBUxAi32txN%2Fka%2FIgSFLHdz83hxf7%2FWZ55GkOx0EhKlCdHdA8%2Fqk8fZfr3uqWrWwiDUYE7ncjpfar%2BYCDcceFlqlisATWwSFGWcxdEvhufniHbmFE28ck6h0HTje78sR%2FphCiqx%2BYJej3pcsQUNtT7MhpadU7BJA2IX4ncPxRI8F2Nead7KKs%3D
     headers:
       Authorization:
       - OBSCURED
       Content-Length:
-      - '653'
+      - '627'
       Content-Type:
       - !!binary |
         YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
@@ -340,14 +340,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><DeleteMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ResponseMetadata><RequestId>9b36c3d8-e800-56ec-8a0d-9affa8830503</RequestId></ResponseMetadata></DeleteMessageResponse>
+      string: <?xml version="1.0"?><DeleteMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ResponseMetadata><RequestId>05fe1742-75ec-575d-9cd1-4e653354d2b6</RequestId></ResponseMetadata></DeleteMessageResponse>
     headers:
       Content-Length:
       - '215'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:13:23 GMT
+      - Tue, 25 May 2021 18:39:52 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -372,14 +372,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>1ff510ec-8dd1-50c4-a83e-49cbcd7a832b</RequestId></ResponseMetadata></GetQueueUrlResponse>
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>d7a9b856-f5f7-5924-87a9-e171b3176ccf</RequestId></ResponseMetadata></GetQueueUrlResponse>
     headers:
       Content-Length:
       - '360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:14:03 GMT
+      - Tue, 25 May 2021 18:40:32 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -404,14 +404,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>aef2aad5-cf5b-537a-baa9-f3f28ff09095</RequestId></ResponseMetadata></GetQueueUrlResponse>
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>dd0e28e8-c2b8-5c46-8beb-71cf845809ad</RequestId></ResponseMetadata></GetQueueUrlResponse>
     headers:
       Content-Length:
       - '360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:14:03 GMT
+      - Tue, 25 May 2021 18:40:32 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
@@ -436,14 +436,14 @@ interactions:
     uri: https://us-west-2.queue.amazonaws.com/
   response:
     body:
-      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>OBSCURED
+      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>arn:aws:sqs:OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</Value></Attribute><Attribute><Name>ApproximateNumberOfMessages</Name><Value>0</Value></Attribute><Attribute><Name>ApproximateNumberOfMessagesNotVisible</Name><Value>0</Value></Attribute><Attribute><Name>ApproximateNumberOfMessagesDelayed</Name><Value>0</Value></Attribute><Attribute><Name>CreatedTimestamp</Name><Value>1621967951</Value></Attribute><Attribute><Name>LastModifiedTimestamp</Name><Value>1621967951</Value></Attribute><Attribute><Name>VisibilityTimeout</Name><Value>30</Value></Attribute><Attribute><Name>MaximumMessageSize</Name><Value>262144</Value></Attribute><Attribute><Name>MessageRetentionPeriod</Name><Value>345600</Value></Attribute><Attribute><Name>DelaySeconds</Name><Value>0</Value></Attribute><Attribute><Name>ReceiveMessageWaitTimeSeconds</Name><Value>0</Value></Attribute><Attribute><Name>KmsMasterKeyId</Name><Value>alias/managed-sns-key</Value></Attribute><Attribute><Name>KmsDataKeyReusePeriodSeconds</Name><Value>300</Value></Attribute></GetQueueAttributesResult><ResponseMetadata><RequestId>75d6bc57-3504-574e-ad28-e57073e4e2a5</RequestId></ResponseMetadata></GetQueueAttributesResponse>
     headers:
       Content-Length:
       - '1360'
       Content-Type:
       - text/xml
       Date:
-      - Tue, 25 May 2021 18:14:03 GMT
+      - Tue, 25 May 2021 18:40:32 GMT
       x-amzn-RequestId: OBSCURED
     status:
       code: 200
