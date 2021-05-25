@@ -4,17 +4,17 @@ from scito_lambdas.lambda_utils import construct_process_name
 
 
 class LambdaInterfaceError(Exception):
-    '''Errors corresponding to misuse of LambdaInterface'''
+    """Errors corresponding to misuse of LambdaInterface"""
 
 
 class LambdaInterface(object):
-    def __init__(self, config: Dict, prefix: str, **kwargs):
-        '''
+    def __init__(self, config: Dict, prefix: str, **kwargs: Dict):
+        """
         Abstraction to interact with a specific lambda based on the config
         :param config: Dict. Pipeline config imported as a dictionary
         :param prefix: str. Unique prefix for this process
         :param **kwargs: Dict. Kwargs for boto3.Session()
-        '''
+        """
         session = boto3.Session(**kwargs)
         self.aws_lambda = session.client('lambda')
         self.lambda_name = construct_process_name(config, prefix)

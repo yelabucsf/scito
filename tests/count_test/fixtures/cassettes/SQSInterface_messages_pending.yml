@@ -1,0 +1,451 @@
+interactions:
+- request:
+    body: Action=CreateQueue&Version=2012-11-05&QueueName=unit-test_fastq_TEST_FASTQ_DEAD-LETTER&Attribute.1.Name=KmsMasterKeyId&Attribute.1.Value=alias%2Fmanaged-sns-key
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '160'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><CreateQueueResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><CreateQueueResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></CreateQueueResult><ResponseMetadata><RequestId>37dde7e9-79c5-5634-897a-bece39a165db</RequestId></ResponseMetadata></CreateQueueResponse>
+    headers:
+      Content-Length:
+      - '360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:12:52 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueUrl&Version=2012-11-05&QueueName=unit-test_fastq_TEST_FASTQ_DEAD-LETTER
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '86'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>e29269ee-31e7-5969-ba04-30c971832a86</RequestId></ResponseMetadata></GetQueueUrlResponse>
+    headers:
+      Content-Length:
+      - '360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:12:52 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueUrl&Version=2012-11-05&QueueName=unit-test_fastq_TEST_FASTQ_DEAD-LETTER
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '86'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>e4a8607f-032e-5b6f-82a2-3958434ac880</RequestId></ResponseMetadata></GetQueueUrlResponse>
+    headers:
+      Content-Length:
+      - '360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:12:52 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueAttributes&Version=2012-11-05&QueueUrl=https%3A%2F%2Fus-west-2.queue.amazonaws.com%OBSCUREDunit-test_fastq_TEST_FASTQ_DEAD-LETTER&AttributeName.1=All
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '173'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>OBSCURED
+    headers:
+      Content-Length:
+      - '1360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:12:52 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueUrl&Version=2012-11-05&QueueName=unit-test_fastq_TEST_FASTQ_DEAD-LETTER
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '86'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>0ee8728c-8f7a-5788-b658-2babcf1e3467</RequestId></ResponseMetadata></GetQueueUrlResponse>
+    headers:
+      Content-Length:
+      - '360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:12:52 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=SendMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fus-west-2.queue.amazonaws.com%OBSCUREDunit-test_fastq_TEST_FASTQ_DEAD-LETTER&MessageBody=Hello+World
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '170'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><SendMessageResult><MessageId>4d251476-3565-4871-8a15-d74df9989998</MessageId><MD5OfMessageBody>b10a8db164e0754105b7a99be72e3fe5</MD5OfMessageBody></SendMessageResult><ResponseMetadata><RequestId>215384b7-d833-5ee7-995f-dd909857dd08</RequestId></ResponseMetadata></SendMessageResponse>
+    headers:
+      Content-Length:
+      - '378'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:12:52 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueUrl&Version=2012-11-05&QueueName=unit-test_fastq_TEST_FASTQ_DEAD-LETTER
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '86'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>336ac934-5816-5ee8-9137-901318944d07</RequestId></ResponseMetadata></GetQueueUrlResponse>
+    headers:
+      Content-Length:
+      - '360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:13:23 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueUrl&Version=2012-11-05&QueueName=unit-test_fastq_TEST_FASTQ_DEAD-LETTER
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '86'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>2aed0218-9298-52f6-924b-5b3fd21bd119</RequestId></ResponseMetadata></GetQueueUrlResponse>
+    headers:
+      Content-Length:
+      - '360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:13:23 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueAttributes&Version=2012-11-05&QueueUrl=https%3A%2F%2Fus-west-2.queue.amazonaws.com%OBSCUREDunit-test_fastq_TEST_FASTQ_DEAD-LETTER&AttributeName.1=All
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '173'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>OBSCURED
+    headers:
+      Content-Length:
+      - '1360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:13:23 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=ReceiveMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fus-west-2.queue.amazonaws.com%OBSCUREDunit-test_fastq_TEST_FASTQ_DEAD-LETTER
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '149'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ReceiveMessageResult><Message><MessageId>4d251476-3565-4871-8a15-d74df9989998</MessageId><ReceiptHandle>AQEB7wzyToag+7wO4h/KxVnPq/2JRc9PLiHBIhpMBTyy2jNpErKVe6giv/fSaL+VEkrQbBt0GOIyuYw/7jeHZG4dgIqxrPTcD28759mYUeEHbxHe8v+URTZbhgoPt7fy+xgjGcwiTDFOa8rw7yJ9wwTv8VmX6Q5r+1pqaqw3OOtyzJ6IFktKcF+cwhpiI2Qp1QRAlzIwlBAJd+mcKq1YvQlAZLS+cBYObKwqTxbHHyjmPBP2x6IORiPIKDieLKhHW0ykkO5hyRd46i30ChmXmozn4sRMIraqdb5EVJBFwVhefRmyKzMVH4ugoCPrxAYg0XeK+cVdGbVszmPEsv0/Yu1YdKiqiQUS1yJ+WhefPcMkH/6F51RHuzO9Y/mcUiqJyYaAU5tRtFLyWvHHs/edpHZDbpjK4s9SL/XTDsXm8EOxXhaCmzINFyS8MFoucwP5ZGZ5</ReceiptHandle><MD5OfBody>b10a8db164e0754105b7a99be72e3fe5</MD5OfBody><Body>Hello
+        World</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>f1893be6-2419-535a-9494-62c1649a70b5</RequestId></ResponseMetadata></ReceiveMessageResponse>
+    headers:
+      Content-Length:
+      - '902'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:13:23 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=DeleteMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fus-west-2.queue.amazonaws.com%OBSCUREDunit-test_fastq_TEST_FASTQ_DEAD-LETTER&ReceiptHandle=AQEB7wzyToag%2B7wO4h%2FKxVnPq%2F2JRc9PLiHBIhpMBTyy2jNpErKVe6giv%2FfSaL%2BVEkrQbBt0GOIyuYw%2F7jeHZG4dgIqxrPTcD28759mYUeEHbxHe8v%2BURTZbhgoPt7fy%2BxgjGcwiTDFOa8rw7yJ9wwTv8VmX6Q5r%2B1pqaqw3OOtyzJ6IFktKcF%2BcwhpiI2Qp1QRAlzIwlBAJd%2BmcKq1YvQlAZLS%2BcBYObKwqTxbHHyjmPBP2x6IORiPIKDieLKhHW0ykkO5hyRd46i30ChmXmozn4sRMIraqdb5EVJBFwVhefRmyKzMVH4ugoCPrxAYg0XeK%2BcVdGbVszmPEsv0%2FYu1YdKiqiQUS1yJ%2BWhefPcMkH%2F6F51RHuzO9Y%2FmcUiqJyYaAU5tRtFLyWvHHs%2FedpHZDbpjK4s9SL%2FXTDsXm8EOxXhaCmzINFyS8MFoucwP5ZGZ5
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '653'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><DeleteMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ResponseMetadata><RequestId>9b36c3d8-e800-56ec-8a0d-9affa8830503</RequestId></ResponseMetadata></DeleteMessageResponse>
+    headers:
+      Content-Length:
+      - '215'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:13:23 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueUrl&Version=2012-11-05&QueueName=unit-test_fastq_TEST_FASTQ_DEAD-LETTER
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '86'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>1ff510ec-8dd1-50c4-a83e-49cbcd7a832b</RequestId></ResponseMetadata></GetQueueUrlResponse>
+    headers:
+      Content-Length:
+      - '360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:14:03 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueUrl&Version=2012-11-05&QueueName=unit-test_fastq_TEST_FASTQ_DEAD-LETTER
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '86'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueUrlResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueUrlResult><QueueUrl>https://us-west-2.queue.amazonaws.OBSCURED-test_fastq_TEST_FASTQ_DEAD-LETTER</QueueUrl></GetQueueUrlResult><ResponseMetadata><RequestId>aef2aad5-cf5b-537a-baa9-f3f28ff09095</RequestId></ResponseMetadata></GetQueueUrlResponse>
+    headers:
+      Content-Length:
+      - '360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:14:03 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+- request:
+    body: Action=GetQueueAttributes&Version=2012-11-05&QueueUrl=https%3A%2F%2Fus-west-2.queue.amazonaws.com%OBSCUREDunit-test_fastq_TEST_FASTQ_DEAD-LETTER&AttributeName.1=All
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Length:
+      - '173'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - OBSCURED
+      X-Amz-Date:
+      - OBSCURED
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: POST
+    uri: https://us-west-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><GetQueueAttributesResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><GetQueueAttributesResult><Attribute><Name>QueueArn</Name><Value>OBSCURED
+    headers:
+      Content-Length:
+      - '1360'
+      Content-Type:
+      - text/xml
+      Date:
+      - Tue, 25 May 2021 18:14:03 GMT
+      x-amzn-RequestId: OBSCURED
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,4 +1,4 @@
-from typing import Dict, Callable
+from typing import Dict, Callable, Tuple, List
 import json
 
 from scito_count.LambdaInterface import LambdaInterface, LambdaInterfaceError
@@ -36,7 +36,6 @@ def prep_queues(config: Dict, lambda_name: str):
     return main_queue
 
 
-
 # NOT TESTED
 def prepare_reduce_part(record: Dict, next_lambda_name: str) -> None:
     """
@@ -60,7 +59,13 @@ def prepare_reduce_part(record: Dict, next_lambda_name: str) -> None:
             problem_in_dead_letter_queue(origin_sqs_interface)
 
 
-def build_lambda(config: Dict, lambda_name: str, lambda_settings: str, event_source_func: Callable, sqs_queue) -> None:
+def build_lambda(
+        config: Dict,
+        lambda_name: str,
+        lambda_settings: str,
+        event_source_func: Callable,
+        sqs_queue
+) -> Tuple[Dict, Dict]:
     """
     Function to assemble lambda architectures for true_split and bus_constructor
     :param config: Dict. Config of the process
@@ -71,20 +76,27 @@ def build_lambda(config: Dict, lambda_name: str, lambda_settings: str, event_sou
     :return: 
     """
     lambda_interface = LambdaInterface(config, lambda_name)
-    dead_letter_arn=json.loads(sqs_queue.attributes['RedrivePolicy'])['deadLetterTargetArn']
+    dead_letter_arn = json.loads(sqs_queue.attributes['RedrivePolicy'])['deadLetterTargetArn']
     if lambda_interface.function_exists():
         raise LambdaInterfaceError(
             f'main_handler(): function with the name {lambda_interface.lambda_name} already exists.')
     lambda_settings = settings_for_next_lambda(lambda_name=lambda_interface.lambda_name,
                                                settings_s3_key=lambda_settings,
                                                dead_letter_arn=dead_letter_arn)
-    lambda_interface.aws_lambda.create_function(**lambda_settings)
+    creation_response = lambda_interface.aws_lambda.create_function(**lambda_settings)
     event_source_settings = event_source_func(sqs_queue.attributes['QueueArn'],
                                               lambda_interface.lambda_name)
-    lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
+    try:
+        event_mapping_response = lambda_interface.aws_lambda.create_event_source_mapping(**event_source_settings)
+        return creation_response, event_mapping_response
+    except lambda_interface.aws_lambda.exceptions.ResourceConflictException:
+        uuids = get_uuid_of_event_source_mapping(lambda_interface)
+        [lambda_interface.aws_lambda.delete_event_source_mapping(UUID=x) for x in uuids]
+        cleanup_protocol(config)
+        return {'creation_response': 'error'}, {'response': 'error'}
 
 
-def cleanup_protocol(config: Dict):
+def cleanup_protocol(config: Dict) -> None:
     lambda_names = ['genomics-true-split', 'genomics-bus-constructor']
     for lambda_name in lambda_names:
         lambda_interface = LambdaInterface(config, lambda_name)
@@ -93,4 +105,7 @@ def cleanup_protocol(config: Dict):
         sqs_interface.destroy()
 
 
-
+def get_uuid_of_event_source_mapping(lambda_interfaace: LambdaInterface) -> List[str]:
+    response = lambda_interfaace.aws_lambda.list_event_source_mappings(FunctionName=lambda_interfaace.lambda_name)
+    uuids = [x['UUID'] for x in response['EventSourceMappings']]
+    return uuids

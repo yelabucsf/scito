@@ -3,6 +3,7 @@ from scito_lambdas.architecture_utils import *
 from scito_lambdas.lambda_utils import init_config
 from ufixtures.UfixVcr import *
 import os
+import time
 
 
 curr_dir = os.path.dirname(os.path.realpath(__file__))
@@ -24,3 +25,19 @@ class Test(TestCase):
             # no need to destroy a queue, it's only in fixtures and does not exist in AWS
         self.assertTrue(main_sqs_exists)
         self.assertTrue(dead_letter_sqs_exists)
+
+
+    def test_build_lambda(self):
+        lambda_conf = 'anton/scito/scito_count/lambda_settings/true_split_settings_TEST.json'
+        lambda_interface = LambdaInterface(conf, 'genomics-Unit-test')
+        self.assertFalse(lambda_interface.function_exists())
+        #with self.vcr.use_cassette('architecture_utils_build_lambda.yml'):
+        main_queue = prep_queues(conf, 'unit_test')
+        func_response, event_map_response = build_lambda(config=conf,
+                                                         lambda_name='genomics-Unit-test',
+                                                         lambda_settings=lambda_conf,
+                                                         event_source_func=settings_event_source_true_split_lambda,
+                                                         sqs_queue=main_queue)
+
+        time.sleep(15)
+        self.assertTrue(lambda_interface.function_exists())

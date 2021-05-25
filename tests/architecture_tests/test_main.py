@@ -47,8 +47,3 @@ class Test(TestCase):
         self.assertTrue(isinstance(conf_string, str))
         self.assertEqual(conf_string[:9], '[DEFAULT]')
 
-# TODO
-
-
-    def test_main_handler(self):
-        pass

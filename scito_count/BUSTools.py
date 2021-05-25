@@ -9,7 +9,7 @@ from warnings import warn
 class BUSTools(object):
     __slots__ = 'bus_file', 'processed_bus_file'
 
-    def __init__(self, bus_header: BUSHeader, bus_records: BUSFile):
+    def __init__(self, bus_header: BUSHeader, bus_records: BitFile):
         self.bus_file = BytesIO()
         self.bus_file.write(bus_header)
         for read_block in bus_records:
