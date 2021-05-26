@@ -24,7 +24,6 @@ def pipeline_config_s3(record: Dict) -> str:
 
 
 def config_for_main(event: Dict) -> Dict:
-
     if len(event['Records']) > 1:
         raise ValueError('main_handler(): trigger for this function should contain only a single record')
     record = event['Records'][0]
@@ -37,22 +36,27 @@ def config_for_main(event: Dict) -> Dict:
     return config
 
 
-def build_dynamic_lambdas(config: Dict) -> None:
-    lambda_names = ['genomics-true-split', 'genomics-bus-constructor']
-    lambda_settings = ['true_split_settings.json',
-                       'bus_constructor_settings.json']
-    event_sources = [settings_event_source_true_split_lambda,
-                     settings_event_source_bus_constructor_lambda]
+def bootstrap_dynamic_lambdas(config: Dict) -> None:
+    lambda_names = [
+        'genomics-true-split',
+        'genomics-bus-constructor'
+    ]
+    lambda_settings = [
+        'true_split_settings.json',
+        'bus_constructor_settings.json'
+    ]
+    event_sources = [
+        settings_event_source_true_split_lambda,
+        settings_event_source_bus_constructor_lambda
+    ]
     for architecture_blocks in zip(lambda_names, lambda_settings, event_sources):
         main_queue = prep_queues(config=config, lambda_name=architecture_blocks[0])
         this_lambda_settings = os.path.join('anton/scito/scito_count/lambda_settings/', architecture_blocks[1])
         build_lambda(config=config,
-                     lambda_name=architecture_blocks,
+                     lambda_name=architecture_blocks[0],
                      lambda_settings=this_lambda_settings,
                      event_source_func=architecture_blocks[2],
                      sqs_queue=main_queue)
-
-
 
 
 def main_handler(event: Dict) -> None:
@@ -68,7 +72,7 @@ def main_handler(event: Dict) -> None:
     # this config
     config = config_for_main(event)
 
-    build_dynamic_lambdas(config)
+    bootstrap_dynamic_lambdas(config)
 
     # activate SQS queue
     sqs_interface = SQSInterface(config, next_lambda_name)
