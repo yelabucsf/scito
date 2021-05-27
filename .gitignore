@@ -17,3 +17,6 @@
 /lambda_settings/true_split_settings_TEST.json
 /scripts/TOKEN.txt
 /scripts/jenkins_docker.sh
+/lambda_settings/bus_reduce_bootstrap.json
+/lambda_settings/catalog_build_bootstrap.json
+/lambda_settings/main_bootstrap.json

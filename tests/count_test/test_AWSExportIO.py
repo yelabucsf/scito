@@ -1,14 +1,15 @@
 from unittest import TestCase
-from scito_count.AWSExportIO import *
+from scito_count.AWSExportIO import BUSToolsExport, BlockByteExport
+from scito_count.S3Interface import S3Interface
 from scito_count.BUSTools import BUSTools
-from scito_count.BitHeader import *
+from scito_count.BitHeader import BUSHeaderAdtAtac
 from scito_count.BlocksIO import BlocksIO
-from scito_count.BlockSplit import *
-from scito_count.BlockByte import *
+from scito_count.BlockSplit import BlockSplit
+from scito_count.BlockByte import BlockByte
 from scito_count.SeqFile import FQFile
-from scito_count.ProcessSettings import *
-from scito_count.SeqSync import *
-from scito_count.BitFile import *
+from scito_count.ProcessSettings import S3Settings, ReadSettings
+from scito_count.SeqSync import FQSyncTwoReads
+from scito_count.BitFile import BUSFileAdtAtac
 
 from scito_lambdas.lambda_utils import init_config
 import struct
