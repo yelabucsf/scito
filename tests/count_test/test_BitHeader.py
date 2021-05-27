@@ -1,5 +1,6 @@
 from unittest import TestCase
-from scito_count.BitHeader import *
+from scito_count.BitHeader import BUSHeaderAdtAtac
+import struct
 
 
 class TestAdtAtacBusHeader(TestCase):

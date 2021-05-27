@@ -1,7 +1,8 @@
 from unittest import TestCase
 from scito_lambdas.architecture_utils import *
 from scito_lambdas.lambda_utils import init_config
-from ufixtures.UfixVcr import *
+from ufixtures.UfixVcr import UfixVcr
+from scito_lambdas.lambda_settings import settings_event_source_true_split_lambda
 import os
 import time
 

@@ -1,0 +1,127 @@
+interactions:
+- request:
+    body: !!python/object/new:_io.BytesIO
+      state: !!python/tuple
+      - !!binary |
+        QlVTAAEAAAAVAAAACAAAABkAAABzY2l0by1zZXEgQURUIDEweCBBVEFDIHYxREibpG0DAADCkwAA
+        AAAAAGUDAAABAAAAAAAAAAAAAABESJukbQMAAMqfAAAAAAAAvAIAAAEAAAAAAAAAAAAAAGJIm6Rt
+        AwAAxl8AAAAAAABlAwAAAQAAAAAAAAAAAAAACkmbpG0DAADOnwAAAAAAAG4CAAABAAAAAAAAAAAA
+        AAAhSZukbQMAAMKfAAAAAAAAwwMAAAEAAAAAAAAAAAAAAOhJm6RtAwAAwlMAAAAAAAAhAAAAAQAA
+        AAAAAAAAAAAA6EmbpG0DAADCXwAAAAAAAHMCAAABAAAAAAAAAAAAAAD5SZukbQMAAMKTAAAAAAAA
+        ZQMAAAEAAAAAAAAAAAAAAA==
+      - 0
+      - null
+    headers:
+      Authorization:
+      - OBSCURED
+      Content-Encoding:
+      - !!binary |
+        YnVz
+      Content-Length:
+      - '301'
+      Content-MD5:
+      - !!binary |
+        YVNGQ3JtcVp5aTlkT0x4ZU05T0UyZz09
+      Content-Type:
+      - !!binary |
+        U09SVEVEX0JVUw==
+      Expect:
+      - !!binary |
+        MTAwLWNvbnRpbnVl
+      User-Agent:
+      - OBSCURED
+      X-Amz-Content-SHA256:
+      - !!binary |
+        VU5TSUdORUQtUEFZTE9BRA==
+      X-Amz-Date:
+      - !!binary |
+        MjAyMTA1MjdUMTcyOTEwWg==
+      X-Amz-Security-Token:
+      - OBSCURED
+      x-amz-server-side-encryption:
+      - !!binary |
+        YXdzOmttcw==
+      x-amz-server-side-encryption-aws-kms-key-id:
+      - OBSCURED
+    method: PUT
+    uri: https://ucsf-genomics-prod-project-data.s3.us-west-2.amazonaws.com/anton/scito/mock/fastq/downsamp/small_R2.SORTED_BUS
+  response:
+    body:
+      string: ''
+    headers:
+      Content-Length:
+      - '0'
+      Date:
+      - Thu, 27 May 2021 17:29:12 GMT
+      ETag:
+      - '"8d648626917620ed6b6ad28b99b02ef6"'
+      Server:
+      - AmazonS3
+      x-amz-id-2:
+      - E1OQ8HNnBPHzJAGvUx/cvVG6MK/2VAw6AHwlLc0YezmhiOq9y+Y4HxiKqLyFyl6nMEoT5iU5kXc=
+      x-amz-request-id:
+      - 2ZDTXAA28XBK56FW
+      x-amz-server-side-encryption:
+      - aws:kms
+      x-amz-server-side-encryption-aws-kms-key-id: OBSCURED
+      x-amz-version-id:
+      - Logc07q.8CZ0MMgiMBOwFeQpe3Ba5k2Z
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      Range:
+      - !!binary |
+        Ynl0ZXM9MC00NA==
+      User-Agent:
+      - OBSCURED
+      X-Amz-Content-SHA256:
+      - !!binary |
+        ZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3
+        ODUyYjg1NQ==
+      X-Amz-Date:
+      - !!binary |
+        MjAyMTA1MjdUMTcyOTExWg==
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: GET
+    uri: https://ucsf-genomics-prod-project-data.s3.us-west-2.amazonaws.com/anton/scito/mock/fastq/downsamp/small_R2.SORTED_BUS
+  response:
+    body:
+      string: "BUS\0\x01\0\0\0\x15\0\0\0\b\0\0\0\x19\0\0\0scito-seq ADT 10x ATAC v1"
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Encoding:
+      - bus
+      Content-Length:
+      - '45'
+      Content-Range:
+      - bytes 0-44/301
+      Content-Type:
+      - SORTED_BUS
+      Date:
+      - Thu, 27 May 2021 17:29:12 GMT
+      ETag:
+      - '"8d648626917620ed6b6ad28b99b02ef6"'
+      Last-Modified:
+      - Thu, 27 May 2021 17:29:12 GMT
+      Server:
+      - AmazonS3
+      x-amz-id-2:
+      - vpob9QBt0i8CI2CXYTsnYDoCd2egpIf0NDKJ/wyAF4GRY5pl1PfE5ChQdSd/Sp1+SO1+r5RsGG8=
+      x-amz-request-id:
+      - 2ZDMVQCFC4SD03P4
+      x-amz-server-side-encryption:
+      - aws:kms
+      x-amz-server-side-encryption-aws-kms-key-id: OBSCURED
+      x-amz-version-id:
+      - Logc07q.8CZ0MMgiMBOwFeQpe3Ba5k2Z
+    status:
+      code: 206
+      message: Partial Content
+version: 1

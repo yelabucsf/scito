@@ -1,0 +1,126 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      Range:
+      - !!binary |
+        Ynl0ZXM9MC0xMDAw
+      User-Agent:
+      - OBSCURED
+      X-Amz-Content-SHA256:
+      - !!binary |
+        ZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3
+        ODUyYjg1NQ==
+      X-Amz-Date:
+      - !!binary |
+        MjAyMTA1MjdUMTcyOTA3Wg==
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: GET
+    uri: https://ucsf-genomics-prod-project-data.s3.us-west-2.amazonaws.com/anton/scito/mock/fastq/downsamp/FQ_READY_small_R2.fastq.gz
+  response:
+    body:
+      string: !!binary |
+        H4sIAAeLvV8C/7XRu04DMRQE0H6/gp7mPv2YKldGOBUNLuD/fwQbERoSrTYilmVZLnw0d05BpM7Q
+        nHBu3vTl/eMTClEnCHkRKJHUJ8EbCC1ajx6xjdbn7i36usxz9B7b8/Z6bW2nW4p4AgtLhVWlByFK
+        GealTqkU+0G+/57QHyTm6z1JEoFppkAqJe8mWc5xxIVQixjU5Be5meTOcZkZMmldmfRSfKyv2xj/
+        NS7nDOUqBapUZL/50Y/Pi81n6TnN/oVZ9puf+HGEjeCVCzyltNtJRL9qYBlfsddd0o4DAAA=
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '224'
+      Content-Range:
+      - bytes 0-223/224
+      Content-Type:
+      - <class 'generator'>
+      Date:
+      - Thu, 27 May 2021 17:29:08 GMT
+      ETag:
+      - '"1c64d1782f122a4d506e006160d7a868"'
+      Last-Modified:
+      - Tue, 24 Nov 2020 22:36:57 GMT
+      Server:
+      - AmazonS3
+      x-amz-id-2:
+      - rQNju8cmHIdKA5jm7rmLVzmNqCtxErLYK6/QN//qrHyhYqI+fqQELS5gylFvw8gAarsPOkvYDjo=
+      x-amz-request-id:
+      - VTZ2B5MD215W6VW2
+      x-amz-server-side-encryption:
+      - aws:kms
+      x-amz-server-side-encryption-aws-kms-key-id: OBSCURED
+      x-amz-version-id:
+      - 1F5sVt30YKwF1WXwYvHwQrhidnCHhxd_
+    status:
+      code: 206
+      message: Partial Content
+- request:
+    body: null
+    headers:
+      Authorization:
+      - OBSCURED
+      Range:
+      - !!binary |
+        Ynl0ZXM9MC0xMDAw
+      User-Agent:
+      - OBSCURED
+      X-Amz-Content-SHA256:
+      - !!binary |
+        ZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3
+        ODUyYjg1NQ==
+      X-Amz-Date:
+      - !!binary |
+        MjAyMTA1MjdUMTcyOTA3Wg==
+      X-Amz-Security-Token:
+      - OBSCURED
+    method: GET
+    uri: https://ucsf-genomics-prod-project-data.s3.us-west-2.amazonaws.com/anton/scito/mock/fastq/downsamp/small_R3.fastq.gz
+  response:
+    body:
+      string: !!binary |
+        H4sICAJVgl8AA3NtYWxsX1IzLmZhc3RxALVWu5KdMAzt+Yr0ceEXYFStxzsoVZq4SP7/R6KHeS0s
+        l8lsfGcwFrLHR+dIum/Z2tA7COMAP0pfwvuv338ggI+BjG5MAdwUJ/8twE+wUAvWkgt2teZc6SVj
+        KZUXSC9IH0slE3/jQd41V3Kgz7QiY6HdpZKfWOkE+tErkis96Qg5kyy5+97N6wAD827AbOb5aHo+
+        jGkT7e/ePsMfegve9slDsNZPDX+R6+XcIUHjG3MAGn5k/Cj4EQV6zW0iM4FCfhaOw4Kfz7rCT85H
+        /ArZ8KSX55AYtUt49oFZXRQmD12CmAH0jTbB5/h9P4Dzzk8Qp2DP8IVXxnlJP+YqgWG+yczoMquC
+        HPA1/Rfwv26YLYR39NsRYp8mikFK8aP6EYXbXBr7qPDXwchY7ZmRieY1V1gIe/gv2F8Ezpyp5M1y
+        88b+a6wGmioW1pcjzR18P1hwlpiHIaXxI/uS/CXrtQ/soya/GCUnlPfCwCVl6j8kvyI2TeZmXuR8
+        P+A0yzaYl/lG/L23MCUfIUS/wl/ZZ3mXJv58IX6Wec6CRwRQlP3MBeCB+M/wv2Ycy6W5YT/GCKMN
+        E+sgLKWPiWG6O55KE/8OPu5Kf6tr0iGKBobF/qT0X+S+2a6+ZcQzvEvV245a1zfsu5Fa3+QThGCT
+        P6mf8RMEVvQl/QShCaCqnzKfn7Q+dvh/9LeQmNva52JPZW8cqAJ6586dX+lfO39Z6efuxwgZr7hz
+        7c8SGJSgrJ0Pn9Nvlqdcmpr2o+TXTZTju864Peko8zl8Fy30k0vQD8NwqvyCUtu9dnbt+8y1lDtC
+        KH8MuD5ga5FVSuPW+Moj9ErYrs5TD5AiDkstnw/Yjiv9X3AVKk6n7i+b4+Uq+AkAAA==
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '676'
+      Content-Range:
+      - bytes 0-675/676
+      Content-Type:
+      - binary/octet-stream
+      Date:
+      - Thu, 27 May 2021 17:29:09 GMT
+      ETag:
+      - '"c59ea3ea8d845d9c8a7ce7a5de53cd6b"'
+      Last-Modified:
+      - Sun, 11 Oct 2020 00:44:05 GMT
+      Server:
+      - AmazonS3
+      x-amz-id-2:
+      - G7MMSy9RKzj1U5DhoihEh5S0oOpWkdH4JXvqp6cT1W0DAPVFKKO0ZyiBbNU1HdFwBzQSW2lOADc=
+      x-amz-request-id:
+      - CHQ5BKJH6TZ6R52Q
+      x-amz-server-side-encryption:
+      - aws:kms
+      x-amz-server-side-encryption-aws-kms-key-id: OBSCURED
+      x-amz-version-id:
+      - zpX5ifaXGvhT6e34D3wYpEge_0PBBOYy
+    status:
+      code: 206
+      message: Partial Content
+version: 1
