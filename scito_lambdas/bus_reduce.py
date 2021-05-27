@@ -46,8 +46,6 @@ def bus_reduce_handler(event):
         for name_of_file in sorted_bus_files:
             sp.Popen(['tail', '-c', f'+{len(header) + 1}', name_of_file], stdout=f)
 
-    # TODO delete parsed file
-
     # maps
     maps = ECBuild(config)
     maps.prepare_maps(outdir)
@@ -68,6 +66,6 @@ def bus_reduce_handler(event):
     counts_interface.s3_obj.upload_file(out_prefix)
 
     # TODO push logs
-
+    # TODO nuke all processed data on EFS
 
 

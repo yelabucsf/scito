@@ -16,3 +16,4 @@
 /lambda_settings/bus_constructor_settings.json
 /lambda_settings/true_split_settings_TEST.json
 /scripts/TOKEN.txt
+/scripts/jenkins_docker.sh
