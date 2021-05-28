@@ -74,18 +74,19 @@ def build_lambda(
 
 
 # NOT TESTED
-def prepare_reduce_part(record: Dict, next_lambda_name: str) -> None:
+def prepare_reduce_part(record: Dict, this_lambda_name: str, next_lambda_name: str) -> None:
     """
     Impure function. Checks if there are messages pending. If the queue is empty it destroys it and invokes next lambda.
     If dead letter queue has messages - the error is thrown
     :param record: Dict. A record from a trigger event
+    :param this_lambda_name: str. Name of current lambda
     :param next_lambda_name: str. Name of the next lambda to invoke
     :return: None
     """
     # delete the main queue if it's empty
     parsed_record = json.loads(record['body'])
     config = json.loads(parsed_record['config'])
-    origin_sqs_interface = SQSInterface(config=config, prefix=next_lambda_name)
+    origin_sqs_interface = SQSInterface(config=config, prefix=this_lambda_name)
     if not origin_sqs_interface.messages_pending(dead_letter=False):  # Is main queue empty
         if not origin_sqs_interface.messages_pending(dead_letter=True):  # Is dead letter queue empty
             origin_sqs_interface.destroy()
@@ -94,6 +95,8 @@ def prepare_reduce_part(record: Dict, next_lambda_name: str) -> None:
             next_lambda_interface.invoke_lambda(lambda_name=next_lambda_name, payload=json.dumps(payload))
         else:
             problem_in_dead_letter_queue(origin_sqs_interface)
+    else:
+        pass
 
 
 def get_uuid_of_event_source_mapping(lambda_interface: LambdaInterface) -> List[str]:

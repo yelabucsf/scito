@@ -1,11 +1,14 @@
-from scito_lambdas.lambda_settings import settings_for_next_lambda, settings_event_source_bus_constructor_lambda
-from scito_lambdas.lambda_utils import *
-from scito_lambdas.architecture_utils import *
+import json
+import numpy as np
+
+from typing import Dict
+from scito_lambdas.lambda_utils import parse_range
+from scito_count.ProcessSettings import S3Settings
 from scito_count.ContentTablesIO import ContentTablesIO
 from scito_count.SQSInterface import SQSInterface
-from scito_count.BlockCatalog import *
-from scito_count.LambdaInterface import *
-from scito_count.ContentTable import *
+from scito_count.BlockCatalog import BlockCatalog, define_overlap
+from scito_count.LambdaInterface import LambdaInterface
+from scito_count.ContentTable import ContentTable
 
 
 def catalog_wrapper(config: Dict, section: str):
@@ -21,12 +24,12 @@ def catalog_wrapper(config: Dict, section: str):
 
 
 def catalog_parser(sync_ranges, config: Dict) -> str:
-    '''
+    """
     Constructs a part of SQS message corresponding to Dict{'section': 'start-end'}
     :param sync_ranges: np.ndarray. numpy array of catalogs with dim (n_sections, 2)
     :param config: Dict. Process config
     :return: str.
-    '''
+    """
     if len(sync_ranges) != len(config.keys()):
         raise ValueError(f'catalog_parser(): number of FASTQ files: {len(config.keys())} does not match number '
                          f'of passed byte ranges {len(sync_ranges)}')
@@ -35,17 +38,13 @@ def catalog_parser(sync_ranges, config: Dict) -> str:
 
 
 def catalog_build_handler(event):
-    this_lambda_name = 'genomics-catalog-build'
     next_lambda_name = 'genomics-bus-constructor'
     previous_lambda_name = 'genomics-true-split'
-
 
     # config to buffer
     if len(event['Records']) > 1:
         raise ValueError('catalog_build_handler(): trigger for this function should contain only a single record')
     record = event['Records'][0]
-
-
 
     # get config
     parsed_record = json.loads(record['body'])
@@ -60,7 +59,6 @@ def catalog_build_handler(event):
     # activate SQS queue
     sqs_interface = SQSInterface(config, next_lambda_name)
     this_queue = sqs_interface.sqs.get_queue_by_name(QueueName=sqs_interface.queue_name)
-
 
     # construct message
     msg_constant_part = {

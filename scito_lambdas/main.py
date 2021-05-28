@@ -1,12 +1,15 @@
 from urllib.parse import unquote_plus
+import os
+import json
+from typing import Tuple, Dict
 
-from scito_lambdas.lambda_utils import *
-from scito_lambdas.architecture_utils import *
-from scito_lambdas.lambda_settings import settings_for_next_lambda, settings_event_source_true_split_lambda, \
+from scito_lambdas.lambda_utils import parse_range, construct_s3_interface, config_ini_to_buf, init_config
+from scito_lambdas.architecture_utils import prep_queues, build_lambda
+from scito_lambdas.lambda_settings import settings_event_source_true_split_lambda, \
     settings_event_source_bus_constructor_lambda
-from scito_count.SQSInterface import SQSInterface, SQSInterfaceError
-from scito_count.blind_byte_range import *
-from scito_count.LambdaInterface import *
+from scito_count.SQSInterface import SQSInterface
+from scito_count.blind_byte_range import blind_byte_range
+from scito_count.ProcessSettings import S3Settings
 
 
 def finalize_message(msg: Dict, blind_range: Tuple) -> str:
@@ -60,11 +63,11 @@ def bootstrap_dynamic_lambdas(config: Dict) -> None:
 
 
 def main_handler(event: Dict) -> None:
-    '''
+    """
     Function is triggered by an S3 upload event. The downstream lambdas are created or invoked programmatically
     :param event: Dict. S3 records
     :return: None
-    '''
+    """
 
     # id of lambdas in concern
     next_lambda_name = 'genomics-true-split'

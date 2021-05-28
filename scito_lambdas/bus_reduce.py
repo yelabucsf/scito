@@ -1,14 +1,20 @@
+import os
+import re
+
 from scito_lambdas.lambda_settings import settings_for_next_lambda
+from scito_lambdas.lambda_utils import extract_technology_config
+from scito_utils.factories import bit_header_factory
+
 from scito_count.LambdaInterface import LambdaInterface
-from scito_utils.factories import *
-from scito_count.ECBuild import *
+from scito_count.SeqSync import select_files_to_sync
+from scito_count.ECBuild import ECBuild
+from scito_count.S3Interface import S3Interface
 
 import json
 import subprocess as sp
 
 
 def bus_reduce_handler(event):
-    this_lambda_name = 'genomics-bus-reduce'
     previous_lambda_name = 'genomics-bus-constructor'
 
     if len(event['Records']) > 1:
@@ -26,9 +32,11 @@ def bus_reduce_handler(event):
 
     # get header for the BUS file to be constructed
     header = bit_header_factory(technology)
-    outdir = settings_for_next_lambda(lambda_name='',
-                                      settings_s3_key='anton/scito/scito_count/lambda_settings/bus_constructor_settings.json',
-                                      dead_letter_arn='')['FileSystemConfigs']['LocalMountPath']
+    outdir = settings_for_next_lambda(
+        lambda_name='',
+        settings_s3_key='anton/scito/scito_count/lambda_settings/bus_constructor_settings.json',
+        dead_letter_arn=''
+    )['FileSystemConfigs']['LocalMountPath']
 
     # using select_files_to_sync function just to get the section of a ground truth file,
     # to keep naming consistent
@@ -37,11 +45,10 @@ def bus_reduce_handler(event):
     dirname = os.path.dirname(config[ground_section]['key'])
     outfile = os.path.join(outdir, dirname, f'{basename}.merged.bus')
 
-
     # for now try merge everything first then sort. IF performance is poor - try reduce operation
     regex = re.compile(f'{basename}.SORTED_BUS')
     sorted_bus_files = list(filter(regex.search, os.listdir(outdir)))
-    with open(outfile, 'a') as f:
+    with open(outfile, 'ab') as f:
         f.write(header)
         for name_of_file in sorted_bus_files:
             sp.Popen(['tail', '-c', f'+{len(header) + 1}', name_of_file], stdout=f)
@@ -67,5 +74,3 @@ def bus_reduce_handler(event):
 
     # TODO push logs
     # TODO nuke all processed data on EFS
-
-

@@ -1,9 +1,12 @@
-from scito_count.BlocksIO import *
-from scito_count.BlockSplit import *
-from scito_count.SQSInterface import *
-from scito_count.BlockByte import *
-from scito_lambdas.lambda_utils import *
-from scito_lambdas.architecture_utils import *
+import json
+from typing import Dict
+from scito_count.BlocksIO import BlocksIO
+from scito_count.BlockSplit import BlockSplit
+from scito_count.SQSInterface import origin_vs_expected_queue
+from scito_count.ProcessSettings import S3Settings
+from scito_count.BlockByte import BlockByte
+from scito_count.AWSExportIO import BlockByteExport
+from scito_lambdas.architecture_utils import prepare_reduce_part
 
 
 def true_split_record(record: Dict) -> None:
@@ -25,7 +28,7 @@ def true_split_record(record: Dict) -> None:
 
 def true_split_handler(event):
     this_lambda_name = 'genomics-true-split'
-    next_lambda_name = ''  # TODO add real arn or name
+    next_lambda_name = 'genomics-scito-catalog-build'
 
     # Check if origin queue is correct
     probe_record = event['Records'][0]
@@ -39,4 +42,4 @@ def true_split_handler(event):
     [true_split_record(record) for record in event['Records']]
 
     # prepare reduce part
-    prepare_reduce_part(record=probe_record, next_lambda_name=next_lambda_name)
+    prepare_reduce_part(record=probe_record, this_lambda_name=this_lambda_name, next_lambda_name=next_lambda_name)

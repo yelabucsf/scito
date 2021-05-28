@@ -1,9 +1,10 @@
 from typing import Type
 
-from scito_count.BitFile import *
-from scito_count.SeqFile import *
-from scito_count.BitHeader import *
-from scito_count.SeqArranger import *
+from scito_count.BitFile import BitFile, BUSFileAdtAtac
+from scito_count.SeqFile import SeqFile,FQFile
+from scito_count.BitHeader import BUSHeaderAdtAtac
+from scito_count.SeqSync import SeqSync, FQSyncTwoReads
+from scito_count.SeqArranger import SeqArranger, FQSeqArrangerAdtAtac
 
 def seq_file_factory(technology: str) -> Type[SeqFile]:
     technologies = {
@@ -17,7 +18,7 @@ def bit_file_factory(technology: str) -> Type[BitFile]:
     }
     return technologies[technology]
 
-def bit_header_factory(technology: str) -> str:
+def bit_header_factory(technology: str) -> bytes:
     technologies = {
         'scito ATAC': BUSHeaderAdtAtac
     }
